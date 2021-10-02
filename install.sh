@@ -7,6 +7,7 @@ else
    echo "Not seeing standard course VM setup (/opt/dbcourse)..."
    echo "You may need to tweak .flashenv and db/setup.sh manually"
    sudo apt-get -qq coreutils
+   # apt-get install coreutils
    mypath=`realpath $0`
    mybase=`dirname $mypath`
    user=`whoami`
@@ -22,6 +23,8 @@ sed -i "s/default_db_password/$dbpasswd/g" .flaskenv
 
 sudo apt-get -qq update
 sudo apt-get -qq --yes install python3-virtualenv
+# apt-get -qq update
+# apt-get -qq --yes install python3-virtualenv
 virtualenv env
 source env/bin/activate
 pip install -r requirements.txt
