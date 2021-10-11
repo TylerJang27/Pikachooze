@@ -1,13 +1,26 @@
 from sqlalchemy import create_engine, text
+from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
+from app.models.base import Base
 
 class DB:
     """Hosts all functions for querying the database."""
     def __init__(self, app):
-        self.engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+        self.engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], echo=True)
+        # self.Base = declarative_base()
+        # Base = automap_base()
+        # Base.prepare(engine=some_engine, reflect=True)
+        # self.Base.metadata.create_all(self.engine)
+        Base.metadata.create_all(self.engine, checkfirst=True)
+        self.Session = sessionmaker(bind=self.engine)
+        Session = sessionmaker()
+        Session.configure(bind=self.engine)
+
+        # self.engine = create_engine('sqlite:///:memory:', echo=True)
 
     def connect(self):
-        return self.engine.connect()
+        #return self.engine.connect()
+        print("I would have connected")
 
     def execute(self, sqlstr, **kwargs):
         """Execute sqlstr and return a list of result tuples.  sqlstr will be

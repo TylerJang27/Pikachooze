@@ -11,5 +11,5 @@ if [[ -n `psql -lqt | cut -d \| -f 1 | grep -w "$dbname"` ]]; then
 fi
 createdb $dbname
 
-psql -af create.sql $dbname
+# psql -af create.sql $dbname
 psql -af load.sql $dbname

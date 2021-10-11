@@ -1,11 +1,30 @@
-from flask_login import UserMixin
+# from flask_login import UserMixin
 from flask import current_app as app
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import Column, Integer, Float, String, Sequence
+from sqlalchemy.orm import relationship
+from app.models.base import Base
 
-from .. import login
+# from .. import login
 
 
-class User(UserMixin):
+# class User(UserMixin):
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key = True) #Sequence('user_id_seq'), 
+    email = Column(String)
+    password = Column(String)
+    firstname = Column(String)
+    lastname = Column(String)
+
+    purchases = relationship("Purchase", back_populates="user")
+
+
+    def __repr__(self):
+        return "<User(id='%d', email='%s', firstname='%s', lastname='%s')>" % (
+                             self.id, self.email, self.firstname, self.lastname)
+'''
     def __init__(self, id, email, firstname, lastname):
         self.id = id
         self.email = email
@@ -67,3 +86,5 @@ WHERE id = :id
 """,
                               id=id)
         return User(*(rows[0])) if rows else None
+
+'''
