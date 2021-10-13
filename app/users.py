@@ -40,8 +40,7 @@ def login():
 
 
 class RegistrationForm(FlaskForm):
-    firstname = StringField(_l('First Name'), validators=[DataRequired()])
-    lastname = StringField(_l('Last Name'), validators=[DataRequired()])
+    username = StringField(_l('Username'), validators=[DataRequired()])
     email = StringField(_l('Email'), validators=[DataRequired(), Email()])
     password = PasswordField(_l('Password'), validators=[DataRequired()])
     password2 = PasswordField(
@@ -62,8 +61,7 @@ def register():
     if form.validate_on_submit():
         if User.register(form.email.data,
                          form.password.data,
-                         form.firstname.data,
-                         form.lastname.data):
+                         form.username.data):
             flash('Congratulations, you are now a registered user!')
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)

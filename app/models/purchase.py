@@ -8,7 +8,7 @@ class Purchase(Base):
     __tablename__ = 'purchases'
 
     id = Column(Integer, primary_key = True) #Sequence('purchase_id_seq'), 
-    uid = Column(Integer, ForeignKey('users.id'))
+    uid = Column(Integer, ForeignKey('users.uid'))
     pid = Column(Integer, ForeignKey('products.id'))
 
     user = relationship("User", back_populates="purchases")
@@ -18,7 +18,7 @@ class Purchase(Base):
 
     def __repr__(self):
         return "<Purchase(id='%d', user='%s', product='%s', time_purchased='%s')>" % (
-                             self.id, self.user.firstname, self.product.name, self.time_purchased)
+                             self.id, self.user.email, self.product.name, self.time_purchased)
 
 """
     def __init__(self, id, uid, pid, time_purchased):
