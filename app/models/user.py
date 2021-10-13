@@ -3,9 +3,7 @@ from flask import current_app as app
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import Column, Integer, String, Sequence
 from sqlalchemy.orm import relationship
-from app.config import Base
-
-from app.config import login
+from app.models.base import Base, login
 
 
 class User(Base, UserMixin):
