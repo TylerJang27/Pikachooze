@@ -1,7 +1,26 @@
-from flask import current_app as app
+from sqlalchemy import Column, Integer, DateTime, Sequence, ForeignKey
+from sqlalchemy.orm import relationship
+from app.models.base import Base
 
 
-class Purchase:
+
+class Purchase(Base):
+    __tablename__ = 'purchases'
+
+    id = Column(Integer, primary_key = True) #Sequence('purchase_id_seq'), 
+    uid = Column(Integer, ForeignKey('users.id'))
+    pid = Column(Integer, ForeignKey('products.id'))
+
+    user = relationship("User", back_populates="purchases")
+    product = relationship("Product", back_populates="purchases")
+
+    time_purchased = Column(DateTime)
+
+    def __repr__(self):
+        return "<Purchase(id='%d', user='%s', product='%s', time_purchased='%s')>" % (
+                             self.id, self.user.firstname, self.product.name, self.time_purchased)
+
+"""
     def __init__(self, id, uid, pid, time_purchased):
         self.id = id
         self.uid = uid
@@ -30,3 +49,4 @@ ORDER BY time_purchased DESC
                               uid=uid,
                               since=since)
         return [Purchase(*row) for row in rows]
+"""
