@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from app.models.base import Base
 
 
-class Trainer(Base):
+class Trainer(Base): 
     __tablename__ = 'trainer'
 
     trainer_id_seq = Sequence('trainer_id_seq')
@@ -21,6 +21,7 @@ class Trainer(Base):
     generation = relationship("Generation")
     location = relationship("Location", back_populates="trainers")
     added_by = relationship("User", back_populates="trainers")
+    trainer_pokemon = relationship("TrainerPokemon", back_populates="trainer")
 
 
     def __repr__(self):

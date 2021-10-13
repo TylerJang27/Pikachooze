@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from app.models.base import Base
-from app.models.pokemonbasestats import PokemonBaseStats
 
 
 class Pokemon(Base):
@@ -15,9 +14,9 @@ class Pokemon(Base):
     type2_id = Column(Integer, ForeignKey('type.type_id'))
 
     generation = relationship("Generation")
-    type1 = relationship("Type") # Can add back populates in Type if needed
-    type2 = relationship("Type")
-    pokemon_base_stats = relationship(PokemonBaseStats, back_populates="pokemon")
+    type1 = relationship("Type", foreign_keys=[type1_id]) # Can add back populates in Type if needed
+    type2 = relationship("Type", foreign_keys=[type2_id])
+    pokemon_base_stats = relationship("PokemonBaseStats", back_populates="pokemon")
 
     def __repr__(self):
         return "<Pokemon(poke_id='%d', name='%s', type1='%s', type2='%s')>" % (

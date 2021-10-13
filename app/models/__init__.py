@@ -10,3 +10,5 @@ from app.models.location import Location
 from app.models.move import Move
 from app.models.pokemon import Pokemon
 from app.models.pokemon_base_stats import PokemonBaseStats
+from app.models.can_learn import CanLearn
+from app.models.trainer_pokemon import TrainerPokemon
