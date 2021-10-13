@@ -12,12 +12,14 @@ class User(Base, UserMixin):
 
     users_id_seq = Sequence('users_id_seq')
     uid = Column(Integer, users_id_seq, server_default=users_id_seq.next_value(), primary_key = True)
-    username = Column(String(50), nullable=False)
+    username = Column(String(20), nullable=False)
     email = Column(String(50), nullable=False)
     password = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     purchases = relationship("Purchase", back_populates="user")
+
+    trainers = relationship("Trainer", back_populates="added_by")
 
 
     def __repr__(self):
