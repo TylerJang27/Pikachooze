@@ -6,3 +6,7 @@ from app.models.user import User
 from app.models.trainer import Trainer
 from app.models.type import Type
 from app.models.generation import Generation
+from app.models.location import Location
+from app.models.move import Move
+from app.models.pokemon import Pokemon
+from app.models.pokemon_base_stats import PokemonBaseStats

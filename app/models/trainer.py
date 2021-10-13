@@ -12,16 +12,14 @@ class Trainer(Base):
     is_user = Column(Boolean)
     name = Column(String(20))
     pic = Column(String)
-    game_id = Column(Integer)
-    # game_id = Column(Integer, ForeignKey('game.game_id')) # TODO: UNCOMMENT
-    generation_id = Column(Integer, ForeignKey('generation'), default=4)
-    location_id = Column(Integer, nullable=True)
-    # location_id = Column(Integer, ForeignKey('location.location_id'), nullable=True) # TODO: UNCOMMENT
+    game_id = Column(Integer, ForeignKey('game.game_id'))
+    generation_id = Column(Integer, ForeignKey('generation.generation'), default=4)
+    location_id = Column(Integer, ForeignKey('location.location_id'), nullable=True)
     added_by_id = Column(Integer, ForeignKey('users.uid'), nullable=True)
 
     game = relationship("Game") # no back populates unless strictly necessary
     generation = relationship("Generation")
-    # location = relationship("Location", back_populates="trainers")
+    location = relationship("Location", back_populates="trainers")
     added_by = relationship("User", back_populates="trainers")
 
 
