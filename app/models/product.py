@@ -1,7 +1,6 @@
-from flask import current_app as app
 from sqlalchemy import Column, Integer, Float, String, Boolean, Sequence
 from sqlalchemy.orm import relationship
-from .base import Base
+from app.config import Base
 
 
 class Product(Base):

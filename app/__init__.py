@@ -1,14 +1,6 @@
 from flask import Flask
-from flask_login import LoginManager
-from flask_babel import Babel
-from .config import Config
-from .db import DB
-
-
-
-# login = LoginManager()
-# login.login_view = 'users.login'
-babel = Babel()
+from app.config import Config, login, babel
+from app.db import DB
 
 
 def create_app():
@@ -16,7 +8,7 @@ def create_app():
     app.config.from_object(Config)
 
     app.db = DB(app)
-    # login.init_app(app)
+    login.init_app(app)
     babel.init_app(app)
 
     from .index import bp as index_bp
