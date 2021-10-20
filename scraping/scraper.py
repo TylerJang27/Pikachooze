@@ -6,6 +6,7 @@ Created on Tue Oct 12 01:50:35 2021
 @author: Pikachooze
 """
 import requests
+import numpy as np
 import pandas as pd
 
 # Database reference, only missing the Move-Pokemon connecting table (assume just a (poke_id, move_id)) relation.
@@ -53,7 +54,12 @@ def get_types():
     df_type = pd.DataFrame(typelist)
     df_type = df_type.to_csv('db/data/Types.csv', index = False, header = False)
     print(df_type)
-    
+
+def get_generation_games():
+    generation_list = [[4]]
+    df_generation = pd.DataFrame(generation_list)
+    df_generation = df_generation.to_csv('db/data/Generations.csv', index = False, header = False)
+    print(df_generation)
 
 # %% Scraping Methods
 
@@ -62,3 +68,4 @@ def get_types():
 # %% Main
 if __name__ == "__main__":
     get_types()
+    get_generation_games
