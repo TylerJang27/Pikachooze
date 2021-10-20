@@ -11,7 +11,7 @@ class Pokemon(Base):
     name = Column(String(20))
     generation_id = Column(Integer, ForeignKey('generation.generation'), default=4)
     type1_id = Column(Integer, ForeignKey('type.type_id'), nullable=False)
-    type2_id = Column(Integer, ForeignKey('type.type_id'))
+    type2_id = Column(Integer, ForeignKey('type.type_id'), nullable=True)
 
     generation = relationship("Generation")
     type1 = relationship("Type", foreign_keys=[type1_id]) # Can add back populates in Type if needed

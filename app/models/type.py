@@ -6,7 +6,7 @@ class Type(Base):
     __tablename__ = 'type'
 
     type_id = Column(Integer, primary_key = True)
-    type_name = Column(String(16), index=True, unique=True)
+    type_name = Column(String(16), index=True, unique=True, nullable=False)
 
     def __repr__(self):
         return "<Type(type_id='%d', type_name='%s')>" % (
