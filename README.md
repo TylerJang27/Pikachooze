@@ -22,7 +22,7 @@ If you have a different setup, your mileage with the following instructions may 
    In your terminal on the VM, you can now issue the command `git clone THE_TEXT_YOU_JUST_COPIED`.
    Make sure to replace 'THE_TEXT_YOU_JUST_COPIED' with the "Clone with SSH" text.
 
-3. In your VM, move into the repository directory and then run `install.sh`.
+3. In your VM, move into the repository directory and then run `./install.sh`.
    This will install a bunch of things, set up an important file called `.flashenv`, and creates a simple PostgreSQL database named `amazon`.
 
 4. If you are running a Google VM, to view the app in your browser, you may need to edit the firewall rules.
