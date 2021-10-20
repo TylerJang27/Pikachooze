@@ -40,7 +40,6 @@ def get_piplup():
     #print(res)
 
 def get_types():
-
     count = 1
     typelist = []
     res = request_to_api(TYPES)
