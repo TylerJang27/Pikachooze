@@ -1,38 +1,44 @@
 from flask_login import UserMixin
 from flask import current_app as app
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import Column, Integer, String, Sequence
+from sqlalchemy import Column, Integer, String, Sequence, DateTime
 from sqlalchemy.orm import relationship
 from app.models.base import Base, login
+import datetime
 
 
 class User(Base, UserMixin):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key = True) #Sequence('user_id_seq'), 
-    email = Column(String)
-    password = Column(String)
-    firstname = Column(String)
-    lastname = Column(String)
+    users_id_seq = Sequence('users_id_seq')
+    uid = Column(Integer, users_id_seq, server_default=users_id_seq.next_value(), primary_key = True)
+    username = Column(String(20), nullable=False)
+    email = Column(String(50), nullable=False)
+    password = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     purchases = relationship("Purchase", back_populates="user")
 
+    trainers = relationship("Trainer", back_populates="added_by")
+
 
     def __repr__(self):
-        return "<User(id='%d', email='%s', firstname='%s', lastname='%s')>" % (
-                             self.id, self.email, self.firstname, self.lastname)
+        return "<User(uid='%d', username='%s', email='%s')>" % (
+                             self.uid, self.username, self.email)
 
-    def __init__(self, id, email, firstname, lastname):
-        self.id = id
+    def __init__(self, uid, email, username):
+        self.uid = uid
         self.email = email
-        self.firstname = firstname
-        self.lastname = lastname
+        self.username = username
+
+    def get_id(self):
+        return (self.uid)
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname
-FROM Users
+SELECT password, uid, username, email
+FROM users
 WHERE email = :email
 """,
                               email=email)
@@ -48,37 +54,38 @@ WHERE email = :email
     def email_exists(email):
         rows = app.db.execute("""
 SELECT email
-FROM Users
+FROM users
 WHERE email = :email
 """,
                               email=email)
         return len(rows) > 0
 
     @staticmethod
-    def register(email, password, firstname, lastname):
+    def register(email, password, username):
         try:
             rows = app.db.execute("""
-INSERT INTO Users(email, password, firstname, lastname)
-VALUES(:email, :password, :firstname, :lastname)
-RETURNING id
+INSERT INTO Users(email, password, username)
+VALUES(:email, :password, :username)
+RETURNING uid
 """,
                                   email=email,
                                   password=generate_password_hash(password),
-                                  firstname=firstname,
-                                  lastname=lastname)
-            id = rows[0][0]
-            return User.get(id)
-        except Exception:
+                                  username=username)
+            uid = rows[0][0]
+            return User.get(uid)
+        except Exception as e:
+
+            print("Unknown error during registration", str(e))
             # likely email already in use; better error checking and
             # reporting needed
             return None
 
     @staticmethod
     @login.user_loader
-    def get(id):
+    def get(uid):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname
-FROM Users
-WHERE id = :id
-""", id=id)
+SELECT uid, email, username
+FROM users
+WHERE uid = :uid
+""", uid=uid)
         return User(*(rows[0])) if rows else None

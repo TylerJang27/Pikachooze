@@ -2,8 +2,6 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 from app.models.base import Base
-from os import getcwd, path
-import subprocess
 
 
 class DB:
@@ -15,7 +13,7 @@ class DB:
         self.Session = sessionmaker(bind=self.engine)
         Session = self.Session()
         Session.commit()
-        
+
                 
         # attempt at direct read--has since been extracted up a level to __init__ for create and load
         # file = open(app.config['SQL_LOAD_PATH'])
