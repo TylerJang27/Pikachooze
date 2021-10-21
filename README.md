@@ -43,3 +43,6 @@ Created by [Rickard Stureborg](http://www.rickard.stureborg.com) and [Yihao Hu](
 # Useful Tips
 
 You can randomly generate passwords with this tool: https://www.lastpass.com/password-generator
+
+## Fixes and tips
+If weird things happen, run 'dropdb pikachooze' and then 'flask run'. If you want to run sql queries, use 'psql pikachooze'. If you can't run 'source env/bin/activate', try upgrading pip and running 'pip install virtualenv'.
