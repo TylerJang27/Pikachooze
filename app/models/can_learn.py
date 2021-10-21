@@ -10,7 +10,7 @@ class CanLearn(Base):
     poke_id = Column(Integer, ForeignKey('pokemon.poke_id'), primary_key = True)
     move_id = Column(Integer, ForeignKey('move.move_id'), primary_key = True)
 
-    pokemon = relationship("Pokmemon", back_populates="learnable_moves")
+    pokemon = relationship("Pokemon", back_populates="learnable_moves")
     move = relationship("Move") # can add pokemon that can learn if necessary
 
     def __repr__(self):

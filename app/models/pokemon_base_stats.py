@@ -15,7 +15,7 @@ class PokemonBaseStats(Base):
     special_defense_stat = Column(Integer, nullable=True)
     #...
 
-    pokemon = relationship("Pokmemon", back_populates="pokemon_base_stats")
+    pokemon = relationship("Pokemon", back_populates="pokemon_base_stats")
 
     def __repr__(self):
         return "<PokemonBaseStats(poke_id='%d', hp='%d', speed='%d')>" % (
