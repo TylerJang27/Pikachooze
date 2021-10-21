@@ -8,12 +8,17 @@ class Move(Base):
 
     move_id = Column(Integer, primary_key = True)
     move_name = Column(String(20), nullable=False)
-    # target = Column(Enum, default=False) #TODO: ADD TARGET ENUM
+    target = Column(String(16), nullable=True)
+    # target = Column(Enum, nullable=False) #TODO: ADD TARGET ENUM
     move_type_id = Column(Integer, ForeignKey('type.type_id'), nullable=False)
-    base_damage = Column(Integer)
-    base_accuracy = Column(Float)
+    power = Column(Integer, nullable=True)
+    accuracy = Column(Integer, nullable=True)
+    crit_rate = Column(Integer, nullable=True)
+    damage_class = Column(String, nullable=True)
+    # damage_class = Column(Enum, nullable=False) #TODO: ADD DAMAGE CLASS ENUM
     turn_takes = Column(Integer, default=1)
-    pp = Column(Integer)
+    priority = Column(Integer, default=0)
+    pp = Column(Integer, nullable=True)
 
     move_type = relationship("Type")
 

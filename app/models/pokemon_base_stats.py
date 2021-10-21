@@ -8,7 +8,11 @@ class PokemonBaseStats(Base):
 
     poke_id = Column(Integer, ForeignKey('pokemon.poke_id'), primary_key = True)
     hp = Column(Integer, nullable=False)
-    speed = Column(Integer, nullable=False)
+    speed = Column(Integer, nullable=True)
+    attack_stat = Column(Integer, nullable=True)
+    special_attack_stat = Column(Integer, nullable=True)
+    defense_stat = Column(Integer, nullable=True)
+    special_defense_stat = Column(Integer, nullable=True)
     #...
 
     pokemon = relationship("Pokmemon", back_populates="pokemon_base_stats")
