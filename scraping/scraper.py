@@ -18,8 +18,11 @@ SPECIES_LIST_EXT = "pokemon-species"
 POKEMON_EXT = "pokemon/{:}"
 MOVES = "moves"
 TYPES = "type"
+POKEDEX = "pokedex/{:}"
 GENERATION = "generation/{:}"
 type_dict = {}
+all_moves = set()
+pokemon_list = []
 # %% Global Variables
 move_list = [] #could be a map, or use enumerate when you need to, in order to preserve foreign keys
 
@@ -92,6 +95,41 @@ def get_games():
     print(version_game)
 
     
+def get_pokemon():
+    res = request_to_api(POKEDEX.format("6"))
+    for pokemon in res["pokemon_entries"]:
+        name = pokemon["pokemon_species"]["name"]
+        pand = pokemon["pokemon_species"]["url"]
+        ext = pand.split("https://pokeapi.co/api/v2/pokemon-species/")
+        num = ext[1]
+        res = request_to_api(POKEMON_EXT.format(num))
+        expand = res
+        uid = expand["id"]
+
+        for items in expand["moves"]:
+            for vers in items["version_group_details"]:
+                if vers["version_group"]["name"] == "diamond-pearl" or "platinium":
+                    all_moves.add(items["move"]["name"])
+        if len(expand["types"]) == 1:
+            typelist1 = []
+            for type in expand["types"]:
+                typelist1.append(type["type"]["name"])
+            type1 = typelist1[0]
+            type2 = ""
+        else:
+            typelist = []
+            for type in expand["types"]:
+                typelist.append(type["type"]["name"])
+            type1 = typelist[0]
+            type2 = typelist[1]
+        pokemon_list.append([uid, name, 4, type1, type2, "pic"])
+    #print(pokemon_list)
+    print(all_moves)
+        
+        
+        
+
+
 
 
     
@@ -108,3 +146,4 @@ if __name__ == "__main__":
     #get_types()
     #get_generation()
     get_games()
+    get_pokemon()
