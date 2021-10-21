@@ -8,3 +8,6 @@ class Config(object):
                 os.environ.get('DB_PASSWORD'),
                 os.environ.get('DB_NAME'))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQL_LOAD_PATH = 'db/load.sh'
+    SQL_CREATE_PATH = 'db/create.sh'
+    SQL_CREATED = False
