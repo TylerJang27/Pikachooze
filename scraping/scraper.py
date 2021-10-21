@@ -6,6 +6,7 @@ Created on Tue Oct 12 01:50:35 2021
 @author: Pikachooze
 """
 import requests
+import numpy as np
 import pandas as pd
 
 # Database reference, only missing the Move-Pokemon connecting table (assume just a (poke_id, move_id)) relation.
@@ -17,6 +18,7 @@ SPECIES_LIST_EXT = "pokemon-species"
 POKEMON_EXT = "pokemon/{:}"
 MOVES = "moves"
 TYPES = "type"
+GENERATION = "generation/{:}"
 type_dict = {}
 # %% Global Variables
 move_list = [] #could be a map, or use enumerate when you need to, in order to preserve foreign keys
@@ -56,6 +58,46 @@ def get_types():
     print(df_type)
     
 
+    #print(type_dict)
+   # print(typelist)
+
+    df_type = pd.DataFrame(typelist)
+    df_type = df_type.to_csv('db/data/Types.csv', index = False, header = False)
+    #print(df_type)
+
+def get_generation():
+    generation_list = [[4]]
+    df_generation = pd.DataFrame(generation_list)
+    df_generation = df_generation.to_csv('db/data/Generations.csv', index = False, header = False)
+
+    
+def get_games():   
+    res = request_to_api(GENERATION.format("4"))
+    game_list =[]
+    version_group_list = []
+    version_game = []
+    for version_group in res["version_groups"][:-1]:
+        vg = version_group["url"]
+        ext = vg.split("https://pokeapi.co/api/v2/")
+        version_group_list.append(ext[1])
+    count = 1
+    for version in version_group_list:
+        res = request_to_api(version)
+        for game in res["versions"]:
+            game_name = game["name"]
+            version_game.append([count,game_name,4])
+            count +=1
+    df_games = pd.DataFrame(version_game)
+    df_games = df_games.to_csv('db/data/Games.csv', index = False, header = False)
+    print(version_game)
+
+    
+
+
+    
+
+
+
 # %% Scraping Methods
 
 
@@ -63,3 +105,6 @@ def get_types():
 # %% Main
 if __name__ == "__main__":
     get_types()
+    #get_types()
+    #get_generation()
+    get_games()

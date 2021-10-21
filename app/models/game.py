@@ -7,8 +7,8 @@ class Game(Base):
     __tablename__ = 'game'
 
     game_id = Column(Integer, primary_key = True)
-    game_name = Column(String(16), index=True, unique=True)
-    generation_id = Column(Integer, ForeignKey('generation.generation'), default=4)
+    game_name = Column(String(16), index=True, unique=True, nullable=False)
+    generation_id = Column(Integer, ForeignKey('generation.generation'), default=4, nullable=False)
 
     generation = relationship("Generation", back_populates="games")
     locations = relationship("Location", back_populates="game")
