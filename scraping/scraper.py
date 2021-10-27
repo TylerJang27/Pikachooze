@@ -8,12 +8,14 @@ Created on Tue Oct 12 01:50:35 2021
 import requests
 import numpy as np
 import pandas as pd
+import time
 
 # Database reference, only missing the Move-Pokemon connecting table (assume just a (poke_id, move_id)) relation.
 # https://dbdiagram.io/d/6158de67825b5b01461dfd3f
 
 # %% Constants
 POKEAPI_HOSTNAME = "https://pokeapi.co/api/v2/"
+POKEIMAGES_URL = "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/{:}"
 SPECIES_LIST_EXT = "pokemon-species"
 POKEMON_EXT = "pokemon/{:}"
 MOVES = "moves"
@@ -52,12 +54,9 @@ def get_types():
         type_dict[type["name"]] = count
         typelist.append([count, type["name"]])
         count += 1
-    #print(type_dict)
-   # print(typelist)
-
     df_type = pd.DataFrame(typelist)
     df_type = df_type.to_csv('db/data/Types.csv', index = False, header = False)
-    #print(df_type)
+   # print(df_type)
 
 def get_generation():
     generation_list = [[4]]
@@ -83,57 +82,54 @@ def get_games():
             count +=1
     df_games = pd.DataFrame(version_game)
     df_games = df_games.to_csv('db/data/Games.csv', index = False, header = False)
-    print(version_game)
+    #print(version_game)
 
     
 def get_pokemon():
     res = request_to_api(POKEDEX.format("6"))
     for pokemon in res["pokemon_entries"]:
+        time.sleep(0.25)
         name = pokemon["pokemon_species"]["name"]
+        name = name.replace("-", " ")
+        name = name.title()
         pand = pokemon["pokemon_species"]["url"]
         ext = pand.split("https://pokeapi.co/api/v2/pokemon-species/")
         num = ext[1]
         res = request_to_api(POKEMON_EXT.format(num))
         expand = res
         uid = expand["id"]
-
+        if len(str(uid)) == 1:
+            pic = POKEIMAGES_URL.format("00" + str(uid)+".png")
+        elif len(str(uid))==2:
+             pic = POKEIMAGES_URL.format("0"+ str(uid)+".png")
+        else:
+             pic = POKEIMAGES_URL.format(str(uid)+".png")
         for items in expand["moves"]:
             for vers in items["version_group_details"]:
                 if vers["version_group"]["name"] == "diamond-pearl" or "platinium":
                     all_moves.add(items["move"]["name"])
         if len(expand["types"]) == 1:
-            typelist1 = []
-            for type in expand["types"]:
-                typelist1.append(type["type"]["name"])
-            type1 = typelist1[0]
+            type = expand["types"]
+            type1 =type[0]["type"]["name"]
+            type1 = type_dict.get(type1)
             type2 = ""
         else:
-            typelist = []
-            for type in expand["types"]:
-                typelist.append(type["type"]["name"])
-            type1 = typelist[0]
-            type2 = typelist[1]
-        pokemon_list.append([uid, name, 4, type1, type2, "pic"])
-    #print(pokemon_list)
-    print(all_moves)
+           type = expand["types"]
+           type1 =type[0]["type"]["name"]
+           type1 = type_dict.get(type1)
+           type2 =type[1]["type"]["name"]
+           type2 = type_dict.get(type2)
+        pokemon_list.append([uid, name, 4, type1, type2, pic])
+    df_pokemon = pd.DataFrame(pokemon_list)
+    df_pokemon = df_pokemon.to_csv('db/data/Pokemon.csv', index = False, header = False)
+    print(pokemon_list)
+    #print(all_moves)
         
-        
-        
-
-
-
-
-    
-
-
 
 # %% Scraping Methods
-
-
-
 # %% Main
 if __name__ == "__main__":
-    #get_types()
+    get_types()
     #get_generation()
-    get_games()
+    #get_games()
     get_pokemon()

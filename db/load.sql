@@ -4,3 +4,4 @@
 \COPY type FROM 'data/Types.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY generation FROM 'data/Generations.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY game FROM 'data/Games.csv' WITH DELIMITER ',' NULL '' CSV
+\COPY pokemon FROM 'data/Pokemon.csv' WITH DELIMITER ',' NULL '' CSV
