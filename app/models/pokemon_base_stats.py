@@ -4,15 +4,15 @@ from app.models.base import Base
 
 
 class PokemonBaseStats(Base):
-    __tablename__ = 'pokemonbasestats'
+    __tablename__ = 'pokemon_base_stats'
 
     poke_id = Column(Integer, ForeignKey('pokemon.poke_id'), primary_key = True)
     hp = Column(Integer, nullable=False)
-    speed = Column(Integer, nullable=True)
     attack_stat = Column(Integer, nullable=True)
-    special_attack_stat = Column(Integer, nullable=True)
     defense_stat = Column(Integer, nullable=True)
+    special_attack_stat = Column(Integer, nullable=True)
     special_defense_stat = Column(Integer, nullable=True)
+    speed = Column(Integer, nullable=True)
     #...
 
     pokemon = relationship("Pokemon", back_populates="pokemon_base_stats")
