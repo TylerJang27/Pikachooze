@@ -7,8 +7,9 @@ from app.models.base import Base
 class TrainerPokemon(Base):
     __tablename__ = 'trainer_pokemon'
 
-    trainer_id = Column(Integer, ForeignKey('trainer.trainer_id'), primary_key = True)
-    poke_id = Column(Integer, ForeignKey('pokemon.poke_id'), primary_key = True)
+    tp_id = Column(Integer, primary_key = True)
+    trainer_id = Column(Integer, ForeignKey('trainer.trainer_id')) # TODO: ADD INDEXES
+    poke_id = Column(Integer, ForeignKey('pokemon.poke_id'))
     nickname = Column(String(25))
     gender = Column(Integer, default=0) # TODO: MAKE ENUM
     level = Column(Integer, default=50)
