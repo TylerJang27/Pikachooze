@@ -19,7 +19,7 @@ class Trainer(Base):
 
     game = relationship("Game") # no back populates unless strictly necessary
     generation = relationship("Generation")
-    location = relationship("Location", back_populates="trainers")
+    location = relationship("Location")
     added_by = relationship("User", back_populates="trainers")
     trainer_pokemon = relationship("TrainerPokemon", back_populates="trainer")
 
