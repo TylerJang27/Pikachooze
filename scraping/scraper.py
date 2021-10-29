@@ -22,6 +22,7 @@ MOVES = "move/{:}"
 TYPES = "type"
 POKEDEX = "pokedex/{:}"
 GENERATION = "generation/{:}"
+TRAINER_HOSTNAME = "https://bulbapedia.bulbagarden.net/w/index.php?title="
 type_dict = {}
 all_moves = set()
 pokemon_list = []
@@ -30,6 +31,7 @@ can_learn = []
 pokemon_list = []
 pokemon_stats = []
 version_game = []
+trainers = ["Roark", "Gardenia", "Maylene", "Crasher Wake", "Fantina", "Byron", "Candice", "Volkner", "Aaron", "Bertha", "Flint", "Lucian", "Cynthia"]
 # %% Global Variables
 move_list = [] #could be a map, or use enumerate when you need to, in order to preserve foreign keys
 
@@ -43,6 +45,13 @@ def request_to_api(extension):
         return response.json()
     else:
         print("ERROR: STATUS CODE: {:}".format(response.status_code))
+
+def html_request_to_api(trainer_name):
+    return requests.get(TRAINER_HOSTNAME + trainer_name + "&action=edit")
+    # if response1.status_code == 200:
+    #     return response1.json()
+    # else:
+    #     print("ERROR: STATUS CODE: {:}".format(response1.status_code))
 
 def get_types():
 
@@ -184,6 +193,18 @@ def get_moves():
     df_moves = df_moves.convert_dtypes()
     df_moves = df_moves.to_csv('db/data/Moves.csv', index = False, header = False)
 
+from bs4 import BeautifulSoup
+
+def get_trainers():
+    for trainer in trainers:
+        page = html_request_to_api(trainer)
+        soup = BeautifulSoup(page.content, "html.parser")
+        print(soup.head.title)
+
+
+
+
+
 
 # %% Scraping Methods
 # %% Main
@@ -191,9 +212,10 @@ if __name__ == "__main__":
     get_types()
     #get_types()
     #get_generation()
-    get_games()
-    get_pokemon()
+    #get_games()
+    #get_pokemon()
     #get_generation()
     #get_games()
-    get_pokemon()
-    get_moves()
+    #get_pokemon()
+    #get_moves()
+    get_trainers()
