@@ -1,6 +1,16 @@
 from flask_login import UserMixin
 from flask import current_app as app
+from app.utils import send_new_pass
 from werkzeug.security import generate_password_hash, check_password_hash
+import random
+import string
+
+# https://pynative.com/python-generate-random-string/#h-steps-to-create-a-random-string
+def get_random_string(length=12):
+    options = string.ascii_lowercase + string.digits
+    result_str = ''.join(random.choice(options) for i in range(length))
+    print("Random string of length", length, "is:", result_str)
+    return result_str
 
 from .. import login
 
@@ -52,10 +62,33 @@ RETURNING id
                                   lastname=lastname)
             id = rows[0][0]
             return User.get(id)
-        except Exception:
+        except Exception as e:
+            print(e)
             # likely email already in use; better error checking and
             # reporting needed
             return None
+
+    @staticmethod
+    def forgot(email):
+        new_random = get_random_string()
+        
+        # TODO: UPDATE TABLE NAME TO USERS LOWERCASE
+        rows = app.db.execute("""
+SELECT id, email, firstname, lastname
+FROM Users
+WHERE email = :email
+""",
+                              email=email)
+        if rows: # TODO: UPDATE TABLE NAME TO USERS LOWERCASE
+            id = rows[0][0]
+            app.db.execute_no_return("""
+UPDATE Users
+SET password=:password
+WHERE email = :email
+""",
+                              email=email, password=generate_password_hash(new_random))
+            send_new_pass(email, new_random)
+            return rows.get(id)
 
     @staticmethod
     @login.user_loader
