@@ -2,6 +2,9 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from app.models.base import Base
 
+class GenderClass(enum.Enum):
+    male = 1
+    female = 2
 
 # TODO: CAN EXTRACT INTO THE ASSOCIATION TABLE, SEE DOCS
 class TrainerPokemon(Base):
@@ -11,7 +14,7 @@ class TrainerPokemon(Base):
     trainer_id = Column(Integer, ForeignKey('trainer.trainer_id')) # TODO: ADD INDEXES
     poke_id = Column(Integer, ForeignKey('pokemon.poke_id'))
     nickname = Column(String(25))
-    gender = Column(Integer, default=0) # TODO: MAKE ENUM
+    gender = Column(Enum(GenderClass), default=0) # TODO: MAKE ENUM
     level = Column(Integer, default=50)
     inParty = Column(Boolean, default=False)
     move1_id = Column(Integer, ForeignKey('move.move_id'), nullable=True)

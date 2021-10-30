@@ -8,8 +8,10 @@ Created on Tue Oct 12 01:50:35 2021
 import requests
 import numpy as np
 import pandas as pd
-import time
+import re
 
+
+from bs4 import BeautifulSoup
 # Database reference, only missing the Move-Pokemon connecting table (assume just a (poke_id, move_id)) relation.
 # https://dbdiagram.io/d/6158de67825b5b01461dfd3f
 
@@ -22,18 +24,18 @@ MOVES = "move/{:}"
 TYPES = "type"
 POKEDEX = "pokedex/{:}"
 GENERATION = "generation/{:}"
-TRAINER_HOSTNAME = "https://bulbapedia.bulbagarden.net/w/index.php?title="
+TRAINER_HOSTNAME = "https://bulbapedia.bulbagarden.net/w/index.php?title={:}&action=edit"
 type_dict = {}
 all_moves = set()
 pokemon_list = []
 moves = {}
+movename_to_id = {}
 can_learn = []
 pokemon_list = []
 pokemon_stats = []
 version_game = []
-trainers = ["Roark", "Gardenia", "Maylene", "Crasher Wake", "Fantina", "Byron", "Candice", "Volkner", "Aaron", "Bertha", "Flint", "Lucian", "Cynthia"]
-# %% Global Variables
-move_list = [] #could be a map, or use enumerate when you need to, in order to preserve foreign keys
+diamond_pearl_gym_leaders = ["Roark", "Gardenia", "Maylene", "Crasher Wake", "Fantina", "Byron", "Candice", "Volkner"]
+diamond_pearl_elite4 = ["Aaron", "Bertha", "Flint", "Lucian", "Cynthia"]
 
 # %% Helper Methods
 def get_limit_and_offset(limit, offset):
@@ -47,14 +49,13 @@ def request_to_api(extension):
         print("ERROR: STATUS CODE: {:}".format(response.status_code))
 
 def html_request_to_api(trainer_name):
-    return requests.get(TRAINER_HOSTNAME + trainer_name + "&action=edit")
-    # if response1.status_code == 200:
-    #     return response1.json()
-    # else:
-    #     print("ERROR: STATUS CODE: {:}".format(response1.status_code))
+    response = requests.get(TRAINER_HOSTNAME.format(trainer_name))
+    if response.status_code == 200:
+        return response
+    else:
+        print("ERROR: STATUS CODE: {:}".format(response.status_code))
 
 def get_types():
-
     count = 1
     typelist = []
     res = request_to_api(TYPES)
@@ -181,6 +182,7 @@ def fill_moves(move_id):
     crit_rate = res["meta"]["crit_rate"]
     damage_class = res["damage_class"]["name"]
     target = res["target"]["name"].replace("-", "_")
+    movename_to_id[move_name] = move_id
     moves[move_id] = [move_name,target, mtype, power, acc, crit_rate, damage_class, min_hits, max_hits, priority,pp]
     #print(moves[move_id])
 
@@ -193,15 +195,44 @@ def get_moves():
     df_moves = df_moves.convert_dtypes()
     df_moves = df_moves.to_csv('db/data/Moves.csv', index = False, header = False)
 
-from bs4 import BeautifulSoup
+def get_csv():
+    df = pd.read_csv("db/data/Types.csv", header=None)
+    for ind in df.index:
+        id = df.iloc[ind,0]
+        name = df.iloc[ind,1]
+        type_dict[name] = id
+    print(type_dict)
 
-def get_trainers():
-    for trainer in trainers:
-        page = html_request_to_api(trainer)
+    
+def get_diamond_pearl_gym_leaders():
+    pokemon = []
+    for leader in diamond_pearl_gym_leaders:
+        page = html_request_to_api(leader)
         soup = BeautifulSoup(page.content, "html.parser")
-        print(soup.head.title)
+        text = soup.find("textarea", {"id": "wpTextbox1"})
+        pokemon_data = text.string.split("===Pokémon===")[1].split("===={{game|")[1].split("{{Pokémon/4") # TODO: add loop to get platinum as well
+        # TODO: ADD LOOP SOMWHERE TO GET BEFORE/AFTER IF APPLICABLE
+        
+        unnecessary_counter = 0
+        for pokemon_section in pokemon_data[1:]:
+            unnecessary_counter += 1
+            print(unnecessary_counter)
+            poke_name_regex = re.compile("\|pokemon.*\n")
+            my_name = poke_name_regex.findall(pokemon_section)
+            print(my_name)
 
+            move_regex = re.compile("\|move[0-9]=[\w\s]+\|") #replace "\|" with "\n" and you can get the whole line
+            my_moves = move_regex.findall(pokemon_section)
+            for move in my_moves:
+                move_name = move.replace("|","").strip().split("=")[1]
+                move_id = movename_to_id[move_name]
+                print(move_name, move_id)
 
+            # ind = pokemon.split("\n")
+            # ind = ind
+            # for trait in ind:
+                # print(trait)
+        break
 
 
 
@@ -209,7 +240,6 @@ def get_trainers():
 # %% Scraping Methods
 # %% Main
 if __name__ == "__main__":
-    get_types()
     #get_types()
     #get_generation()
     #get_games()
@@ -218,4 +248,5 @@ if __name__ == "__main__":
     #get_games()
     #get_pokemon()
     #get_moves()
-    get_trainers()
+    #get_diamond_pearl_gym_leaders()
+    get_csv()
