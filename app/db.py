@@ -21,3 +21,7 @@ class DB:
         calling this function."""
         with self.engine.connect() as conn:
             return list(conn.execute(text(sqlstr), kwargs).fetchall())
+
+    def execute_no_return(self, sqlstr, **kwargs):
+        with self.engine.connect() as conn:
+            conn.execute(text(sqlstr), kwargs)
