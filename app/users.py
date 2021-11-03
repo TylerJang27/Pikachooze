@@ -6,7 +6,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from flask_babel import _, lazy_gettext as _l
 
-from .models.user import User
+from app.models.user import User
 
 
 from flask import Blueprint
@@ -40,8 +40,7 @@ def login():
 
 
 class RegistrationForm(FlaskForm):
-    firstname = StringField(_l('First Name'), validators=[DataRequired()])
-    lastname = StringField(_l('Last Name'), validators=[DataRequired()])
+    username = StringField(_l('Username'), validators=[DataRequired()])
     email = StringField(_l('Email'), validators=[DataRequired(), Email()])
     password = PasswordField(_l('Password'), validators=[DataRequired()])
     password2 = PasswordField(
@@ -73,8 +72,7 @@ def register():
         print('validated1')
         if User.register(form.email.data,
                          form.password.data,
-                         form.firstname.data,
-                         form.lastname.data):
+                         form.username.data):
             flash('Congratulations, you are now a registered user!')
             print("registered!")
             return redirect(url_for('users.login'))
