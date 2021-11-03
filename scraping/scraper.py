@@ -118,9 +118,10 @@ def get_games():
 def get_games_csv():
     df = pd.read_csv("db/data/Games.csv", header=None)
     for ind in df.index:
+        game_id = df.iloc[ind,0]
         game_name = df.iloc[ind,1]
         generation = df.iloc[ind,2]
-        df_games[game_name] = generation
+        df_games[game_name] = game_id
     print(df_games)
     
 def get_pokemon():
@@ -187,7 +188,7 @@ def get_pokemon_csv():
         type_1 = df.iloc[ind,3]
         type_2 = df.iloc[ind,4]
         pic = df.iloc[ind,5]
-        df_pokemon[id] = [name, generation, type_1, type_2, pic]
+        df_pokemon[name] = [id, generation, type_1, type_2, pic]
     print(df_pokemon)
 
 def get_stats_csv():
@@ -249,18 +250,19 @@ def get_moves():
 def get_moves_csv():
     df = pd.read_csv("db/data/Moves.csv", header=None)
     for ind in df.index:
-        move_name = df.iloc[ind,0]
-        target = df.iloc[ind,1]
-        mtype = df.iloc[ind,2]
-        power = df.iloc[ind,3]
-        acc = df.iloc[ind,4]
-        crit_rate = df.iloc[ind,5]
-        damage_class = df.iloc[ind,6]
-        min_hits = df.iloc[ind,7]
-        max_hits = df.iloc[ind,8]
-        priority = df.iloc[ind,9]
-        pp = df.iloc[ind,10]
-        df_moves[move_name] = [move_name,target, mtype, power, acc, crit_rate, damage_class, min_hits, max_hits, priority,pp]
+        move_id = df.iloc[ind,0]
+        move_name = df.iloc[ind,1]
+        target = df.iloc[ind,2]
+        mtype = df.iloc[ind,3]
+        power = df.iloc[ind,4]
+        acc = df.iloc[ind,5]
+        crit_rate = df.iloc[ind,6]
+        damage_class = df.iloc[ind,7]
+        min_hits = df.iloc[ind,8]
+        max_hits = df.iloc[ind,9]
+        priority = df.iloc[ind,10]
+        pp = df.iloc[ind,11]
+        df_moves[move_name] = [move_id,target, mtype, power, acc, crit_rate, damage_class, min_hits, max_hits, priority,pp]
     print(df_moves)
     
 def get_diamond_pearl_gym_leaders():
