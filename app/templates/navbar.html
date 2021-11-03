@@ -1,14 +1,14 @@
 <header class="header-global">
     <nav id="navbar-main" aria-label="Primary navigation" class="navbar navbar-main navbar-expand-lg navbar-theme-primary headroom navbar-dark">
         <div class="container position-relative">
-            <a class="navbar-brand me-lg-5" href="./index.html">
+            <a class="navbar-brand me-lg-5" href="{{ url_for('index.index') }}">
                 <img class="navbar-brand" src="/static/assets/img/logo.png" alt="Logo">
             </a>
             <div class="navbar-collapse collapse me-auto" id="navbar_global">
                 <div class="navbar-collapse-header">
                     <div class="row">
                         <div class="col-6 collapse-brand">
-                            <a href="./index.html">
+                            <a href="{{ url_for('index.index') }}">
                                 <img src="/static/assets/img/logo.png" alt="Logo">
                             </a>
                         </div>
@@ -19,25 +19,25 @@
                 </div>
                 <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
                     <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" id="frontPagesDropdown" aria-expanded="false" data-bs-toggle="dropdown">
+                        <a href="{{ url_for('index.fight') }}" class="nav-link dropdown-toggle" id="frontPagesDropdown" aria-expanded="false" data-bs-toggle="dropdown">
                             Fight
                             <span class="fas fa-angle-down nav-link-arrow ms-1"></span>
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" id="componentsDropdown" aria-expanded="false" data-bs-toggle="dropdown">
+                        <a href="{{ url_for('index.inventory') }}" class="nav-link dropdown-toggle" id="componentsDropdown" aria-expanded="false" data-bs-toggle="dropdown">
                             Inventory
                             <span class="fas fa-angle-down nav-link-arrow ms-1"></span>
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="supportDropdown" aria-expanded="false">
+                        <a href="{{ url_for('index.leaders') }}" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="supportDropdown" aria-expanded="false">
                             Gym Leaders
                             <span class="fas fa-angle-down nav-link-arrow ms-1"></span>
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="supportDropdown" aria-expanded="false">
+                        <a href="{{ url_for('index.faq') }}" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="supportDropdown" aria-expanded="false">
                             FAQ
                             <span class="fas fa-angle-down nav-link-arrow ms-1"></span>
                         </a>

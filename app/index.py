@@ -26,3 +26,19 @@ def index():
                            purchase_history=purchases)'''
     
     return render_template('index.html')
+
+@bp.route('/faq')
+def faq():
+    return render_template('faq.html')
+
+@bp.route('/fight')
+def fight():
+    return render_template('fight.html')
+
+@bp.route('/inventory')
+def inventory():
+    return render_template('inventory.html')
+
+@bp.route('/leaders')
+def leaders():
+    return render_template('leaders.html')
