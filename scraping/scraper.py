@@ -5,6 +5,7 @@ Created on Tue Oct 12 01:50:35 2021
 
 @author: Pikachooze
 """
+from os import P_PGID
 import requests
 import numpy as np
 import pandas as pd
@@ -12,6 +13,7 @@ import re
 
 
 from bs4 import BeautifulSoup
+from sqlalchemy.sql.sqltypes import MatchType
 # Database reference, only missing the Move-Pokemon connecting table (assume just a (poke_id, move_id)) relation.
 # https://dbdiagram.io/d/6158de67825b5b01461dfd3f
 
@@ -26,9 +28,15 @@ POKEDEX = "pokedex/{:}"
 GENERATION = "generation/{:}"
 TRAINER_HOSTNAME = "https://bulbapedia.bulbagarden.net/w/index.php?title={:}&action=edit"
 type_dict = {}
+df_games = {}
+df_moves = {}
+df_pokemon = {}
+df_stats = {}
+df_can_learn = {}
 all_moves = set()
 pokemon_list = []
 moves = {}
+move_list = []
 movename_to_id = {}
 can_learn = []
 pokemon_list = []
@@ -69,14 +77,17 @@ def get_types():
     df_type = pd.DataFrame(typelist)
     df_type = df_type.to_csv('db/data/Types.csv', index = False, header = False)
     print(df_type)
-    
 
     #print(type_dict)
    # print(typelist)
 
-    df_type = pd.DataFrame(typelist)
-    df_type = df_type.to_csv('db/data/Types.csv', index = False, header = False)
-   # print(df_type)
+def get_types_csv():
+    df = pd.read_csv("db/data/Types.csv", header=None)
+    for ind in df.index:
+        id = df.iloc[ind,0]
+        name = df.iloc[ind,1]
+        type_dict[name] = id
+    print(type_dict)
 
 def get_generation():
     generation_list = [[4]] #expand to include all gens if needed
@@ -104,6 +115,13 @@ def get_games():
     df_games = df_games.to_csv('db/data/Games.csv', index = False, header = False)
     #print(version_game)
 
+def get_games_csv():
+    df = pd.read_csv("db/data/Games.csv", header=None)
+    for ind in df.index:
+        game_name = df.iloc[ind,1]
+        generation = df.iloc[ind,2]
+        df_games[game_name] = generation
+    print(df_games)
     
 def get_pokemon():
     res = request_to_api(POKEDEX.format("6"))
@@ -111,7 +129,7 @@ def get_pokemon():
         name = pokemon["pokemon_species"]["name"]
     res = request_to_api(POKEDEX.format("6")) #change this, to be the pokedex for multiple generations
     for pokemon in res["pokemon_entries"]:
-        time.sleep(0.25)
+        #time.sleep(0.25)
         name = pokemon["pokemon_species"]["name"]
         name = name.replace("-", " ")
         name = name.title()
@@ -159,9 +177,42 @@ def get_pokemon():
 
     df_can_learn = pd.DataFrame(can_learn)
     df_can_learn = df_can_learn.to_csv('db/data/Learn.csv', index = False, header = False)
+
+def get_pokemon_csv():
+    df = pd.read_csv("db/data/Pokemon.csv", header=None)
+    for ind in df.index:
+        id = df.iloc[ind,0]
+        name = df.iloc[ind,1]
+        generation = df.iloc[ind,2]
+        type_1 = df.iloc[ind,3]
+        type_2 = df.iloc[ind,4]
+        pic = df.iloc[ind,5]
+        df_pokemon[id] = [name, generation, type_1, type_2, pic]
+    print(df_pokemon)
+
+def get_stats_csv():
+    df = pd.read_csv("db/data/Stats.csv", header=None)
+    for ind in df.index:
+        id = df.iloc[ind,0]
+        hp = df.iloc[ind,1]
+        Attack = df.iloc[ind,2]
+        Defense = df.iloc[ind,3]
+        SP_attack = df.iloc[ind,4]
+        SP_defense = df.iloc[ind,5]
+        speed = df.iloc[ind,6]
+        df_stats[id] = [hp, Attack, Defense, SP_attack, SP_defense, speed]
+    print(df_stats)
+    
+def get_learn_csv():
+    df = pd.read_csv("db/data/Learn.csv", header=None)
+    for ind in df.index:
+        id = df.iloc[ind,0]
+        move_id = df.iloc[ind,1]
+        df_can_learn[id] = [move_id]
+    print(df_can_learn)
         
 def fill_moves(move_id):
-    time.sleep(0.25)
+    #time.sleep(0.25)
     res = request_to_api(MOVES.format(move_id))
     acc = res["accuracy"]
     if not acc is None:
@@ -195,14 +246,22 @@ def get_moves():
     df_moves = df_moves.convert_dtypes()
     df_moves = df_moves.to_csv('db/data/Moves.csv', index = False, header = False)
 
-def get_csv():
-    df = pd.read_csv("db/data/Types.csv", header=None)
+def get_moves_csv():
+    df = pd.read_csv("db/data/Moves.csv", header=None)
     for ind in df.index:
-        id = df.iloc[ind,0]
-        name = df.iloc[ind,1]
-        type_dict[name] = id
-    print(type_dict)
-
+        move_name = df.iloc[ind,0]
+        target = df.iloc[ind,1]
+        mtype = df.iloc[ind,2]
+        power = df.iloc[ind,3]
+        acc = df.iloc[ind,4]
+        crit_rate = df.iloc[ind,5]
+        damage_class = df.iloc[ind,6]
+        min_hits = df.iloc[ind,7]
+        max_hits = df.iloc[ind,8]
+        priority = df.iloc[ind,9]
+        pp = df.iloc[ind,10]
+        df_moves[move_name] = [move_name,target, mtype, power, acc, crit_rate, damage_class, min_hits, max_hits, priority,pp]
+    print(df_moves)
     
 def get_diamond_pearl_gym_leaders():
     pokemon = []
@@ -246,7 +305,11 @@ if __name__ == "__main__":
     #get_pokemon()
     #get_generation()
     #get_games()
-    #get_pokemon()
     #get_moves()
     #get_diamond_pearl_gym_leaders()
-    get_csv()
+    get_games_csv()
+    get_pokemon_csv()
+    get_stats_csv()
+    get_learn_csv()
+    get_moves_csv()
+    get_types_csv()
