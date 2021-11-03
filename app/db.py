@@ -1,11 +1,29 @@
 from sqlalchemy import create_engine, text
+from sqlalchemy.orm import sessionmaker
+
+from app.models.base import Base
 
 
 class DB:
     """Hosts all functions for querying the database."""
     def __init__(self, app):
-        self.engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+        self.engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], echo=True)
+        print("Creating all tables")
+        Base.metadata.create_all(self.engine, checkfirst=True)
+        self.Session = sessionmaker(bind=self.engine)
+        Session = self.Session()
+        Session.commit()
 
+                
+        # attempt at direct read--has since been extracted up a level to __init__ for create and load
+        # file = open(app.config['SQL_LOAD_PATH'])
+        # abspath = getcwd()
+        # escaped_sql = text(file.read().replace("$PATH$", abspath))
+        # with self.engine.connect() as conn:
+        #     conn.execute(escaped_sql)
+
+
+    # TODO: ATTEMPT TO DEPRECATE THESE METHODS IN FAVOR OF SESSION BEHAVIOR
     def connect(self):
         return self.engine.connect()
 

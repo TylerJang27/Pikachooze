@@ -1,6 +1,22 @@
-from flask import current_app as app
+from sqlalchemy import Column, Integer, Float, String, Boolean, Sequence
+from sqlalchemy.orm import relationship
+from app.models.base import Base
 
-class Product:
+
+class Product(Base):
+    __tablename__ = 'products'
+
+    id = Column(Integer, primary_key = True) #Sequence('product_id_seq'),  
+    name = Column(String)
+    price = Column(Float)
+    available = Column(Boolean)
+
+    purchases = relationship("Purchase", back_populates="product")
+
+    def __repr__(self):
+        return "<Product(id='%d', name='%s', pid='%f', available='%b')>" % (
+                             self.id, self.name, self.price, self.available)
+"""
     def __init__(self, id, name, price, available):
         self.id = id
         self.name = name
@@ -26,3 +42,4 @@ WHERE available = :available
 ''',
                               available=available)
         return [Product(*row) for row in rows]
+"""

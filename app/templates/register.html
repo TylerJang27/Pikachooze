@@ -12,16 +12,9 @@
   {{ form.hidden_tag() }}
   <!-- I added some features here that should be on dev. Make sure to update to include username/email/password/confirmpassword -->
   <p>
-    {{ form.firstname.label }}<br/>
-    {{ form.firstname(size=32) }}<br/>
-    {% for error in form.firstname.errors %}
-    <span style="color: red;">[{{ error }}]</span>
-    {% endfor %}
-  </p>
-  <p>
-    {{ form.lastname.label }}<br/>
-    {{ form.lastname(size=32) }}<br/>
-    {% for error in form.lastname.errors %}
+    {{ form.username.label }}<br/>
+    {{ form.username(size=32) }}<br/>
+    {% for error in form.username.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
