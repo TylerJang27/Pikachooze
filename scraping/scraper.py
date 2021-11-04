@@ -42,8 +42,13 @@ can_learn = []
 pokemon_list = []
 pokemon_stats = []
 version_game = []
-diamond_pearl_gym_leaders = ["Roark", "Gardenia", "Maylene", "Crasher Wake", "Fantina", "Byron", "Candice", "Volkner"]
+locations = {}
+trainer_list = []
+trainer_pokemon_list = []
+#diamond_pearl_gym_leaders = ["Roark", "Gardenia", "Maylene", "Crasher Wake", "Fantina", "Byron", "Candice", "Volkner"]
+diamond_pearl_gym_leaders = ["Cynthia"]
 diamond_pearl_elite4 = ["Aaron", "Bertha", "Flint", "Lucian", "Cynthia"]
+gym_leader_url = "https://cdn2.bulbagarden.net/upload/2/2f/{:}"
 
 # %% Helper Methods
 def get_limit_and_offset(limit, offset):
@@ -87,7 +92,7 @@ def get_types_csv():
         id = df.iloc[ind,0]
         name = df.iloc[ind,1]
         type_dict[name] = id
-    print(type_dict)
+    #print(type_dict)
 
 def get_generation():
     generation_list = [[4]] #expand to include all gens if needed
@@ -122,7 +127,7 @@ def get_games_csv():
         game_name = df.iloc[ind,1]
         generation = df.iloc[ind,2]
         df_games[game_name] = game_id
-    print(df_games)
+    #print(df_games)
     
 def get_pokemon():
     res = request_to_api(POKEDEX.format("6"))
@@ -189,7 +194,7 @@ def get_pokemon_csv():
         type_2 = df.iloc[ind,4]
         pic = df.iloc[ind,5]
         df_pokemon[name] = [id, generation, type_1, type_2, pic]
-    print(df_pokemon)
+    #print(df_pokemon)
 
 def get_stats_csv():
     df = pd.read_csv("db/data/Stats.csv", header=None)
@@ -202,7 +207,7 @@ def get_stats_csv():
         SP_defense = df.iloc[ind,5]
         speed = df.iloc[ind,6]
         df_stats[id] = [hp, Attack, Defense, SP_attack, SP_defense, speed]
-    print(df_stats)
+    #print(df_stats)
     
 def get_learn_csv():
     df = pd.read_csv("db/data/Learn.csv", header=None)
@@ -210,7 +215,7 @@ def get_learn_csv():
         id = df.iloc[ind,0]
         move_id = df.iloc[ind,1]
         df_can_learn[id] = [move_id]
-    print(df_can_learn)
+    #print(df_can_learn)
         
 def fill_moves(move_id):
     #time.sleep(0.25)
@@ -263,7 +268,7 @@ def get_moves_csv():
         priority = df.iloc[ind,10]
         pp = df.iloc[ind,11]
         df_moves[move_name] = [move_id,target, mtype, power, acc, crit_rate, damage_class, min_hits, max_hits, priority,pp]
-    print(df_moves)
+    #print(df_moves)
     
 def get_diamond_pearl_gym_leaders():
     pokemon = []
@@ -273,15 +278,79 @@ def get_diamond_pearl_gym_leaders():
         text = soup.find("textarea", {"id": "wpTextbox1"})
         pokemon_data = text.string.split("===Pokémon===")[1].split("===={{game|")[1].split("{{Pokémon/4") # TODO: add loop to get platinum as well
         # TODO: ADD LOOP SOMWHERE TO GET BEFORE/AFTER IF APPLICABLE
-        
+
+        trainer_section = pokemon_data[0]
+        poke_trainer_name_regex = re.compile("\|name.*\n")
+        poke_trainer_name = poke_trainer_name_regex.findall(trainer_section)
+        poke_trainer_name = poke_trainer_name[0]
+        poke_trainer_name = poke_trainer_name.split("=")[1]
+        poke_trainer_name = poke_trainer_name.strip()
+        print(poke_trainer_name)
+
+        poke_sprite = re.compile("\|sprite.*\n")
+        pic_url = poke_sprite.findall(trainer_section)
+        pic_url = pic_url[0]
+        pic_url = pic_url.split("=")[1]
+        pic_url = pic_url.strip()
+        pic_url = pic_url.replace(" ", "_")
+        pic_url = gym_leader_url.format(pic_url)
+        print(pic_url)
+
+        game_name_regex = re.compile("\|game.*\n")
+        game_name = game_name_regex.findall(trainer_section)
+        game_name = game_name[0]
+        game_name = game_name.split("=")[1]
+        game_name = game_name.strip()
+        print(game_name)
+
+        location_name_regex = re.compile("\|locationname.*\n")
+        location_name = location_name_regex.findall(trainer_section)
+        location_name = location_name[0]
+        location_name = location_name.split("=")[1]
+        location_name = location_name.strip()
+        print(location_name)
+        if location_name not in locations:
+            locations[location_name] = len(locations)
+            #TODO populate locations.csv
+        location_id = locations[location_name]
+        if game_name == "DP":
+            game_ids = [df_games["diamond"],df_games["pearl"]]
+        else:
+            game_ids = [df_games["platinum"]]
+        trainer_ids = []
+        for game_id in game_ids:
+            generation_id = 4
+            trainer_id = len(trainer_list)
+            trainer_ids.append(trainer_id)
+            trainer_list.append([trainer_id,False,poke_trainer_name, pic_url,game_id,generation_id,location_id,None])
+        print(trainer_list)
         unnecessary_counter = 0
         for pokemon_section in pokemon_data[1:]:
             unnecessary_counter += 1
-            print(unnecessary_counter)
+            print("counter",unnecessary_counter)
             poke_name_regex = re.compile("\|pokemon.*\n")
             poke_name = poke_name_regex.findall(pokemon_section)
-            poke_id = df_pokemon[poke_name]
+            poke_name = poke_name[0]
+            poke_name = poke_name.split("=")[1]
+            poke_name = poke_name.strip()
+            poke_id = df_pokemon[poke_name][0]
             print(poke_name, poke_id)
+            
+            poke_level_regex = re.compile("\|level.*[\|\n]")
+            poke_level = poke_level_regex.findall(pokemon_section)
+            poke_level = poke_level[0]
+            poke_level = poke_level.split("=")[1]
+            poke_level = poke_level.split("|")[0]
+            poke_level = poke_level.strip()
+            poke_level = int(poke_level)
+            print(poke_level)
+
+            poke_gender_regex = re.compile("\|gender.*[\|\n]")
+            poke_gender = poke_gender_regex.findall(pokemon_section)
+            poke_gender = poke_gender[0]
+            poke_gender = poke_gender.split("=")[1]
+            poke_gender = poke_gender.strip()
+            print(poke_gender)
 
             move_regex = re.compile("\|move[0-9]=[\w\s]+\|") #replace "\|" with "\n" and you can get the whole line
             my_moves_strings = move_regex.findall(pokemon_section)
@@ -289,11 +358,19 @@ def get_diamond_pearl_gym_leaders():
             for move in my_moves_strings:
                 move_name = move.replace("|","").strip().split("=")[1]
                 #move_id = movename_to_id[move_name]
-                move_id = df_moves[move_name]
+                move_id = df_moves[move_name][0]
                 print(move_name, move_id)
                 my_moves_list.append(move_id)
+            my_moves1 = my_moves_list[0] if my_moves_list[0] else None
+            my_moves2 = my_moves_list[1] if my_moves_list[1] else None
+            my_moves3 = my_moves_list[2] if my_moves_list[2] else None
+            my_moves4 = my_moves_list[3] if my_moves_list[3] else None
 
-                """
+            for trainer_id in trainer_ids:
+                trainer_pokemon_list.append([len(trainer_pokemon_list), trainer_id, poke_id, poke_name, poke_gender, poke_level, True, my_moves1,my_moves2,my_moves3,my_moves4])
+        print(trainer_pokemon_list)
+
+        """
     trainer_id = Column(Integer, primary_key = True) # trainer_id_seq, server_default=trainer_id_seq.next_value(), 
     is_user = Column(Boolean)
     name = Column(String(20))
@@ -304,7 +381,7 @@ def get_diamond_pearl_gym_leaders():
     added_by_id = Column(Integer, ForeignKey('users.uid'), nullable=True)
                 """
 
-                """
+        """
     tp_id = Column(Integer, primary_key = True)
     trainer_id = Column(Integer, ForeignKey('trainer.trainer_id')) # TODO: ADD INDEXES
     poke_id = Column(Integer, ForeignKey('pokemon.poke_id'))
