@@ -279,16 +279,45 @@ def get_diamond_pearl_gym_leaders():
             unnecessary_counter += 1
             print(unnecessary_counter)
             poke_name_regex = re.compile("\|pokemon.*\n")
-            my_name = poke_name_regex.findall(pokemon_section)
-            print(my_name)
+            poke_name = poke_name_regex.findall(pokemon_section)
+            poke_id = df_pokemon[poke_name]
+            print(poke_name, poke_id)
 
             move_regex = re.compile("\|move[0-9]=[\w\s]+\|") #replace "\|" with "\n" and you can get the whole line
-            my_moves = move_regex.findall(pokemon_section)
-            for move in my_moves:
+            my_moves_strings = move_regex.findall(pokemon_section)
+            my_moves_list = []
+            for move in my_moves_strings:
                 move_name = move.replace("|","").strip().split("=")[1]
-                move_id = movename_to_id[move_name]
+                #move_id = movename_to_id[move_name]
+                move_id = df_moves[move_name]
                 print(move_name, move_id)
+                my_moves_list.append(move_id)
 
+                """
+    trainer_id = Column(Integer, primary_key = True) # trainer_id_seq, server_default=trainer_id_seq.next_value(), 
+    is_user = Column(Boolean)
+    name = Column(String(20))
+    pic = Column(String)
+    game_id = Column(Integer, ForeignKey('game.game_id'))
+    generation_id = Column(Integer, ForeignKey('generation.generation'), default=4)
+    location_id = Column(Integer, ForeignKey('location.location_id'), nullable=True)
+    added_by_id = Column(Integer, ForeignKey('users.uid'), nullable=True)
+                """
+
+                """
+    tp_id = Column(Integer, primary_key = True)
+    trainer_id = Column(Integer, ForeignKey('trainer.trainer_id')) # TODO: ADD INDEXES
+    poke_id = Column(Integer, ForeignKey('pokemon.poke_id'))
+    nickname = Column(String(25))
+    gender = Column(Enum(GenderClass), default=0) # TODO: MAKE ENUM
+    level = Column(Integer, default=50)
+    inParty = Column(Boolean, default=False)
+    move1_id = Column(Integer, ForeignKey('move.move_id'), nullable=True)
+    move2_id = Column(Integer, ForeignKey('move.move_id'), nullable=True)
+    move3_id = Column(Integer, ForeignKey('move.move_id'), nullable=True)
+    move4_id = Column(Integer, ForeignKey('move.move_id'), nullable=True)
+                """
+            #
             # ind = pokemon.split("\n")
             # ind = ind
             # for trait in ind:
@@ -308,10 +337,10 @@ if __name__ == "__main__":
     #get_generation()
     #get_games()
     #get_moves()
-    #get_diamond_pearl_gym_leaders()
     get_games_csv()
     get_pokemon_csv()
     get_stats_csv()
     get_learn_csv()
     get_moves_csv()
     get_types_csv()
+    get_diamond_pearl_gym_leaders()
