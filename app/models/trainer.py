@@ -10,7 +10,7 @@ class Trainer(Base):
 
     trainer_id = Column(Integer, primary_key = True) # trainer_id_seq, server_default=trainer_id_seq.next_value(), 
     is_user = Column(Boolean)
-    name = Column(String(20))
+    name = Column(String(40))
     pic = Column(String)
     game_id = Column(Integer, ForeignKey('game.game_id'))
     location_id = Column(Integer, ForeignKey('location.location_id'), nullable=True)

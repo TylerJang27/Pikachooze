@@ -377,14 +377,14 @@ def get_gym_leaders():
             except:
                 location_name = extract_field("location", trainer_section)
 
-            if location_name not in locations:
-                locations[location_name] = len(locations)
-                # TODO populate locations.csv
-            location_id = locations[location_name]
+            for game_id in game_ids:
+                if (location_name, game_id) not in locations:
+                    locations[(location_name, game_id)] = len(locations)
             
             # make trainers for each game 
             trainer_ids = []
             for game_id in game_ids:
+                location_id = locations[(location_name, game_id)]
                 trainer_id = len(trainer_list)
                 trainer_ids.append(trainer_id)
                 trainer_list.append([trainer_id, False, poke_trainer_name, pic_url, game_id, location_id, None])
@@ -413,7 +413,7 @@ def get_gym_leaders():
                     poke_level = int(poke_level[0])
 
                 try:
-                    poke_gender = extract_field("gender", pokemon_section, False).lower()
+                    poke_gender = extract_field("gender", pokemon_section, False).split("|")[0].lower()
                 except:
                     poke_gender = None
 
@@ -424,7 +424,7 @@ def get_gym_leaders():
                 for move in my_moves_strings:
                     move_name = sanitize_move(move.replace("|","").strip().split("=")[1])
                     move_id = df_moves[move_name][0]
-                    my_moves_list.append(move_id)
+                    my_moves_list.append(int(move_id))
                 my_moves1 = my_moves_list[0] if len(my_moves_list) > 0 else None
                 my_moves2 = my_moves_list[1] if len(my_moves_list) > 1 else None
                 my_moves3 = my_moves_list[2] if len(my_moves_list) > 2 else None
@@ -432,7 +432,7 @@ def get_gym_leaders():
 
                 # make trainer_pokemon for each pokemon in each encounter with a particular trainer
                 for trainer_id in trainer_ids:
-                    trainer_pokemon_list.append([len(trainer_pokemon_list), trainer_id, poke_id, poke_name, poke_gender, poke_level, True, my_moves1,my_moves2,my_moves3,my_moves4])
+                    trainer_pokemon_list.append([len(trainer_pokemon_list), trainer_id, poke_id, poke_name, poke_gender, poke_level, True, my_moves1, my_moves2, my_moves3, my_moves4])
                 if "{{Party/Footer}}" in pokemon_section:
                     # print("REACHED THE END")
                     break
@@ -441,10 +441,23 @@ def get_gym_leaders():
     # end of a particular trainer
 
     # dump results to csv
-    for trainer in trainer_list:
-        print(trainer)
-    for trainer_pokemon in trainer_pokemon_list:
-        print(trainer_pokemon)
+    trainer_df = pd.DataFrame(trainer_list)
+    trainer_df.to_csv('db/data/Leaders.csv', index = False, header = False)
+
+    trainer_pokemon_df = pd.DataFrame(trainer_pokemon_list, dtype=object)
+    print(trainer_pokemon_df)
+    trainer_pokemon_df.to_csv('db/data/LeaderPokemon.csv', index = False, header = False)
+
+    location_list = [[locations[location], location[0], False, False, location[1]] for location in locations]
+    location_df = pd.DataFrame(location_list)
+    location_df.to_csv('db/data/Locations.csv', index = False, header = False)
+
+    # for trainer in trainer_list:
+    #     print(trainer)
+    # for trainer_pokemon in trainer_pokemon_list:
+    #     print(trainer_pokemon)
+    # for location in locations:
+    #     print(location, locations[location])
 
 # %% Main
 if __name__ == "__main__":

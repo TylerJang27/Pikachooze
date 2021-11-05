@@ -8,3 +8,6 @@
 \COPY pokemon_base_stats FROM 'data/Stats.csv' WITH DELIMITER ',' NULL '' CSV
 \copy move FROM 'data/Moves.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY can_learn FROM 'data/Learn.csv' WITH DELIMITER ',' NULL '' CSV
+\COPY location FROM 'data/Locations.csv' WITH DELIMITER ',' NULL '' CSV
+\COPY trainer FROM 'data/Leaders.csv' WITH DELIMITER ',' NULL '' CSV
+\COPY trainer_pokemon FROM 'data/LeaderPokemon.csv' WITH DELIMITER ',' NULL '' CSV
