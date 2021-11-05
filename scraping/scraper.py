@@ -7,10 +7,8 @@ Created on Tue Oct 12 01:50:35 2021
 """
 from os import P_PGID
 import requests
-import numpy as np
 import pandas as pd
 import re
-
 
 from bs4 import BeautifulSoup
 from sqlalchemy.sql.sqltypes import MatchType
@@ -18,7 +16,7 @@ from sqlalchemy.sql.sqltypes import MatchType
 # https://dbdiagram.io/d/6158de67825b5b01461dfd3f
 
 # %% Constants
-POKEAPI_HOSTNAME = "https://pokeapi.co/api/v2/"
+POKEAPI_HOSTNAME = "https://pokeapi.co/api/v2/{:}"
 POKEIMAGES_URL = "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/{:}"
 SPECIES_LIST_EXT = "pokemon-species"
 POKEMON_EXT = "pokemon/{:}"
@@ -27,12 +25,17 @@ TYPES = "type"
 POKEDEX = "pokedex/{:}"
 GENERATION = "generation/{:}"
 TRAINER_HOSTNAME = "https://bulbapedia.bulbagarden.net/w/index.php?title={:}&action=edit"
+gym_leader_url = "https://cdn2.bulbagarden.net/upload/2/2f/{:}"
+
+# dictionaries for preserved lookups
 type_dict = {}
 df_games = {}
 df_moves = {}
 df_pokemon = {}
 df_stats = {}
 df_can_learn = {}
+
+# collections for populating
 all_moves = set()
 pokemon_list = []
 moves = {}
@@ -45,23 +48,39 @@ version_game = []
 locations = {}
 trainer_list = []
 trainer_pokemon_list = []
+
+# trainers to scrape
 diamond_pearl_gym_leaders = ["Roark", "Gardenia", "Maylene", "Crasher Wake", "Fantina", "Byron", "Candice", "Volkner"]
 diamond_pearl_elite4 = ["Aaron_(Elite_Four)", "Bertha", "Flint_(Elite_Four)", "Lucian", "Cynthia"]
 diamond_pearl_all_elite_trainers = diamond_pearl_gym_leaders + diamond_pearl_elite4
-diamond_pearl_all_elite_trainers = diamond_pearl_elite4
-gym_leader_url = "https://cdn2.bulbagarden.net/upload/2/2f/{:}"
 
 # %% Helper Methods
+# deal with misformated names in source
+def sanitize_move(move_name):
+    if move_name == "Hi Jump Kick":
+        return "High Jump Kick"
+    if move_name == "Faint Attack":
+        return "Feint Attack"
+    if " " in move_name:
+        return move_name
+    for i, letter in enumerate(move_name):
+        if letter.isupper() and i != 0:
+            return move_name[:i] + " " + move_name[i:]
+    return move_name
+
+# get the extension for large queries
 def get_limit_and_offset(limit, offset):
     return "?limit={:d}&offset={:d}".format(limit, offset)
 
+# request to pokeapi for pokemon data
 def request_to_api(extension):
-    response = requests.get(POKEAPI_HOSTNAME + extension)
+    response = requests.get(POKEAPI_HOSTNAME.format(extension))
     if response.status_code == 200:
         return response.json()
     else:
         print("ERROR: STATUS CODE: {:}".format(response.status_code))
 
+# request to bulbapedia for trainer data
 def html_request_to_api(trainer_name):
     response = requests.get(TRAINER_HOSTNAME.format(trainer_name))
     if response.status_code == 200:
@@ -69,6 +88,8 @@ def html_request_to_api(trainer_name):
     else:
         print("ERROR: STATUS CODE: {:}".format(response.status_code))
 
+# %% Scraping Methods
+# populates Types.csv with [type_id, type_name]
 def get_types():
     count = 1
     typelist = []
@@ -77,16 +98,14 @@ def get_types():
         type_dict[type["name"]] = count
         typelist.append([count, type["name"]])
         count += 1
-    print(type_dict)
-    print(typelist)
+    # print(type_dict)
+    # print(typelist)
 
     df_type = pd.DataFrame(typelist)
     df_type = df_type.to_csv('db/data/Types.csv', index = False, header = False)
-    print(df_type)
+    # print(df_type)
 
-    #print(type_dict)
-   # print(typelist)
-
+# reads in from Types.csv to populate type_dict
 def get_types_csv():
     df = pd.read_csv("db/data/Types.csv", header=None)
     for ind in df.index:
@@ -95,15 +114,15 @@ def get_types_csv():
         type_dict[name] = id
     #print(type_dict)
 
+# writes hard-coded generation to Generations.csv with [gen_number]
 def get_generation():
     generation_list = [[4]] #expand to include all gens if needed
     df_generation = pd.DataFrame(generation_list)
     df_generation = df_generation.to_csv('db/data/Generations.csv', index = False, header = False)
 
-    
+# populates Games.csv with [game_id, game_name, gen_number]
 def get_games():   
     res = request_to_api(GENERATION.format("4")) #expand this to include all generations if needed
-    game_list =[]
     version_group_list = []
  
     for version_group in res["version_groups"][:-1]:
@@ -121,6 +140,7 @@ def get_games():
     df_games = df_games.to_csv('db/data/Games.csv', index = False, header = False)
     #print(version_game)
 
+# reads in from Games.csv to populate df_games
 def get_games_csv():
     df = pd.read_csv("db/data/Games.csv", header=None)
     for ind in df.index:
@@ -129,7 +149,10 @@ def get_games_csv():
         generation = df.iloc[ind,2]
         df_games[game_name] = game_id
     #print(df_games)
-    
+
+# populates Pokemon.csv with [poke_id, name, generation_id, type1_id, type2_id, pic]
+# populates Stats.csv with [poke_id, hp, attack_stat, defense_stat, special_attack_stat, special_defense_stat, speed]
+# populates Learn.csv with [poke_id, move_id]
 def get_pokemon():
     res = request_to_api(POKEDEX.format("6"))
     for pokemon in res["pokemon_entries"]:
@@ -160,7 +183,7 @@ def get_pokemon():
                 if vers["version_group"]["name"] == "diamond-pearl" or "platinium":
                     move_url = move["move"]["url"]
                     move_id = move_url.split("https://pokeapi.co/api/v2/move/")[1].replace("/","")    
-            can_learn.append([uid, move_id])
+            can_learn.append([uid, move_id]) # LATER: CONSIDER DIFFERENT GENERATION CHANGES
             if not move_id in moves:
                 fill_moves(move_id)   
         lstat.append(uid)
@@ -185,6 +208,7 @@ def get_pokemon():
     df_can_learn = pd.DataFrame(can_learn)
     df_can_learn = df_can_learn.to_csv('db/data/Learn.csv', index = False, header = False)
 
+# reads in from Pokemon.csv to populate df_pokemon
 def get_pokemon_csv():
     df = pd.read_csv("db/data/Pokemon.csv", header=None)
     for ind in df.index:
@@ -197,6 +221,7 @@ def get_pokemon_csv():
         df_pokemon[name] = [id, generation, type_1, type_2, pic]
     #print(df_pokemon)
 
+# reads in from Stats.csv to populate df_stats
 def get_stats_csv():
     df = pd.read_csv("db/data/Stats.csv", header=None)
     for ind in df.index:
@@ -209,7 +234,8 @@ def get_stats_csv():
         speed = df.iloc[ind,6]
         df_stats[id] = [hp, Attack, Defense, SP_attack, SP_defense, speed]
     #print(df_stats)
-    
+
+# reads in from Learn.csv to populate df_can_learn
 def get_learn_csv():
     df = pd.read_csv("db/data/Learn.csv", header=None)
     for ind in df.index:
@@ -217,7 +243,8 @@ def get_learn_csv():
         move_id = df.iloc[ind,1]
         df_can_learn[id] = [move_id]
     #print(df_can_learn)
-        
+
+# helper method to extract information about moves and add to moves dictionary
 def fill_moves(move_id):
     #time.sleep(0.25)
     res = request_to_api(MOVES.format(move_id))
@@ -241,9 +268,10 @@ def fill_moves(move_id):
     damage_class = res["damage_class"]["name"]
     target = res["target"]["name"].replace("-", "_")
     movename_to_id[move_name] = move_id
-    moves[move_id] = [move_name,target, mtype, power, acc, crit_rate, damage_class, min_hits, max_hits, priority,pp]
+    moves[move_id] = [move_name, target, mtype, power, acc, crit_rate, damage_class, min_hits, max_hits, priority, pp]
     #print(moves[move_id])
 
+# populates Moves.csv with [move_id, move_name, target, mtype, power, acc, crit_rate, damage_class, min_hits, max_hits, priority, pp]
 def get_moves():
     for key in moves:
         m = [key]
@@ -253,6 +281,7 @@ def get_moves():
     df_moves = df_moves.convert_dtypes()
     df_moves = df_moves.to_csv('db/data/Moves.csv', index = False, header = False)
 
+# reads in from Moves.csv to df_moves
 def get_moves_csv():
     df = pd.read_csv("db/data/Moves.csv", header=None)
     for ind in df.index:
@@ -268,22 +297,13 @@ def get_moves_csv():
         max_hits = df.iloc[ind,9]
         priority = df.iloc[ind,10]
         pp = df.iloc[ind,11]
-        df_moves[move_name] = [move_id,target, mtype, power, acc, crit_rate, damage_class, min_hits, max_hits, priority,pp]
+        df_moves[move_name] = [move_id, target, mtype, power, acc, crit_rate, damage_class, min_hits, max_hits, priority, pp]
     #print(df_moves)
 
-def sanitize_move(move_name):
-    if move_name == "Hi Jump Kick":
-        return "High Jump Kick"
-    if move_name == "Faint Attack":
-        return "Feint Attack"
-    if " " in move_name:
-        return move_name
-    for i, letter in enumerate(move_name):
-        if letter.isupper() and i != 0:
-            return move_name[:i] + " " + move_name[i:]
-    return move_name
-    
-def get_diamond_pearl_gym_leaders():
+# populates Leaders.csv with [trainer_id, is_user, name, pic, game_id, generation_id, location_id, added_by_id]
+# populates LeaderPokemon.csv with [tp_id, trainer_id, poke_id, nickname, gender, level, inParty, move1_id, move2_id, move3_id, move4_id]
+# populates Locations.csv with [location_id, location_name, is_route, is_gym, game_id]
+def get_gym_leaders():
     for leader in diamond_pearl_all_elite_trainers:
         page = html_request_to_api(leader)
         soup = BeautifulSoup(page.content, "html.parser")
@@ -363,10 +383,9 @@ def get_diamond_pearl_gym_leaders():
                 game_ids = []
             trainer_ids = []
             for game_id in game_ids:
-                generation_id = 4
                 trainer_id = len(trainer_list)
                 trainer_ids.append(trainer_id)
-                trainer_list.append([trainer_id,False,poke_trainer_name, pic_url,game_id,generation_id,location_id,None])
+                trainer_list.append([trainer_id,False,poke_trainer_name, pic_url,game_id,location_id,None])
 
             for pokemon_section in pokemon_data[1:]:
                 poke_name_regex = re.compile("\|pokemon.*\n")
@@ -476,4 +495,4 @@ if __name__ == "__main__":
     get_learn_csv()
     get_moves_csv()
     get_types_csv()
-    get_diamond_pearl_gym_leaders()
+    get_gym_leaders()
