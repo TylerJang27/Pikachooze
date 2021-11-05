@@ -5,7 +5,6 @@ from sqlalchemy.orm import sessionmaker
 
 from app.models.product import Product
 from app.models.purchase import Purchase
-from app.models.purchase import Purchase
 from app.config import Config
 
 from flask import Blueprint
@@ -42,6 +41,7 @@ def index():
             # purchases = Purchase.get_all_by_uid_since(
                 # current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
             # purchases = session.query(Purchase).all()
+            print(current_user, current_user.trainers)
             purchases = []
             print("There would have been purchases!")
         else:
