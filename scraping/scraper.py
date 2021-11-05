@@ -68,6 +68,15 @@ def sanitize_move(move_name):
             return move_name[:i] + " " + move_name[i:]
     return move_name
 
+# extract a field from the trainer text
+def extract_field(field_name, source_text, replace_spaces=False, manual_regex="\|{:}.*[\|\n]"):
+    regex_pattern = re.compile(manual_regex.format(field_name))
+    matching_fields = regex_pattern.findall(source_text)[0]
+    matching_text = matching_fields.split("=")[1].strip()
+    if replace_spaces:
+        matching_text = matching_text.replace(" ", "_")
+    return matching_text
+
 # get the extension for large queries
 def get_limit_and_offset(limit, offset):
     return "?limit={:d}&offset={:d}".format(limit, offset)
@@ -304,13 +313,18 @@ def get_moves_csv():
 # populates LeaderPokemon.csv with [tp_id, trainer_id, poke_id, nickname, gender, level, inParty, move1_id, move2_id, move3_id, move4_id]
 # populates Locations.csv with [location_id, location_name, is_route, is_gym, game_id]
 def get_gym_leaders():
+    # iterate through all desired trainers
     for leader in diamond_pearl_all_elite_trainers:
+        # retrieve trainer data
         page = html_request_to_api(leader)
         soup = BeautifulSoup(page.content, "html.parser")
         text = soup.find("textarea", {"id": "wpTextbox1"})
+
+        # split trainer data by games
         pokemon_game_data_list = text.string.split("===Pokémon===")[1].split("===={{game|")[1:]
         pokemon_scenarios = {}
 
+        # parse games for relevant games and their respective scenarios if multiple encounters
         for game_data in pokemon_game_data_list:
             game_name_temp = game_data[:20]
             if not ("Diamond" in game_name_temp or "Pearl" in game_name_temp or "Platinum" in game_name_temp):
@@ -324,56 +338,31 @@ def get_gym_leaders():
                         break
                     if "Multi Battle" in game_scenario_data:
                         continue
-                    scenario = game_scenario_data.split("=====")[0].replace("[", "").replace("]", "")
+                    scenario = game_scenario_data.split("=====")[0].replace("[", "").replace("]", "") # LATER: ADD BETTER EDGE CASE HANDLING
                     pokemon_scenarios[scenario] = game_scenario_data
                 
             else:
                 pokemon_scenarios[""] = game_data
                 pokemon_data = game_data.split("{{Pokémon/4")
 
+        # iterate through game scenarios
         for scenario in pokemon_scenarios:
             game_data = pokemon_scenarios[scenario]
+            # split to separate trainer information from pokemon information
             pokemon_data = game_data.split("{{Pokémon/4")
-
             trainer_section = pokemon_data[0]
-            poke_trainer_name_regex = re.compile("\|name.*\n")
-            poke_trainer_name = poke_trainer_name_regex.findall(trainer_section)
-            poke_trainer_name = poke_trainer_name[0]
-            poke_trainer_name = poke_trainer_name.split("=")[1]
-            print(pokemon_scenarios.keys())
-            poke_trainer_name = poke_trainer_name.strip() + (" " + scenario if len(scenario) > 0 and "{" not in scenario else "")
-            print(poke_trainer_name)
-
-            poke_sprite = re.compile("\|sprite.*\n")
-            pic_url = poke_sprite.findall(trainer_section)
-            pic_url = pic_url[0]
-            pic_url = pic_url.split("=")[1]
-            pic_url = pic_url.strip()
-            pic_url = pic_url.replace(" ", "_")
-            pic_url = gym_leader_url.format(pic_url)
-            print(pic_url)
-
-            game_name_regex = re.compile("\|game.*\n")
-            game_name = game_name_regex.findall(trainer_section)
-            game_name = game_name[0]
-            game_name = game_name.split("=")[1]
-            game_name = game_name.strip()
-            print(game_name)
-
-            location_name_regex = re.compile("\|locationname.*\n")
-            location_name = location_name_regex.findall(trainer_section)
-            if len(location_name) == 0:
-                location_name_regex = re.compile("\|location.*\n")
-                location_name = location_name_regex.findall(trainer_section)
             
-            location_name = location_name[0]
-            location_name = location_name.split("=")[1]
-            location_name = location_name.strip()
-            print(location_name)
-            if location_name not in locations:
-                locations[location_name] = len(locations)
-                #TODO populate locations.csv
-            location_id = locations[location_name]
+            # extract trainer name
+            poke_trainer_name = extract_field("name", trainer_section)
+            poke_trainer_name = poke_trainer_name + (" " + scenario if len(scenario) > 0 and "{" not in scenario else "")
+
+            # extract trainer image
+            pic_name = extract_field("sprite", trainer_section, True)
+            pic_url = gym_leader_url.format(pic_name)
+
+            # extract trainer game(s)
+            game_name = extract_field("game", trainer_section)
+
             if game_name == "DP":
                 game_ids = [df_games["diamond"],df_games["pearl"]]
             elif game_name == "Pt":
@@ -381,107 +370,85 @@ def get_gym_leaders():
             else:
                 print("NOT A GAME WE KNOW HOW TO PARSE")
                 game_ids = []
+
+            # extract trainer location(s)
+            try:
+                location_name = extract_field("locationname", trainer_section)
+            except:
+                location_name = extract_field("location", trainer_section)
+
+            if location_name not in locations:
+                locations[location_name] = len(locations)
+                # TODO populate locations.csv
+            location_id = locations[location_name]
+            
+            # make trainers for each game 
             trainer_ids = []
             for game_id in game_ids:
                 trainer_id = len(trainer_list)
                 trainer_ids.append(trainer_id)
-                trainer_list.append([trainer_id,False,poke_trainer_name, pic_url,game_id,location_id,None])
+                trainer_list.append([trainer_id, False, poke_trainer_name, pic_url, game_id, location_id, None])
 
+            # iterate through a trainer's pokemon
             for pokemon_section in pokemon_data[1:]:
-                poke_name_regex = re.compile("\|pokemon.*\n")
-                poke_name = poke_name_regex.findall(pokemon_section)
-                poke_name = poke_name[0]
-                poke_name = poke_name.split("=")[1]
-                poke_name = poke_name.strip()
+
+                # extract pokemon name
+                poke_name = extract_field("pokemon", pokemon_section)
+                # LATER: EXTRACT NICKNAME IF APPLICABLE
                 if poke_name not in df_pokemon:
                     print("MISSING POKEMON FOR ", poke_name)
+                    # TODO: ACCOUNT FOR MISSING POKEMON
                     continue
+
+                # extract pokemon id
                 poke_id = df_pokemon[poke_name][0]
-                # print(poke_name, poke_id)
                 
-                poke_level_regex = re.compile("\|level.*[\|\n]")
-                poke_level = poke_level_regex.findall(pokemon_section)
-                poke_level = poke_level[0]
-                poke_level_temp = poke_level.split("=")[1]
-                poke_level_temp = poke_level_temp.split("|")[0]
-                poke_level_temp = poke_level_temp.strip()
+                # extract pokemon level (use lowest if multiple)
+                poke_level = extract_field("level", pokemon_section, False)
                 try:
-                    poke_level = int(poke_level_temp)
+                    poke_level = int(poke_level)
                 except:
-                    poke_level_regex = re.compile("[0-9]+")
+                    poke_level_regex = re.compile("[0-9]+") # LATER: ACCOUNT FOR MULTIPLE ENCOUNTERS/LEVELS
                     poke_level = poke_level_regex.findall(poke_level)
-                    poke_level = poke_level[0]
-                # print(poke_level)
+                    poke_level = int(poke_level[0])
 
-                poke_gender_regex = re.compile("\|gender.*[\|\n]")
-                poke_gender = poke_gender_regex.findall(pokemon_section)
-                if len(poke_gender) > 0: 
-                    poke_gender = poke_gender[0]
-                    poke_gender = poke_gender.split("=")[1]
-                    poke_gender = poke_gender.strip()
-                else:
+                try:
+                    poke_gender = extract_field("gender", pokemon_section, False).lower()
+                except:
                     poke_gender = None
-                # print(poke_gender)
 
+                # extract moves
                 move_regex = re.compile("\|move[0-9]=[\w\s]+\|") #replace "\|" with "\n" and you can get the whole line
                 my_moves_strings = move_regex.findall(pokemon_section)
                 my_moves_list = []
                 for move in my_moves_strings:
                     move_name = sanitize_move(move.replace("|","").strip().split("=")[1])
-                    #move_id = movename_to_id[move_name]
                     move_id = df_moves[move_name][0]
-                    # print(move_name, move_id)
                     my_moves_list.append(move_id)
                 my_moves1 = my_moves_list[0] if len(my_moves_list) > 0 else None
                 my_moves2 = my_moves_list[1] if len(my_moves_list) > 1 else None
                 my_moves3 = my_moves_list[2] if len(my_moves_list) > 2 else None
                 my_moves4 = my_moves_list[3] if len(my_moves_list) > 3 else None
 
+                # make trainer_pokemon for each pokemon in each encounter with a particular trainer
                 for trainer_id in trainer_ids:
                     trainer_pokemon_list.append([len(trainer_pokemon_list), trainer_id, poke_id, poke_name, poke_gender, poke_level, True, my_moves1,my_moves2,my_moves3,my_moves4])
                 if "{{Party/Footer}}" in pokemon_section:
-                    print("REACHED THE END")
+                    # print("REACHED THE END")
                     break
+            # end of a particular pokemon
+        # end of a particular trainer scenario
+    # end of a particular trainer
+
+    # dump results to csv
     for trainer in trainer_list:
         print(trainer)
     for trainer_pokemon in trainer_pokemon_list:
         print(trainer_pokemon)
 
-"""
-    trainer_id = Column(Integer, primary_key = True) # trainer_id_seq, server_default=trainer_id_seq.next_value(), 
-    is_user = Column(Boolean)
-    name = Column(String(20))
-    pic = Column(String)
-    game_id = Column(Integer, ForeignKey('game.game_id'))
-    generation_id = Column(Integer, ForeignKey('generation.generation'), default=4)
-    location_id = Column(Integer, ForeignKey('location.location_id'), nullable=True)
-    added_by_id = Column(Integer, ForeignKey('users.uid'), nullable=True)
-                """
-
-"""
-    tp_id = Column(Integer, primary_key = True)
-    trainer_id = Column(Integer, ForeignKey('trainer.trainer_id')) # TODO: ADD INDEXES
-    poke_id = Column(Integer, ForeignKey('pokemon.poke_id'))
-    nickname = Column(String(25))
-    gender = Column(Enum(GenderClass), default=0) # TODO: MAKE ENUM
-    level = Column(Integer, default=50)
-    inParty = Column(Boolean, default=False)
-    move1_id = Column(Integer, ForeignKey('move.move_id'), nullable=True)
-    move2_id = Column(Integer, ForeignKey('move.move_id'), nullable=True)
-    move3_id = Column(Integer, ForeignKey('move.move_id'), nullable=True)
-    move4_id = Column(Integer, ForeignKey('move.move_id'), nullable=True)
-                """
-            #
-            # ind = pokemon.split("\n")
-            # ind = ind
-            # for trait in ind:
-                # print(trait)
-
-
-
-# %% Scraping Methods
 # %% Main
 if __name__ == "__main__":
+    # Original parsing data
     #get_types()
     #get_generation()
     #get_games()
@@ -489,10 +456,14 @@ if __name__ == "__main__":
     #get_generation()
     #get_games()
     #get_moves()
+
+    # Populate from csvs
     get_games_csv()
     get_pokemon_csv()
     get_stats_csv()
     get_learn_csv()
     get_moves_csv()
     get_types_csv()
+
+    # Parse new data
     get_gym_leaders()
