@@ -17,6 +17,61 @@
         </div>
     </div>
     <!-- End of Hero -->
+
+    <!--End of Title section-->
+    <div class="section section-md">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-4">
+                    <h4 class="h4">Roark's Pokemon</h4>
+
+                    {% for a in range(0, 6)%}
+                    <div class="card shadow">
+                        <div class = "row">
+                            <div class="col-4 m-2">
+                                <img src=https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrEpro86Nz9q6kBJfA4wDU9F5W0yQdeOIoSg&usqp=CAU" alt="Togepi" class="card-img-top rounded-top">
+                            </div>
+                            <div class="col -0">
+                                <div class="card-body p-2">
+                                    <h3 class="h5 card-title mb-0">Togepi - Luka</h3>
+                                    <a href="#" class="btn btn-primary btn-sm">Normal</a>
+                                    <a href="#" class="btn btn-primary btn-sm">Normal</a>
+                                    <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Lv. 71, 180 hp</span><br>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+
+                <div class="col">
+                    <h4 class="h4">Top Picks</h4>
+
+                    {% for i in range(0, 5) %}
+                    <div class="row align-items-center">
+                        <div class="col-3" style="text-align: center;">
+                            <p>{{i}}</p>
+                        </div>
+                        <div class="col-3">
+                            <p>Charizard-George</p>
+                            <!-- Should this be name or nickname -->
+                        </div>
+                        <div class="col-3"> 
+                            <img src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/006.png" alt="Charizard" class="rounded-top w-75">
+                            <!-- Can we make this link to the edit page? -->
+                        </div>
+                        <div class="col-3">
+                            <p>{{86 - i**2}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 {% endblock content %}
