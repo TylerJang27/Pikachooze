@@ -80,7 +80,7 @@ RETURNING uid
             # TODO: ADD SEQUENCE TO AVOID CONCURRENT ISSUES OF TRAINER ID
             rows2 = app.db.execute("""
 INSERT INTO trainer(trainer_id, is_user, name, game_id, added_by_id)
-VALUES((SELECT COUNT(*) FROM trainer) + 1, true, :username, 1, :uid)
+VALUES((SELECT COUNT(*) FROM trainer) + 1, true, :username, 1, :uid) RETURNING trainer_id
 """,
                                   username=username, uid=uid)
             return User.get(uid)
