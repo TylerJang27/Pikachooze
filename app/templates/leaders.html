@@ -19,4 +19,62 @@
     <!-- End of Hero -->
 </main>
 
+    <!--End of Title section-->
+    <div class="section section-md">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-6">
+                    {% for a in range(0, 3)%}
+                    <div class="card shadow">
+                        <div class = "row">
+                            <div class="col-2 m-2">
+                                <img src="https://cdn2.bulbagarden.net/upload/a/a6/Lets_Go_Pikachu_Eevee_Brock.png" alt="Brock" class="card-img-top rounded-top">
+                            </div>
+                            <div class="col -0">
+                                <div class="card-body p-2">
+                                    <h3 class="h5 card-title mb-0">Brock</h3>
+                                    <h6 class="h6 card-title mb-0">Location: Pewter City</h6>
+                                    <h6 class="h6 card-title mb-0">Pokemon Type:</h6>
+                                    <a href="#" class="btn btn-primary btn-sm">Rock</a>
+                                    <h6 class="h6 card-title mb-0">Reward: </h6>
+                                    <h6 class="h6 card-title mb-0">Boulder Badge</h6>
+                                    <a href="{{ url_for('index.fight') }}" class="btn">Fight</a>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="col-6">
+                    {% for a in range(0, 3)%}
+                    <div class="card shadow">
+                        <div class = "row">
+                            <div class="col-2 m-2">
+                                <img src="https://cdn2.bulbagarden.net/upload/a/a6/Lets_Go_Pikachu_Eevee_Brock.png" alt="Brock" class="card-img-top rounded-top">
+                            </div>
+                            <div class="col -0">
+                                <div class="card-body p-2">
+                                    <h3 class="h5 card-title mb-0">Brock</h3>
+                                    <h6 class="h6 card-title mb-0">Location: Pewter City</h6>
+                                    <h6 class="h6 card-title mb-0">Pokemon Type: </h6>
+                                    <a href="#" class="btn btn-primary btn-sm">Rock</a>
+                                    <h6 class="h6 card-title mb-0">Reward: </h6>
+                                    <h6 class="h6 card-title mb-0">Boulder Badge</h6>
+                                    <a href="{{ url_for('index.fight') }}" class="btn">Fight</a>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
 {% endblock content %}
