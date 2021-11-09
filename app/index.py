@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.models.product import Product
 from app.models.purchase import Purchase
+from app.models.trainer import Trainer
 from app.config import Config
 
 from flask import Blueprint
@@ -67,7 +68,8 @@ def inventory():
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine)
     session = Session()
-    trainer = session.query(Trainer).filter(trainer_id == 2).one_or_none()
+    trainer = session.query(Trainer).filter(Trainer.trainer_id == 2).one_or_none()
+    print([p.pokemon.type1 for p in trainer.trainer_pokemon])
     return render_template('inventory.html', trainer=trainer)
 
 @bp.route('/leaders')
