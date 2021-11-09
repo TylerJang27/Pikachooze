@@ -9,9 +9,11 @@ from app.models.trainer import Trainer
 from app.models.trainer_pokemon import TrainerPokemon
 from app.models.user import User
 
+from app.scoring_algo import score_teams
 from app.config import Config
 
 from flask import Blueprint
+
 bp = Blueprint('index', __name__)
 
 
@@ -49,7 +51,15 @@ def index():
             print("There would have been purchases!")
         else:
             purchases = None
+            trainer1 = session.query(Trainer).filter(Trainer.trainer_id==2).one_or_none()
+            trainer2 = session.query(Trainer).filter(Trainer.trainer_id==4).one_or_none()
+            trainer1_pkmn = trainer1.trainer_pokemon
+            trainer2_pkmn = trainer2.trainer_pokemon
+            print(score_teams(trainer2_pkmn, trainer1_pkmn))
+
         # render the page by adding information to the index.html file
+
+
         return render_template('index.html',
                             avail_products=products,
                             purchase_history=purchases)

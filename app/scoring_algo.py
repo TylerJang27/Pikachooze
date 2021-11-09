@@ -47,6 +47,7 @@ def score(one_pkmn, team_pkmn):
     outgoing_dmg.append(max_damage_perc(one_pkmn, pk_2))
     incoming_dmg.append(max_damage_perc(pk_2, one_pkmn))
   for dmg in outgoing_dmg:
+    dmg = dmg*100
     val = 0
     if dmg >= 100:
       val = 100
@@ -73,6 +74,7 @@ def score(one_pkmn, team_pkmn):
     outgoing.append(val)
 
   for dmg in incoming_dmg:
+    dmg = dmg*100
     val = 0
     if dmg >= 100:
       val = 100
@@ -98,8 +100,11 @@ def score(one_pkmn, team_pkmn):
       val = 0
     incoming.append(val)
   
-  difference = [a_i - b_i for a_i, b_i in zip(incoming, outgoing)]
+  #print(incoming_dmg, outgoing_dmg)
+  #print(incoming, outgoing)
+  difference = [a_i - b_i for a_i, b_i in zip(outgoing, incoming)]
   #calculation based on damages here
+  #print(sum(difference)/len(difference))
   return math.floor(sum(difference)/len(difference))
 
 #calculate the max damage as percent of pokemon health out_pkmn and in_pkmn
@@ -107,7 +112,7 @@ def max_damage_perc(out_pkmn, in_pkmn):
   level = out_pkmn.level
   hp_IV = 0
   hp_EV = 0
-  hp_base = out_pkmn.pokemon.pokemon_base_stats.hp
+  hp_base = out_pkmn.pokemon.pokemon_base_stats[0].hp
   HP = math.floor(0.01 * (2 * hp_base + hp_IV + math.floor(0.25 * hp_EV)) * level) + level + 10
   return min(max_damage(out_pkmn, in_pkmn) / HP, 1.0)
 
@@ -156,15 +161,18 @@ def damage_calc(out_pkmn, move, in_pkmn):
 
   critical = 1 #(move.crit_rate*2)+(1-move.crit_rate*1)
   random_scale = 0.85 #0.85+0.05*.15 or 1
-  STAB = 2 if ((move.move_type.type_name == out_pkmn.pokemon.type1.type_name) or (move.move_type.type_name == out_pkmn.pokemon.type2.type_name)) else 1
+  STAB = 2 if ((move.move_type.type_name == out_pkmn.pokemon.type1.type_name) or (out_pkmn.pokemon.type2 and move.move_type.type_name == out_pkmn.pokemon.type2.type_name)) else 1
   Type1 = damage_array[pokemon_types[move.move_type.type_name.lower()]][pokemon_types[in_pkmn.pokemon.type1.type_name.lower()]]
   Type2 = damage_array[pokemon_types[move.move_type.type_name.lower()]][pokemon_types[in_pkmn.pokemon.type2.type_name.lower()]] if in_pkmn.pokemon.type2_id else 1
-  accuracy = move.accuracy
+  accuracy = move.accuracy if move.accuracy else 100
 
   hits = 2 if (move.min_hits == 2) else 1
   #(2*0.375+3*0.375+4*0.125+5*0.125) if (move.min_hits == 2 and move.max_hits == 5) else 1
 
-  damage = ((2/5*level+2)*power*A/D/50+2)*critical*random_scale*STAB*Type1*Type2*accuracy*hits
+  #print(level, power, A, D, critical, random_scale, STAB, Type1, Type2, accuracy, hits)
+
+  damage = ((2/5*level+2)*power*A/D/50+2)*critical*random_scale*STAB*Type1*Type2*accuracy/100*hits
+  #print(damage)
   #*weather*targets*Burn*other
   return damage
 
