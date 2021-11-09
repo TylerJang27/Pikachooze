@@ -23,9 +23,22 @@
         <div class="section section-md">
             <div class="container">
                 <div class="row mb-5">
-                    <div class="col-12 col-md-6 col-lg-3 mb-5 mb-lg-0">
+                    <!-- <div class="col-12 col-md-6 col-lg-3 mb-5 mb-lg-0"> -->
                         {% for pokemon in trainer.trainer_pokemon %}
-                        <div class="card shadow">
+                        <div class="card shadow col-3">
+                            <img src="{{pokemon.pokemon.pic}}" alt="Togepi" class="card-img-top rounded-top">
+                            <div class="card-body">
+                                <a href="#" class="btn btn-primary btn-sm">{{pokemon.pokemon.type1.type_name}}</a>
+                                {% if pokemon.pokemon.type2 %}
+                                <a href="#" class="btn btn-primary btn-sm">{{pokemon.pokemon.type2.type_name}}</a>
+                                {% endif %}
+                                <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Lv. </span></span>{{pokemon.level}}</span>
+                                <h3 class="h5 card-title mt-3">{{pokemon.nickname}}</h3>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% for pokemon in trainer.trainer_pokemon %}
+                        <div class="card shadow col-3">
                             <img src="{{pokemon.pokemon.pic}}" alt="Togepi" class="card-img-top rounded-top">
                             <div class="card-body">
                                 <a href="#" class="btn btn-primary btn-sm">{{pokemon.pokemon.type1.type_name}}</a>
@@ -38,7 +51,7 @@
                         </div>
                         {% endfor %}
 
-                    </div>
+                    <!-- </div> -->
                 </div>
             </div>
         </div>
