@@ -66,7 +66,7 @@ def fight():
 @bp.route('/inventory')
 def inventory():
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
-    Session = sessionmaker(engine)
+    Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
     trainer = session.query(Trainer).filter(Trainer.trainer_id == 2).one_or_none()
     print([p.pokemon.type1 for p in trainer.trainer_pokemon])
