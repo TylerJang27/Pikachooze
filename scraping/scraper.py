@@ -9,6 +9,7 @@ from os import P_PGID
 import requests
 import pandas as pd
 import re
+import time
 
 from bs4 import BeautifulSoup
 from sqlalchemy.sql.sqltypes import MatchType
@@ -68,6 +69,10 @@ def sanitize_move(move_name):
             return move_name[:i] + " " + move_name[i:]
     return move_name
 
+def sanitize_poke(poke_name):
+    if poke_name == "Mr. Mime":
+        return "Mr Mime"
+    return poke_name
 # extract a field from the trainer text
 def extract_field(field_name, source_text, replace_spaces=False, manual_regex="\|{:}.*[\|\n]"):
     regex_pattern = re.compile(manual_regex.format(field_name))
@@ -163,12 +168,9 @@ def get_games_csv():
 # populates Stats.csv with [poke_id, hp, attack_stat, defense_stat, special_attack_stat, special_defense_stat, speed]
 # populates Learn.csv with [poke_id, move_id]
 def get_pokemon():
-    res = request_to_api(POKEDEX.format("6"))
+    res = request_to_api(POKEDEX.format("1")) #change this, to be the pokedex for multiple generations
     for pokemon in res["pokemon_entries"]:
-        name = pokemon["pokemon_species"]["name"]
-    res = request_to_api(POKEDEX.format("6")) #change this, to be the pokedex for multiple generations
-    for pokemon in res["pokemon_entries"]:
-        #time.sleep(0.25)
+        time.sleep(0.25)
         name = pokemon["pokemon_species"]["name"]
         name = name.replace("-", " ")
         name = name.title()
@@ -255,7 +257,7 @@ def get_learn_csv():
 
 # helper method to extract information about moves and add to moves dictionary
 def fill_moves(move_id):
-    #time.sleep(0.25)
+    time.sleep(0.25)
     res = request_to_api(MOVES.format(move_id))
     acc = res["accuracy"]
     if not acc is None:
@@ -393,7 +395,8 @@ def get_gym_leaders():
             for pokemon_section in pokemon_data[1:]:
 
                 # extract pokemon name
-                poke_name = extract_field("pokemon", pokemon_section)
+    
+                poke_name = sanitize_poke(extract_field("pokemon", pokemon_section))
                 # LATER: EXTRACT NICKNAME IF APPLICABLE
                 if poke_name not in df_pokemon:
                     print("MISSING POKEMON FOR ", poke_name)
@@ -465,6 +468,7 @@ if __name__ == "__main__":
     #get_types()
     #get_generation()
     #get_games()
+    #get_types_csv()
     #get_pokemon()
     #get_generation()
     #get_games()
@@ -478,5 +482,4 @@ if __name__ == "__main__":
     get_moves_csv()
     get_types_csv()
 
-    # Parse new data
     get_gym_leaders()
