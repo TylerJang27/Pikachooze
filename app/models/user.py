@@ -3,8 +3,11 @@ from flask import current_app as app
 from app.utils import send_new_pass
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import Column, Integer, String, Sequence, DateTime
-from sqlalchemy.orm import relationship
+from sqlalchemy import create_engine
+from sqlalchemy.orm import relationship, sessionmaker
 from app.models.base import Base, login
+from app.config import Config
+
 import datetime
 
 
@@ -49,7 +52,9 @@ WHERE email = :email
             # incorrect password
             return None
         else:
-            return User(*(rows[0][1:]))
+            return User.get(rows[0][1])
+                # return session.query(User).filter(User.email == email, check_password_hash(User.password, password)).one_or_none()
+            # return User(*(rows[0][1:]))
 
     @staticmethod
     def email_exists(email):
@@ -73,6 +78,12 @@ RETURNING uid
                                   password=generate_password_hash(password),
                                   username=username)
             uid = rows[0][0]
+            # TODO: ADD SEQUENCE TO AVOID CONCURRENT ISSUES OF TRAINER ID
+            rows2 = app.db.execute("""
+INSERT INTO trainer(trainer_id, is_user, name, game_id, added_by_id)
+VALUES((SELECT COUNT(*) FROM trainer) + 1, true, :username, 1, :uid) RETURNING trainer_id
+""",
+                                  username=username, uid=uid)
             return User.get(uid)
         except Exception as e:
 
@@ -106,9 +117,13 @@ WHERE email = :email
     @staticmethod
     @login.user_loader
     def get(uid):
-        rows = app.db.execute("""
-SELECT uid, email, username
-FROM users
-WHERE uid = :uid
-""", uid=uid)
-        return User(*(rows[0])) if rows else None
+        engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+        Session = sessionmaker(engine, expire_on_commit=False)
+        session = Session()
+        return session.query(User).filter(User.uid == uid).one_or_none()
+#         rows = app.db.execute("""
+# SELECT uid, email, username
+# FROM users
+# WHERE uid = :uid
+# """, uid=uid)
+#         return User(*(rows[0])) if rows else None
