@@ -24,14 +24,21 @@
             <div class="container">
                 <div class="row mb-5">
                     <div class="col-12 col-md-6 col-lg-4 mb-5 mb-lg-0">
+
+                        { % for pokemon in trainer.trainer_pokemon % }
                         <div class="card shadow">
                             <img src=https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrEpro86Nz9q6kBJfA4wDU9F5W0yQdeOIoSg&usqp=CAU" alt="Togepi" class="card-img-top rounded-top">
                             <div class="card-body">
-                                <a href="#" class="btn btn-primary btn-sm">Normal</a>
+                                <a href="#" class="btn btn-primary btn-sm">{{pokemon.pokemon.type1.type_name}}</a>
+                                { % if pokemon.pokemon.type2 % }
+                                <a href="#" class="btn btn-primary btn-sm">{{pokemon.pokemon.type2.type_name}}</a>
+                                { % endif % }
                                 <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Lv. 71</span>
-                                <h3 class="h5 card-title mt-3">Togepi</h3>
+                                <h3 class="h5 card-title mt-3">{{pokemon.nickname}}</h3>
                             </div>
                         </div>
+                        { % endfor % }
+
                     </div>
                 </div>
             </div>

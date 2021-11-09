@@ -64,7 +64,11 @@ def fight():
 
 @bp.route('/inventory')
 def inventory():
-    return render_template('inventory.html')
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+    Session = sessionmaker(engine)
+    session = Session()
+    trainer = session.query(Trainer).filter(trainer_id == 2).one_or_none()
+    return render_template('inventory.html', trainer=trainer)
 
 @bp.route('/leaders')
 def leaders():
