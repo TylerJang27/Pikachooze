@@ -1,5 +1,5 @@
 section {
-color: #fff;
+color: #000;
 text-align: center;
 }
 
@@ -431,3 +431,11 @@ width: 50%;
         .card-group > .card:not(:first-child) .card-img-bottom,
         .card-group > .card:not(:first-child) .card-footer {
           border-bottom-left-radius: 0; } }
+
+/* FAQ page */
+.img-fluid {
+  max-width: 100%;
+  height: auto; }
+
+.organic-radius {
+  border-radius: 63% 37% 30% 70% / 50% 45% 55% 50%; }
