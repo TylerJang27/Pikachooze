@@ -75,3 +75,7 @@ def inventory():
 @bp.route('/leaders')
 def leaders():
     return render_template('leaders.html')
+
+@bp.route('/pokemon')
+def pokemon():
+    return render_template('pokemon.html')
