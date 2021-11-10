@@ -93,7 +93,7 @@ def fight(trainer):
     user_trainer = dummy_trainer
 
     score_results = score_teams(user_trainer.trainer_pokemon, trainer.trainer_pokemon)[::-1]
-    print(score_results)
+    # print(score_results)
 
     return render_template('fight.html', trainer=trainer, scores=score_results)
 
