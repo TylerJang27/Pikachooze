@@ -9,9 +9,11 @@ from app.models.trainer import Trainer
 from app.models.trainer_pokemon import TrainerPokemon
 from app.models.user import User
 
+from app.scoring_algo import score_teams
 from app.config import Config
 
 from flask import Blueprint
+
 bp = Blueprint('index', __name__)
 
 
@@ -49,7 +51,15 @@ def index():
             print("There would have been purchases!")
         else:
             purchases = None
+            trainer1 = session.query(Trainer).filter(Trainer.trainer_id==2).one_or_none()
+            trainer2 = session.query(Trainer).filter(Trainer.trainer_id==4).one_or_none()
+            trainer1_pkmn = trainer1.trainer_pokemon
+            trainer2_pkmn = trainer2.trainer_pokemon
+            print(score_teams(trainer2_pkmn, trainer1_pkmn))
+
         # render the page by adding information to the index.html file
+
+
         return render_template('index.html',
                             avail_products=products,
                             purchase_history=purchases)
@@ -79,10 +89,13 @@ def fight(trainer):
     user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
     trainer = session.query(Trainer).filter(Trainer.name == trainer_name, Trainer.game_id==user.trainers[0].game_id).one_or_none()
     # user_trainer = user.trainers[0] // TODO: ONCE USER CAN ADD POKEMON, INPUT HERE
-    dummy_trainer = session.query(Trainer).filter(Trainer.trainer_id == 2).one_or_none()
+    dummy_trainer = session.query(Trainer).filter(Trainer.trainer_id == 4).one_or_none()
+    user_trainer = dummy_trainer
 
+    score_results = score_teams(user_trainer.trainer_pokemon, trainer.trainer_pokemon)[::-1]
+    # print(score_results)
 
-    return render_template('fight.html', trainer=trainer, user_trainer=dummy_trainer)
+    return render_template('fight.html', trainer=trainer, scores=score_results)
 
 @bp.route('/inventory')
 def inventory():
@@ -119,4 +132,8 @@ def pokemon(id):
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
     pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.tp_id == id).one_or_none()
-    return render_template('pokemon.html', pokemon = pokemon)
+    moves = []
+    for m in [pokemon.move1, pokemon.move2, pokemon.move3, pokemon.move4]:
+        if m is not None:
+            moves.append(m)
+    return render_template('pokemon.html', pokemon=pokemon, moves=moves)
