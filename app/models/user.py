@@ -7,8 +7,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship, sessionmaker
 from app.models.base import Base, login
 from app.config import Config
+import random
+import string
 
 import datetime
+
+def get_random_string(length):
+    # choose from all lowercase letter
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    return result_str
 
 
 class User(Base, UserMixin):
@@ -67,7 +75,7 @@ WHERE email = :email
         return len(rows) > 0
 
     @staticmethod
-    def register(email, password, username):
+    def register(email, password, username, game):
         try:
             rows = app.db.execute("""
 INSERT INTO Users(email, password, username)
@@ -81,9 +89,9 @@ RETURNING uid
             # TODO: ADD SEQUENCE TO AVOID CONCURRENT ISSUES OF TRAINER ID
             rows2 = app.db.execute("""
 INSERT INTO trainer(trainer_id, is_user, name, game_id, added_by_id)
-VALUES((SELECT COUNT(*) FROM trainer) + 1, true, :username, 1, :uid) RETURNING trainer_id
+VALUES((SELECT COUNT(*) FROM trainer) + 1, true, :username, :game_id, :uid) RETURNING trainer_id
 """,
-                                  username=username, uid=uid)
+                                  username=username, uid=uid, game_id=game)
             return User.get(uid)
         except Exception as e:
 
