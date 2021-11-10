@@ -35,7 +35,7 @@
                                     <h3 class="h3 card-title mb-0">{{trainer.name}}</h3>
                                     <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">{{trainer.location.location_name}}</span> <br>
                                     <span class="h5 card-title mb-0">Pokemon Type:
-                                        {% for t in trainer_types[loop.index]%}
+                                        {% for t in trainer_types[(loop.index-1)*2]%}
                                             <a class="btn disabled btn-sm {{t}}"" style="opacity: 1">{{t.title()}}</a>
                                         {% endfor %}
                                     </span><br>
@@ -58,7 +58,7 @@
                                     <h3 class="h3 card-title mb-0">{{trainer.name}}</h3>
                                     <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">{{trainer.location.location_name}}</span> <br>
                                     <span class="h5 card-title mb-0">Pokemon Type:
-                                        {% for t in trainer_types[loop.index]%}
+                                        {% for t in trainer_types[loop.index*2-1]%}
                                             <a class="btn disabled btn-sm {{t}}"" style="opacity: 1">{{t.title()}}</a>
                                         {% endfor %}
                                     </span><br>

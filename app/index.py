@@ -89,10 +89,13 @@ def fight(trainer):
     user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
     trainer = session.query(Trainer).filter(Trainer.name == trainer_name, Trainer.game_id==user.trainers[0].game_id).one_or_none()
     # user_trainer = user.trainers[0] // TODO: ONCE USER CAN ADD POKEMON, INPUT HERE
-    dummy_trainer = session.query(Trainer).filter(Trainer.trainer_id == 2).one_or_none()
+    dummy_trainer = session.query(Trainer).filter(Trainer.trainer_id == 4).one_or_none()
+    user_trainer = dummy_trainer
 
+    score_results = score_teams(user_trainer.trainer_pokemon, trainer.trainer_pokemon)[::-1]
+    print(score_results)
 
-    return render_template('fight.html', trainer=trainer, user_trainer=dummy_trainer)
+    return render_template('fight.html', trainer=trainer, scores=score_results)
 
 @bp.route('/inventory')
 def inventory():
