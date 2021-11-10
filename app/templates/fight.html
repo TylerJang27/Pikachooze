@@ -23,20 +23,22 @@
         <div class="container">
             <div class="row mb-5">
                 <div class="col-4">
-                    <h4 class="h4 mb-3">Roark's Pokemon</h4>
+                    <h4 class="h4 mb-3">{{trainer.name}}'s Pokemon</h4>
 
-                    {% for a in range(0, 6)%}
+                    {% for pokemon in trainer.trainer_pokemon%}
                     <div class="card shadow mb-3">
                         <div class = "row">
                             <div class="col-4 m-2">
-                                <img src=https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrEpro86Nz9q6kBJfA4wDU9F5W0yQdeOIoSg&usqp=CAU" alt="Togepi" class="card-img-top rounded-top">
+                                <img src="{{pokemon.pokemon.pic}}" alt="{{pokemon.pokemon.name}}" class="card-img-top rounded-top">
                             </div>
                             <div class="col -0">
                                 <div class="card-body p-2">
-                                    <h3 class="h5 card-title mb-0">Togepi - Luka</h3>
-                                    <a class="btn disabled btn-sm" style="opacity: 1">Normal</a>
-                                    <a class="btn disabled btn-sm" style="opacity: 1">Fairy</a> <br>
-                                    <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Lv. 71, 180 hp</span><br>
+                                    <h3 class="h5 card-title mb-0">{% if pokemon.pokemon.name != pokemon.nickname%} {{pokemon.pokemon.name}} - {{pokemon.nickname}} {% else %} {{pokemon.pokemon.name}} {% endif %}</h3>
+                                    <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
+                                    {% if pokemon.pokemon.type2 %}
+                                    <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
+                                    {% endif %}
+                                    <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Lv. {{pokemon.level}}, ?? hp</span><br>
                                 </div>
 
                             </div>
@@ -50,23 +52,25 @@
                 <div class="col">
                     <h4 class="h4 mb-3">Top Picks</h4>
 
-                    {% for i in range(0, 5) %}
+                    {% for pokemon in user_trainer.trainer_pokemon %}
                     <div class="row align-items-center">
                         <div class="col-3" style="text-align: center;">
-                            <p>{{i}}</p>
+                            <p>{{loop.index}}</p>
                         </div>
                         <div class="col-3">
-                            <p class="mb-1">Charizard-George</p>
-                            <a class="btn disabled btn-sm" style="opacity: 1">Fire</a>
-                            <a class="btn disabled btn-sm" style="opacity: 1">Flying</a>
+                            <p class="mb-1">{% if pokemon.pokemon.name != pokemon.nickname%} {{pokemon.pokemon.name}} - {{pokemon.nickname}} {% else %} {{pokemon.pokemon.name}} {% endif %}</p>
+                            <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}} style="opacity: 1"">{{pokemon.pokemon.type1.type_name.title()}}</a>
+                            {% if pokemon.pokemon.type2 %}
+                            <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}} style="opacity: 1"">{{pokemon.pokemon.type2.type_name.title()}}</a>
+                            {% endif %}
                             <!-- Should this be name or nickname -->
                         </div>
                         <div class="col-3"> 
-                            <img src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/006.png" alt="Charizard" class="rounded-top w-75">
+                            <img src="{{pokemon.pokemon.pic}}" alt="{{pokemon.pokemon.name}}" class="rounded-top w-75">
                             <!-- Can we make this link to the edit page? -->
                         </div>
                         <div class="col-3">
-                            <p>{{86 - i**2}}</p>
+                            <p>{{86 - loop.index**2}}</p>
                         </div>
                     </div>
                     {% endfor %}
