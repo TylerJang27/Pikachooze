@@ -6,6 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from app.models.product import Product
 from app.models.purchase import Purchase
 from app.models.trainer import Trainer
+from app.models.trainer_pokemon import TrainerPokemon
 from app.models.user import User
 
 from app.config import Config
@@ -110,6 +111,12 @@ def leaders():
 
     return render_template('leaders.html', trainers=trainers, trainer_types=trainer_types)
 
-@bp.route('/pokemon')
-def pokemon():
-    return render_template('pokemon.html')
+@bp.route('/pokemon/<int:id>')
+def pokemon(id):
+    if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon
+        return redirect("/login", code=302)
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+    Session = sessionmaker(engine, expire_on_commit=False)
+    session = Session()
+    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.tp_id == id).one_or_none()
+    return render_template('pokemon.html', pokemon = pokemon)

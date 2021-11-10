@@ -11,8 +11,8 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-12 text-left mb-3 mt-4">
-                        <h2>Pikachooze</h2>
-                        <h1>Pikachu</h1>
+                        <h2>Inventory</h2>
+                        <h1>{{ pokemon.pokemon.name }}</h1>
                     </div>
                 </div>
             </div>
@@ -24,13 +24,17 @@
         <div class="container mb-5">
             <div class="row align-items-center justify-content-around">
                 <div class="col-md-6 col-xl-4 text-center text-md-left text-black">
-                    <img class="img-fluid" src="https://assets.stickpng.com/images/580b57fcd9996e24bc43c325.png" alt="Pikachu Image">
+                    <img class="img-fluid" src="{{ pokemon.pokemon.pic }}" alt="Pikachu Image">
                 </div>
                 <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
-                    <span class="h4 card-title mb-0">Name: </span> <span class="h5 card-title mb-0">Pikachu</span> <br><br>
-                    <span class="h4 card-title mb-0">Nick Name: </span> <span class="h5 card-title mb-0">Pika</span> <br><br>
-                    <span class="h4 card-title mb-0">Level: </span> <span class="h5 card-title mb-0">71</span> <br><br>
-                    <span class="h4 card-title mb-0">Type: </span> <a class="btn disabled btn-sm electric"" style="opacity: 1">Electric</a> <br><br>
+                    <span class="h4 card-title mb-0">Name: </span> <span class="h5 card-title mb-0">{{ pokemon.pokemon.name }}</span> <br><br>
+                    <span class="h4 card-title mb-0">Nick Name: </span> <span class="h5 card-title mb-0">{{ pokemon.pokemon.nickname }}</span> <br><br>
+                    <span class="h4 card-title mb-0">Level: </span> <span class="h5 card-title mb-0">{{ pokemon.pokemon.level }}</span> <br><br>
+                    <span class="h4 card-title mb-0">Type: </span> 
+                    <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
+                    {% if pokemon.pokemon.type2 %}
+                    <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
+                    {% endif %} <br><br>
                     <span class="h4 card-title mb-0">Stats: </span><br><br>
                     <ul>
                         <span class="h5 card-title mb-0">HP: </span> <span class="h6 card-title mb-0">211</span> <br>
@@ -38,9 +42,24 @@
                         <span class="h5 card-title mb-0">Defense: </span> <span class="h6 card-title mb-0">122</span> <br>
                         <span class="h5 card-title mb-0">Speed: </span> <span class="h6 card-title mb-0">240</span> <br>
                         <span class="h5 card-title mb-0">Sp. Def: </span> <span class="h6 card-title mb-0">145</span> <br>
+                        <span class="h5 card-title mb-0">Sp. Att: </span> <span class="h6 card-title mb-0">148</span> <br>
                     </ul>
                 </div>
                 <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
+                    <span class="h4 card-title mb-0">Moves: </span> <br><br>
+                    <div class="card shadow mb-3">
+                        <div class = "row">
+                            <div class="col-4 m-2">
+                                <span class="h5 card-title mb-0">Move 1</span>
+                            </div>
+                            <div class="col-2 m-2">
+                                <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
+                            </div>
+                            <div class="col -0 m-2">
+                                <span class="h5 card-title mb-0">10 / 10</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
