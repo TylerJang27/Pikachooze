@@ -28,9 +28,9 @@
                         <div class="card shadow col-3">
                             <img src="{{pokemon.pokemon.pic}}" alt="Togepi" class="card-img-top rounded-top">
                             <div class="card-body">
-                                <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name}}</a>
+                                <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
                                 {% if pokemon.pokemon.type2 %}
-                                <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name}}</a>
+                                <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
                                 {% endif %}
                                 <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Lv. </span></span>{{pokemon.level}}</span>
                                 <h3 class="h5 card-title mt-3">{{pokemon.nickname}}</h3>
@@ -41,9 +41,9 @@
                         <div class="card shadow col-3">
                             <img src="{{pokemon.pokemon.pic}}" alt="Togepi" class="card-img-top rounded-top">
                             <div class="card-body">
-                                <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name}}</a>
+                                <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
                                 {% if pokemon.pokemon.type2 %}
-                                <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name}}</a>
+                                <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
                                 {% endif %}
                                 <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Lv. </span></span>{{pokemon.level}}</span>
                                 <h3 class="h5 card-title mt-3">{{pokemon.nickname}}</h3>
