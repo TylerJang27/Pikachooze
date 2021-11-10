@@ -6,6 +6,8 @@ from sqlalchemy.orm import sessionmaker
 from app.models.product import Product
 from app.models.purchase import Purchase
 from app.models.trainer import Trainer
+from app.models.user import User
+
 from app.config import Config
 
 from flask import Blueprint
@@ -59,9 +61,27 @@ def index():
 def faq():
     return render_template('faq.html')
 
-@bp.route('/fight')
-def fight():
-    return render_template('fight.html')
+
+@bp.route('/fight/', defaults={'trainer': 'dummy'})
+@bp.route('/fight/<trainer>')
+def fight(trainer):
+    if not current_user.is_authenticated:
+        return redirect("/login", code=302)
+    print("THIS IS MY TRAINER", trainer)
+    if trainer == 'dummy':
+        return redirect("/leaders", code=302)
+    
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+    Session = sessionmaker(engine, expire_on_commit=False)
+    session = Session()
+    trainer_name = trainer.replace("%20", " ")
+    user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
+    trainer = session.query(Trainer).filter(Trainer.name == trainer_name, Trainer.game_id==user.trainers[0].game_id).one_or_none()
+    # user_trainer = user.trainers[0] // TODO: ONCE USER CAN ADD POKEMON, INPUT HERE
+    dummy_trainer = session.query(Trainer).filter(Trainer.trainer_id == 2).one_or_none()
+
+
+    return render_template('fight.html', trainer=trainer, user_trainer=dummy_trainer)
 
 @bp.route('/inventory')
 def inventory():
@@ -74,22 +94,21 @@ def inventory():
 
 @bp.route('/leaders')
 def leaders():
-    if current_user.is_authenticated:
-        engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
-        Session = sessionmaker(engine, expire_on_commit=False)
-        session = Session()
-        trainers = session.query(Trainer).filter(Trainer.game_id == current_user.trainers[0].game_id, Trainer.is_user == False).all() # TODO: VERIFY DOESN'T INCLUDE USERS
-        trainer_types = []
-        for t in trainers:
-            pokemon = [p.pokemon for p in t.trainer_pokemon]
-            all_types = [p.type1.type_name for p in pokemon] + [p.type2.type_name for p in pokemon if p.type2 is not None]
-            all_type_counts = [(t, all_types.count(t)) for t in set(all_types)]
-            all_types_sorted = sorted(all_type_counts, key=lambda x: -1*x[1])
-            trainer_types.append([k[0] for k in all_types_sorted[:2]])
-
-        return render_template('leaders.html', trainers=trainers, trainer_types=trainer_types)
-    else:
+    if not current_user.is_authenticated:
         return redirect("/login", code=302)
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+    Session = sessionmaker(engine, expire_on_commit=False)
+    session = Session()
+    trainers = session.query(Trainer).filter(Trainer.game_id == current_user.trainers[0].game_id, Trainer.is_user == False).all() # TODO: VERIFY DOESN'T INCLUDE USERS
+    trainer_types = []
+    for t in trainers:
+        pokemon = [p.pokemon for p in t.trainer_pokemon]
+        all_types = [p.type1.type_name for p in pokemon] + [p.type2.type_name for p in pokemon if p.type2 is not None]
+        all_type_counts = [(t, all_types.count(t)) for t in set(all_types)]
+        all_types_sorted = sorted(all_type_counts, key=lambda x: -1*x[1])
+        trainer_types.append([k[0] for k in all_types_sorted[:2]])
+
+    return render_template('leaders.html', trainers=trainers, trainer_types=trainer_types)
 
 @bp.route('/pokemon')
 def pokemon():
