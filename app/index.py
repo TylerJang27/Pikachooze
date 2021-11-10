@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, redirect
 from flask_login import current_user
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -74,4 +74,20 @@ def inventory():
 
 @bp.route('/leaders')
 def leaders():
-    return render_template('leaders.html')
+    if current_user.is_authenticated:
+        engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+        Session = sessionmaker(engine, expire_on_commit=False)
+        session = Session()
+        trainers = session.query(Trainer).filter(Trainer.game_id == current_user.trainers[0].game_id, Trainer.is_user == False).all() # TODO: VERIFY DOESN'T INCLUDE USERS
+        trainer_types = []
+        for t in trainers:
+            pokemon = [p.pokemon for p in t.trainer_pokemon]
+            all_types = [p.type1.type_name for p in pokemon] + [p.type2.type_name for p in pokemon if p.type2 is not None]
+            all_type_counts = [(t, all_types.count(t)) for t in set(all_types)]
+            all_types_sorted = sorted(all_type_counts, key=lambda x: -1*x[1])
+            trainer_types.append([k[0] for k in all_types_sorted[:2]])
+
+        return render_template('leaders.html', trainers=trainers, trainer_types=trainer_types)
+    else:
+        return redirect("/login", code=302)
+    

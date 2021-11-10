@@ -24,18 +24,21 @@
         <div class="container">
             <div class="row mb-5">
                 <div class="col-6">
-                    {% for a in range(0, 3)%}
+                    {% for trainer in trainers[::2]%}
                     <div class="card shadow mb-3">
                         <div class = "row">
                             <div class="col-2 m-2">
-                                <img src="https://cdn2.bulbagarden.net/upload/a/a6/Lets_Go_Pikachu_Eevee_Brock.png" alt="Brock" class="card-img-top rounded-top">
+                                <img src="{{trainer.pic}}" alt="{{trainer.name}}" class="card-img-top rounded-top">
                             </div>
                             <div class="col -0">
                                 <div class="card-body p-2">
-                                    <h3 class="h3 card-title mb-0">Brock</h3>
-                                    <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">Pewter City</span> <br>
-                                    <span class="h5 card-title mb-0">Pokemon Type: </span> <a href="#" class="btn btn-primary btn-sm">Rock</a> <br>
-                                    <span class="h5 card-title mb-0">Reward: </span> <span class="h6 card-title mb-0">Boulder Badge</span> <br>
+                                    <h3 class="h3 card-title mb-0">{{trainer.name}}</h3>
+                                    <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">{{trainer.location.location_name}}</span> <br>
+                                    <span class="h5 card-title mb-0">Pokemon Type:
+                                        {% for t in trainer_types[loop.index]%}
+                                            <a href="#" class="btn btn-primary btn-sm {{t}}">{{t.title()}}</a>
+                                        {% endfor %}
+                                    </span><br>
                                     <a href="{{ url_for('index.fight') }}" class="btn">Fight</a>
                                 </div>
                             </div>
@@ -44,25 +47,27 @@
                     {% endfor %}
                 </div>
                 <div class="col-6">
-                    {% for a in range(0, 3)%}
+                    {% for trainer in trainers[1::2]%}
                     <div class="card shadow mb-3">
                         <div class = "row">
                             <div class="col-2 m-2">
-                                <img src="https://cdn2.bulbagarden.net/upload/a/a6/Lets_Go_Pikachu_Eevee_Brock.png" alt="Brock" class="card-img-top rounded-top">
+                                <img src="{{trainer.pic}}" alt="{{trainer.name}}" class="card-img-top rounded-top">
                             </div>
                             <div class="col -0">
                                 <div class="card-body p-2">
-                                    <h3 class="h3 card-title mb-0">Brock</h3>
-                                    <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">Pewter City</span> <br>
-                                    <span class="h5 card-title mb-0">Pokemon Type: </span> <a href="#" class="btn btn-primary btn-sm">Rock</a> <br>
-                                    <span class="h5 card-title mb-0">Reward: </span> <span class="h6 card-title mb-0">Boulder Badge</span> <br>
+                                    <h3 class="h3 card-title mb-0">{{trainer.name}}</h3>
+                                    <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">{{trainer.location.location_name}}</span> <br>
+                                    <span class="h5 card-title mb-0">Pokemon Type:
+                                        {% for t in trainer_types[loop.index]%}
+                                            <a href="#" class="btn btn-primary btn-sm {{t}}">{{t.title()}}</a>
+                                        {% endfor %}
+                                    </span><br>
                                     <a href="{{ url_for('index.fight') }}" class="btn">Fight</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     {% endfor %}
-                    
                 </div>
             </div>
         </div>

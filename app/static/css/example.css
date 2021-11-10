@@ -439,3 +439,10 @@ width: 50%;
 
 .organic-radius {
   border-radius: 63% 37% 30% 70% / 50% 45% 55% 50%; }
+
+/* Type Buttons */
+.grass {
+  background-color: #00ff00;
+}
+
+/* TODO: ADD OTHER TYPES */
