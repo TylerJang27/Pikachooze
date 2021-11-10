@@ -59,9 +59,9 @@
                         </div>
                         <div class="col-3">
                             <p class="mb-1">{% if score[0].pokemon.name != score[0].nickname%} {{score[0].pokemon.name}} - {{score[0].nickname}} {% else %} {{score[0].pokemon.name}} {% endif %}</p>
-                            <a class="btn disabled btn-sm {{score[0].pokemon.type1.type_name}} style="opacity: 1"">{{score[0].pokemon.type1.type_name.title()}}</a>
+                            <a class="btn disabled btn-sm {{score[0].pokemon.type1.type_name}}" style="opacity: 1">{{score[0].pokemon.type1.type_name.title()}}</a>
                             {% if score[0].pokemon.type2 %}
-                            <a class="btn disabled btn-sm {{score[0].pokemon.type2.type_name}} style="opacity: 1"">{{score[0].pokemon.type2.type_name.title()}}</a>
+                            <a class="btn disabled btn-sm {{score[0].pokemon.type2.type_name}}" style="opacity: 1">{{score[0].pokemon.type2.type_name.title()}}</a>
                             {% endif %}
                             <!-- Should this be name or nickname -->
                         </div>
