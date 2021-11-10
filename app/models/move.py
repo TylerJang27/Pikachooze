@@ -5,9 +5,19 @@ import enum
 
 class Target(enum.Enum):
     user = 1
-    selected_pokemon = 2 # note the underscore
+    selected_pokemon = 2 
     ally = 3
     all_other_pokemon = 4
+    random_opponent = 5
+    all_opponents = 6
+    users_field = 7
+    specific_move = 8
+    entire_field = 9
+    opponents_field = 10
+    user_and_allies = 11
+    user_or_ally = 12
+    all_pokemon = 13
+    selected_pokemon_me_first = 14
     # TODO: ADD MORE AS NEEDED
 
 class DamageClass(enum.Enum):
@@ -28,7 +38,8 @@ class Move(Base):
     crit_rate = Column(Integer, nullable=True)
     # damage_class = Column(String, nullable=True)
     damage_class = Column(Enum(DamageClass), nullable=False)
-    turn_takes = Column(Integer, default=1)
+    min_hits = Column(Integer, nullable=True)
+    max_hits = Column(Integer, nullable=True)
     priority = Column(Integer, default=0)
     pp = Column(Integer, nullable=True)
 

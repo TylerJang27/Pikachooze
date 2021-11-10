@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% include 'navbar.html' %}
+
+{% block content %}
+
+<main>
+    <!-- Hero -->
+    <div class="section-header pb-6 text-black">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 text-left mb-3 mt-4">
+                    <h2>Pikachooze</h2>
+                    <h1>Gym Leaders</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Hero -->
+</main>
+
+    <!--End of Title section-->
+    <div class="section section-md">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-6">
+                    {% for trainer in trainers[::2]%}
+                    <div class="card shadow mb-3">
+                        <div class = "row">
+                            <div class="col-2 m-2">
+                                <img src="{{trainer.pic}}" alt="{{trainer.name}}" class="card-img-top rounded-top">
+                            </div>
+                            <div class="col -0">
+                                <div class="card-body p-2">
+                                    <h3 class="h3 card-title mb-0">{{trainer.name}}</h3>
+                                    <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">{{trainer.location.location_name}}</span> <br>
+                                    <span class="h5 card-title mb-0">Pokemon Type:
+                                        {% for t in trainer_types[(loop.index-1)*2]%}
+                                            <a class="btn disabled btn-sm {{t}}"" style="opacity: 1">{{t.title()}}</a>
+                                        {% endfor %}
+                                    </span><br>
+                                    <a href="{{ url_for('index.fight', trainer=trainer.name.replace(' ', '%20')) }}" class="btn">Fight</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="col-6">
+                    {% for trainer in trainers[1::2]%}
+                    <div class="card shadow mb-3">
+                        <div class = "row">
+                            <div class="col-2 m-2">
+                                <img src="{{trainer.pic}}" alt="{{trainer.name}}" class="card-img-top rounded-top">
+                            </div>
+                            <div class="col -0">
+                                <div class="card-body p-2">
+                                    <h3 class="h3 card-title mb-0">{{trainer.name}}</h3>
+                                    <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">{{trainer.location.location_name}}</span> <br>
+                                    <span class="h5 card-title mb-0">Pokemon Type:
+                                        {% for t in trainer_types[loop.index*2-1]%}
+                                            <a class="btn disabled btn-sm {{t}}"" style="opacity: 1">{{t.title()}}</a>
+                                        {% endfor %}
+                                    </span><br>
+                                    <a href="{{ url_for('index.fight', trainer=trainer.name.replace(' ', '%20')) }}" class="btn">Fight</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock content %}
