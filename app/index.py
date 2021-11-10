@@ -132,4 +132,8 @@ def pokemon(id):
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
     pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.tp_id == id).one_or_none()
-    return render_template('pokemon.html', pokemon = pokemon)
+    moves = []
+    for m in [pokemon.move1, pokemon.move2, pokemon.move3, pokemon.move4]:
+        if m is not None:
+            moves.append(m)
+    return render_template('pokemon.html', pokemon=pokemon, moves=moves)
