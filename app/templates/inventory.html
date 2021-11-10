@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% include 'navbar.html' %}
+
+{% block content %}
+
+    <main>
+        
+        <!-- Hero -->
+        <div class="section-header pb-6 text-black">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 text-left mb-3 mt-4">
+                        <h2>Pikachooze</h2>
+                        <h1>Inventory</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Hero -->
+
+        <!--End of Title section-->
+        <div class="section section-md">
+            <div class="container">
+                <div class="row mb-5">
+                    <!-- <div class="col-12 col-md-6 col-lg-3 mb-5 mb-lg-0"> -->
+                        {% for pokemon in trainer.trainer_pokemon %}
+                        <div class="card shadow col-3">
+                            <img src="{{pokemon.pokemon.pic}}" alt="Togepi" class="card-img-top rounded-top">
+                            <div class="card-body">
+                                <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
+                                {% if pokemon.pokemon.type2 %}
+                                <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
+                                {% endif %}
+                                <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Lv. </span></span>{{pokemon.level}}</span>
+                                <h3 class="h5 card-title mt-3">{{pokemon.nickname}}</h3>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% for pokemon in trainer.trainer_pokemon %}
+                        <div class="card shadow col-3">
+                            <img src="{{pokemon.pokemon.pic}}" alt="Togepi" class="card-img-top rounded-top">
+                            <div class="card-body">
+                                <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
+                                {% if pokemon.pokemon.type2 %}
+                                <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
+                                {% endif %}
+                                <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Lv. </span></span>{{pokemon.level}}</span>
+                                <h3 class="h5 card-title mt-3">{{pokemon.nickname}}</h3>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    <!-- </div> -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+{% endblock content %}
