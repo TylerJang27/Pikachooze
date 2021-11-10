@@ -14,7 +14,7 @@
               <img class="img-fluid mb-3" src="/static/assets/img/logo.png" alt="Logo">
               <h2 class="h1 mb-5">CS 316</h2>
               {% if current_user.is_authenticated %}
-                <a href="{{ url_for('index.fight') }}" class="btn">Fight</a>
+                <a href="{{ url_for('index.fight') }}" class="btn btn-light">Fight</a>
               {% else %}
                 <p><a href="{{ url_for('users.login') }}">Log in</a> to start a Pokemon fight!</p>
               {% endif %}

@@ -36,7 +36,7 @@
                                     <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">{{trainer.location.location_name}}</span> <br>
                                     <span class="h5 card-title mb-0">Pokemon Type:
                                         {% for t in trainer_types[loop.index]%}
-                                            <a href="#" class="btn btn-primary btn-sm {{t}}">{{t.title()}}</a>
+                                            <a class="btn disabled btn-sm {{t}}"" style="opacity: 1">{{t.title()}}</a>
                                         {% endfor %}
                                     </span><br>
                                     <a href="{{ url_for('index.fight') }}" class="btn">Fight</a>
@@ -59,7 +59,7 @@
                                     <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">{{trainer.location.location_name}}</span> <br>
                                     <span class="h5 card-title mb-0">Pokemon Type:
                                         {% for t in trainer_types[loop.index]%}
-                                            <a href="#" class="btn btn-primary btn-sm {{t}}">{{t.title()}}</a>
+                                            <a class="btn disabled btn-sm {{t}}"" style="opacity: 1">{{t.title()}}</a>
                                         {% endfor %}
                                     </span><br>
                                     <a href="{{ url_for('index.fight') }}" class="btn">Fight</a>
