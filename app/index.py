@@ -90,4 +90,7 @@ def leaders():
         return render_template('leaders.html', trainers=trainers, trainer_types=trainer_types)
     else:
         return redirect("/login", code=302)
-    
+
+@bp.route('/pokemon')
+def pokemon():
+    return render_template('pokemon.html')
