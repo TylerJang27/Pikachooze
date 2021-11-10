@@ -1,23 +1,34 @@
+13,Razor Wind,all_opponents,1,80,100,1,special,,,0,10
 14,Swords Dance,user,1,,,0,status,,,0,20
 15,Cut,selected_pokemon,1,50,95,0,physical,,,0,30
+20,Bind,selected_pokemon,1,15,85,0,physical,,,0,20
+22,Vine Whip,selected_pokemon,12,45,100,0,physical,,,0,25
 29,Headbutt,selected_pokemon,1,70,100,0,physical,,,0,15
 33,Tackle,selected_pokemon,1,40,100,0,physical,,,0,35
 34,Body Slam,selected_pokemon,1,85,100,0,physical,,,0,15
-37,Thrash,random_opponent,1,120,100,0,physical,,,0,10
+36,Take Down,selected_pokemon,1,90,85,0,physical,,,0,20
 38,Double Edge,selected_pokemon,1,120,100,0,physical,,,0,15
-44,Bite,selected_pokemon,17,60,100,0,physical,,,0,25
+45,Growl,all_opponents,1,,100,0,status,,,0,40
 70,Strength,selected_pokemon,1,80,100,0,physical,,,0,15
-71,Absorb,selected_pokemon,12,20,100,0,special,,,0,25
 72,Mega Drain,selected_pokemon,12,40,100,0,special,,,0,15
 73,Leech Seed,selected_pokemon,12,,90,0,status,,,0,10
 74,Growth,user,1,,,0,status,,,0,20
 75,Razor Leaf,all_opponents,12,55,95,1,physical,,,0,25
 76,Solar Beam,selected_pokemon,12,120,100,0,special,,,0,10
+77,Poison Powder,selected_pokemon,4,,75,0,status,,,0,35
+79,Sleep Powder,selected_pokemon,12,,75,0,status,,,0,15
+80,Petal Dance,random_opponent,12,120,100,0,special,,,0,10
+81,String Shot,all_opponents,7,,95,0,status,,,0,40
 92,Toxic,selected_pokemon,4,,90,0,status,,,0,10
+99,Rage,selected_pokemon,1,20,100,0,physical,,,0,20
+102,Mimic,selected_pokemon,1,,,0,status,,,0,10
 104,Double Team,user,1,,,0,status,,,0,15
-110,Withdraw,user,11,,,0,status,,,0,40
+111,Defense Curl,user,1,,,0,status,,,0,40
 113,Light Screen,users_field,14,,,0,status,,,0,30
 115,Reflect,users_field,14,,,0,status,,,0,20
+117,Bide,user,1,,,0,physical,,,1,10
+124,Sludge,selected_pokemon,4,65,100,0,special,,,0,20
+130,Skull Bash,selected_pokemon,1,130,100,0,physical,,,0,10
 133,Amnesia,user,14,,,0,status,,,0,20
 148,Flash,selected_pokemon,1,,100,0,status,,,0,20
 156,Rest,user,14,,,0,status,,,0,10
@@ -25,44 +36,42 @@
 173,Snore,selected_pokemon,1,50,100,0,special,,,0,15
 174,Curse,specific_move,8,,,0,status,,,0,10
 182,Protect,user,1,,,0,status,,,4,10
+188,Sludge Bomb,selected_pokemon,4,90,100,0,special,,,0,10
 189,Mud Slap,selected_pokemon,5,20,100,0,special,,,0,10
 202,Giga Drain,selected_pokemon,12,75,100,0,special,,,0,10
 203,Endure,user,1,,,0,status,,,4,10
+204,Charm,selected_pokemon,18,,100,0,status,,,0,20
 207,Swagger,selected_pokemon,1,,85,0,status,,,0,15
+210,Fury Cutter,selected_pokemon,7,40,95,0,physical,,,0,20
 213,Attract,selected_pokemon,1,,100,0,status,,,0,15
 214,Sleep Talk,user,1,,,0,status,,,0,10
 216,Return,selected_pokemon,1,,100,0,physical,,,0,20
 218,Frustration,selected_pokemon,1,,100,0,physical,,,0,20
 219,Safeguard,users_field,1,,,0,status,,,0,25
-231,Iron Tail,selected_pokemon,9,100,75,0,physical,,,0,15
+230,Sweet Scent,all_opponents,1,,100,0,status,,,0,20
 235,Synthesis,user,12,,,0,status,,,0,5
 237,Hidden Power,selected_pokemon,1,60,100,0,special,,,0,15
 241,Sunny Day,entire_field,10,,,0,status,,,0,5
-242,Crunch,selected_pokemon,17,80,100,0,physical,,,0,15
 249,Rock Smash,selected_pokemon,2,40,100,0,physical,,,0,15
-254,Stockpile,user,1,,,0,status,,,0,20
-255,Spit Up,selected_pokemon,1,,100,0,special,,,0,10
-256,Swallow,user,1,,,0,status,,,0,10
 263,Facade,selected_pokemon,1,70,100,0,physical,,,0,20
 267,Nature Power,selected_pokemon,1,,,0,status,,,0,20
-276,Superpower,selected_pokemon,2,120,100,0,physical,,,0,5
+275,Ingrain,user,12,,,0,status,,,0,20
+282,Knock Off,selected_pokemon,17,65,100,0,physical,,,0,20
 290,Secret Power,selected_pokemon,1,70,100,0,physical,,,0,20
-321,Tickle,selected_pokemon,1,,100,0,status,,,0,20
-328,Sand Tomb,selected_pokemon,5,35,85,0,physical,,,0,15
+320,Grass Whistle,selected_pokemon,12,,55,0,status,,,0,15
 331,Bullet Seed,selected_pokemon,12,25,100,0,physical,2,5,0,30
+345,Magical Leaf,selected_pokemon,12,60,,0,special,,,0,20
 363,Natural Gift,selected_pokemon,1,,100,0,physical,,,0,15
 388,Worry Seed,selected_pokemon,12,,100,0,status,,,0,10
 402,Seed Bomb,selected_pokemon,12,80,100,0,physical,,,0,15
 412,Energy Ball,selected_pokemon,12,90,100,0,special,,,0,10
-414,Earth Power,selected_pokemon,5,90,100,0,special,,,0,10
-431,Rock Climb,selected_pokemon,1,90,85,0,physical,,,0,20
 437,Leaf Storm,selected_pokemon,12,130,90,0,special,,,0,5
+438,Power Whip,selected_pokemon,12,120,85,0,physical,,,0,10
 445,Captivate,all_opponents,1,,100,0,status,,,0,20
-446,Stealth Rock,opponents_field,6,,,0,status,,,0,20
 447,Grass Knot,selected_pokemon,12,,100,0,special,,,0,20
-469,Wide Guard,users_field,6,,,0,status,,,3,10
-484,Heavy Slam,selected_pokemon,9,,100,0,physical,,,0,10
+474,Venoshock,selected_pokemon,4,65,100,0,special,,,0,10
 496,Round,selected_pokemon,1,60,100,0,special,,,0,15
+497,Echoed Voice,selected_pokemon,1,40,100,0,special,,,0,15
 520,Grass Pledge,selected_pokemon,12,80,100,0,special,,,0,10
 526,Work Up,user,1,,,0,status,,,0,30
 580,Grassy Terrain,entire_field,12,,,0,status,,,0,10
@@ -70,476 +79,583 @@
 46,Roar,selected_pokemon,1,,,0,status,,,-6,20
 63,Hyper Beam,selected_pokemon,1,150,90,0,special,,,0,5
 89,Earthquake,all_other_pokemon,5,100,100,0,physical,,,0,10
-157,Rock Slide,all_opponents,6,75,90,0,physical,,,0,10
 200,Outrage,random_opponent,16,120,100,0,physical,,,0,10
-201,Sandstorm,entire_field,6,,,0,status,,,0,10
-317,Rock Tomb,selected_pokemon,6,60,95,0,physical,,,0,15
 335,Block,selected_pokemon,1,,,0,status,,,0,5
 338,Frenzy Plant,selected_pokemon,12,150,90,0,special,,,0,5
-397,Rock Polish,user,6,,,0,status,,,0,20
 416,Giga Impact,selected_pokemon,1,150,90,0,physical,,,0,5
-442,Iron Head,selected_pokemon,9,80,100,0,physical,,,0,15
-444,Stone Edge,selected_pokemon,6,100,80,1,physical,,,0,5
-452,Wood Hammer,selected_pokemon,12,120,100,0,physical,,,0,15
+431,Rock Climb,selected_pokemon,1,90,85,0,physical,,,0,20
 523,Bulldoze,all_other_pokemon,5,60,100,0,physical,,,0,20
+572,Petal Blizzard,all_other_pokemon,12,90,100,0,physical,,,0,15
+5,Mega Punch,selected_pokemon,1,80,85,0,physical,,,0,20
 7,Fire Punch,selected_pokemon,10,75,100,0,physical,,,0,15
 9,Thunder Punch,selected_pokemon,13,75,100,0,physical,,,0,15
 10,Scratch,selected_pokemon,1,40,100,0,physical,,,0,35
-24,Double Kick,selected_pokemon,2,30,100,0,physical,2,2,0,30
+25,Mega Kick,selected_pokemon,1,120,75,0,physical,,,0,5
 43,Leer,all_opponents,1,,100,0,status,,,0,30
+44,Bite,selected_pokemon,17,60,100,0,physical,,,0,25
 52,Ember,selected_pokemon,10,40,100,0,special,,,0,25
 53,Flamethrower,selected_pokemon,10,90,100,0,special,,,0,15
 66,Submission,selected_pokemon,2,80,80,0,physical,,,0,20
-67,Low Kick,selected_pokemon,2,,100,0,physical,,,0,20
 68,Counter,specific_move,2,,100,0,physical,,,-5,20
+69,Seismic Toss,selected_pokemon,2,,100,0,physical,,,0,20
+82,Dragon Rage,selected_pokemon,16,,100,0,special,,,0,10
 83,Fire Spin,selected_pokemon,10,35,85,0,special,,,0,15
 91,Dig,selected_pokemon,5,80,100,0,physical,,,0,10
-116,Focus Energy,user,1,,,0,status,,,0,30
+108,Smokescreen,selected_pokemon,1,,100,0,status,,,0,20
 126,Fire Blast,selected_pokemon,10,110,85,0,special,,,0,5
 129,Swift,all_opponents,1,60,,0,special,,,0,20
-154,Fury Swipes,selected_pokemon,1,18,80,0,physical,2,5,0,15
-172,Flame Wheel,selected_pokemon,10,60,100,0,physical,,,0,25
-205,Rollout,selected_pokemon,6,30,90,0,physical,,,0,20
-227,Encore,selected_pokemon,1,,100,0,status,,,0,5
-252,Fake Out,selected_pokemon,1,40,100,0,physical,,,3,10
-253,Uproar,random_opponent,1,90,100,0,special,,,0,10
+157,Rock Slide,all_opponents,6,75,90,0,physical,,,0,10
+163,Slash,selected_pokemon,1,70,100,1,physical,,,0,20
+184,Scary Face,selected_pokemon,1,,100,0,status,,,0,10
+187,Belly Drum,user,1,,,0,status,,,0,10
+223,Dynamic Punch,selected_pokemon,2,100,50,0,physical,,,0,5
+225,Dragon Breath,selected_pokemon,16,60,100,0,special,,,0,20
+231,Iron Tail,selected_pokemon,9,100,75,0,physical,,,0,15
+232,Metal Claw,selected_pokemon,9,50,95,0,physical,,,0,35
+242,Crunch,selected_pokemon,17,80,100,0,physical,,,0,15
+246,Ancient Power,selected_pokemon,6,60,100,0,special,,,0,5
+251,Beat Up,selected_pokemon,17,,100,0,physical,6,6,0,10
 257,Heat Wave,all_opponents,10,95,90,0,special,,,0,10
-259,Torment,selected_pokemon,17,,100,0,status,,,0,15
 261,Will O Wisp,selected_pokemon,10,,85,0,status,,,0,15
 264,Focus Punch,selected_pokemon,2,150,100,0,physical,,,-3,20
-269,Taunt,selected_pokemon,17,,100,0,status,,,0,20
-270,Helping Hand,ally,1,,,0,status,,,5,20
-272,Role Play,selected_pokemon,14,,,0,status,,,0,10
-274,Assist,user,1,,,0,status,,,0,20
 280,Brick Break,selected_pokemon,2,75,100,0,physical,,,0,15
-283,Endeavor,selected_pokemon,1,,100,0,physical,,,0,5
-299,Blaze Kick,selected_pokemon,10,85,90,1,physical,,,0,10
-303,Slack Off,user,1,,,0,status,,,0,10
+314,Air Cutter,all_opponents,3,60,95,1,special,,,0,25
 315,Overheat,selected_pokemon,10,130,90,0,special,,,0,5
+317,Rock Tomb,selected_pokemon,6,60,95,0,physical,,,0,15
 332,Aerial Ace,selected_pokemon,3,60,,0,physical,,,0,20
-339,Bulk Up,user,2,,,0,status,,,0,20
-343,Covet,selected_pokemon,1,60,100,0,physical,,,0,25
-369,U Turn,selected_pokemon,7,70,100,0,physical,,,0,20
+337,Dragon Claw,selected_pokemon,16,80,100,0,physical,,,0,15
+349,Dragon Dance,user,16,,,0,status,,,0,20
 374,Fling,selected_pokemon,17,,100,0,physical,,,0,10
-410,Vacuum Wave,selected_pokemon,2,40,100,0,special,,,1,30
-417,Nasty Plot,user,17,,,0,status,,,0,20
+394,Flare Blitz,selected_pokemon,10,120,100,0,physical,,,0,15
+406,Dragon Pulse,selected_pokemon,16,85,100,0,special,,,0,10
+407,Dragon Rush,selected_pokemon,16,100,75,0,physical,,,0,10
 421,Shadow Claw,selected_pokemon,8,70,100,1,physical,,,0,15
-441,Gunk Shot,selected_pokemon,4,120,80,0,physical,,,0,5
+424,Fire Fang,selected_pokemon,10,65,95,0,physical,,,0,15
 468,Hone Claws,user,17,,,0,status,,,0,15
+481,Flame Burst,selected_pokemon,10,70,100,0,special,,,0,15
 488,Flame Charge,selected_pokemon,10,50,100,0,physical,,,0,20
-490,Low Sweep,selected_pokemon,2,65,100,0,physical,,,0,20
-501,Quick Guard,users_field,2,,,0,status,,,3,15
 510,Incinerate,all_opponents,10,60,100,0,special,,,0,15
-512,Acrobatics,selected_pokemon,3,55,100,0,physical,,,0,15
+517,Inferno,selected_pokemon,10,100,50,0,special,,,0,5
 519,Fire Pledge,selected_pokemon,10,80,100,0,special,,,0,10
 612,Power Up Punch,selected_pokemon,2,40,100,0,physical,,,0,20
-183,Mach Punch,selected_pokemon,2,40,100,0,physical,,,1,30
-364,Feint,selected_pokemon,1,30,100,0,physical,,,2,10
-370,Close Combat,selected_pokemon,2,120,100,0,physical,,,0,5
-394,Flare Blitz,selected_pokemon,10,120,100,0,physical,,,0,15
-398,Poison Jab,selected_pokemon,4,80,100,0,physical,,,0,20
-411,Focus Blast,selected_pokemon,2,120,70,0,special,,,0,5
-514,Retaliate,selected_pokemon,1,70,100,0,physical,,,0,5
-530,Dual Chop,selected_pokemon,16,40,90,0,physical,2,2,0,15
+17,Wing Attack,selected_pokemon,3,60,100,0,physical,,,0,35
+19,Fly,selected_pokemon,3,90,95,0,physical,,,0,15
+90,Fissure,selected_pokemon,5,,30,0,physical,,,0,5
+201,Sandstorm,entire_field,6,,,0,status,,,0,10
+211,Steel Wing,selected_pokemon,9,70,90,0,physical,,,0,25
+239,Twister,all_opponents,16,40,100,0,special,,,0,20
 307,Blast Burn,selected_pokemon,10,150,90,0,special,,,0,5
-347,Calm Mind,user,14,,,0,status,,,0,20
-386,Punishment,selected_pokemon,17,,100,0,physical,,,0,5
-1,Pound,selected_pokemon,1,40,100,0,physical,,,0,35
-31,Fury Attack,selected_pokemon,1,15,85,0,physical,2,5,0,20
-45,Growl,all_opponents,1,,100,0,status,,,0,40
-48,Supersonic,selected_pokemon,1,,55,0,status,,,0,20
+355,Roost,user,3,,,0,status,,,0,10
+366,Tailwind,users_field,3,,,0,status,,,0,15
+403,Air Slash,selected_pokemon,3,75,95,0,special,,,0,15
+411,Focus Blast,selected_pokemon,2,120,70,0,special,,,0,5
+432,Defog,selected_pokemon,3,,,0,status,,,0,15
+466,Ominous Wind,selected_pokemon,8,60,100,0,special,,,0,5
+507,Sky Drop,selected_pokemon,3,60,100,0,physical,,,0,10
+525,Dragon Tail,selected_pokemon,16,60,90,0,physical,,,-6,10
+693,Brutal Swing,all_other_pokemon,17,60,100,0,physical,,,0,20
+8,Ice Punch,selected_pokemon,15,75,100,0,physical,,,0,15
+39,Tail Whip,all_opponents,1,,100,0,status,,,0,30
 54,Mist,users_field,15,,,0,status,,,0,30
+55,Water Gun,selected_pokemon,11,40,100,0,special,,,0,25
 56,Hydro Pump,selected_pokemon,11,110,80,0,special,,,0,5
 57,Surf,all_other_pokemon,11,90,100,0,special,,,0,15
 58,Ice Beam,selected_pokemon,15,90,100,0,special,,,0,10
 59,Blizzard,all_opponents,15,110,70,0,special,,,0,5
 61,Bubble Beam,selected_pokemon,11,65,100,0,special,,,0,20
-64,Peck,selected_pokemon,3,35,100,0,physical,,,0,35
-65,Drill Peck,selected_pokemon,3,80,100,0,physical,,,0,20
-97,Agility,user,14,,,0,status,,,0,30
-117,Bide,user,1,,,0,physical,,,1,10
+93,Confusion,selected_pokemon,14,50,100,0,special,,,0,25
+110,Withdraw,user,11,,,0,status,,,0,40
+114,Haze,entire_field,15,,,0,status,,,0,30
 127,Waterfall,selected_pokemon,11,80,100,0,physical,,,0,15
 145,Bubble,all_opponents,11,40,100,0,special,,,0,30
 175,Flail,selected_pokemon,1,,100,0,physical,,,0,15
+193,Foresight,selected_pokemon,1,,,0,status,,,0,40
 196,Icy Wind,all_opponents,15,55,95,0,special,,,0,15
+205,Rollout,selected_pokemon,6,30,90,0,physical,,,0,20
+229,Rapid Spin,selected_pokemon,1,50,100,0,physical,,,0,40
 240,Rain Dance,entire_field,11,,,0,status,,,0,5
+243,Mirror Coat,specific_move,14,,100,0,special,,,-5,20
 250,Whirlpool,selected_pokemon,11,35,85,0,special,,,0,15
+252,Fake Out,selected_pokemon,1,40,100,0,physical,,,3,10
 258,Hail,entire_field,15,,,0,status,,,0,10
 281,Yawn,selected_pokemon,1,,,0,status,,,0,10
+287,Refresh,user,1,,,0,status,,,0,20
 291,Dive,selected_pokemon,11,80,100,0,physical,,,0,10
-297,Feather Dance,selected_pokemon,3,,100,0,status,,,0,15
 300,Mud Sport,entire_field,5,,,0,status,,,0,15
-324,Signal Beam,selected_pokemon,7,75,100,0,special,,,0,15
-346,Water Sport,entire_field,11,,,0,status,,,0,15
-352,Water Pulse,selected_pokemon,11,60,100,0,special,,,0,20
-362,Brine,selected_pokemon,11,65,100,0,special,,,0,10
-365,Pluck,selected_pokemon,3,60,100,0,physical,,,0,20
-392,Aqua Ring,user,11,,,0,status,,,0,20
-432,Defog,selected_pokemon,3,,,0,status,,,0,15
-458,Double Hit,selected_pokemon,1,35,90,0,physical,2,2,0,10
-497,Echoed Voice,selected_pokemon,1,40,100,0,special,,,0,15
-503,Scald,selected_pokemon,11,80,100,0,special,,,0,15
-511,Quash,selected_pokemon,17,,100,0,status,,,0,15
-518,Water Pledge,selected_pokemon,11,80,100,0,special,,,0,10
-681,Power Trip,selected_pokemon,17,20,100,0,physical,,,0,10
-232,Metal Claw,selected_pokemon,9,50,95,0,physical,,,0,35
-210,Fury Cutter,selected_pokemon,7,40,95,0,physical,,,0,20
-211,Steel Wing,selected_pokemon,9,70,90,0,physical,,,0,25
-282,Knock Off,selected_pokemon,17,65,100,0,physical,,,0,20
-308,Hydro Cannon,selected_pokemon,11,150,90,0,special,,,0,5
+323,Water Spout,all_opponents,11,150,100,0,special,,,0,5
+330,Muddy Water,all_opponents,11,90,85,0,special,,,0,10
 334,Iron Defense,user,9,,,0,status,,,0,15
+352,Water Pulse,selected_pokemon,11,60,100,0,special,,,0,20
+360,Gyro Ball,selected_pokemon,9,,100,0,physical,,,0,5
+362,Brine,selected_pokemon,11,65,100,0,special,,,0,10
+392,Aqua Ring,user,11,,,0,status,,,0,20
+396,Aura Sphere,selected_pokemon,2,80,,0,special,,,0,20
+401,Aqua Tail,selected_pokemon,11,90,90,0,physical,,,0,10
+428,Zen Headbutt,selected_pokemon,14,80,90,0,physical,,,0,15
+453,Aqua Jet,selected_pokemon,11,40,100,0,physical,,,1,20
+503,Scald,selected_pokemon,11,80,100,0,special,,,0,15
+518,Water Pledge,selected_pokemon,11,80,100,0,special,,,0,10
+308,Hydro Cannon,selected_pokemon,11,150,90,0,special,,,0,5
+324,Signal Beam,selected_pokemon,7,75,100,0,special,,,0,15
+399,Dark Pulse,selected_pokemon,17,80,100,0,special,,,0,15
 419,Avalanche,selected_pokemon,15,60,100,0,physical,,,-4,10
 430,Flash Cannon,selected_pokemon,9,80,100,0,special,,,0,10
-453,Aqua Jet,selected_pokemon,11,40,100,0,physical,,,1,20
-17,Wing Attack,selected_pokemon,3,60,100,0,physical,,,0,35
+479,Smack Down,selected_pokemon,6,50,100,0,physical,,,0,15
+450,Bug Bite,selected_pokemon,7,60,100,0,physical,,,0,20
+527,Electroweb,all_opponents,13,55,95,0,special,,,0,15
+106,Harden,user,1,,,0,status,,,0,30
+16,Gust,selected_pokemon,3,40,100,0,special,,,0,35
 18,Whirlwind,selected_pokemon,1,,,0,status,,,-6,20
-19,Fly,selected_pokemon,3,90,95,0,physical,,,0,15
+48,Supersonic,selected_pokemon,1,,55,0,status,,,0,20
+60,Psybeam,selected_pokemon,14,65,100,0,special,,,0,20
+78,Stun Spore,selected_pokemon,12,,75,0,status,,,0,30
+94,Psychic,selected_pokemon,14,90,100,0,special,,,0,10
+100,Teleport,user,14,,,0,status,,,0,20
+138,Dream Eater,selected_pokemon,14,100,100,0,special,,,0,15
+149,Psywave,selected_pokemon,14,,100,0,special,,,0,15
+168,Thief,selected_pokemon,17,60,100,0,physical,,,0,25
+171,Nightmare,selected_pokemon,8,,100,0,status,,,0,15
+244,Psych Up,selected_pokemon,1,,,0,status,,,0,10
+247,Shadow Ball,selected_pokemon,8,80,100,0,special,,,0,15
+285,Skill Swap,selected_pokemon,14,,,0,status,,,0,10
+318,Silver Wind,selected_pokemon,7,60,100,0,special,,,0,5
+369,U Turn,selected_pokemon,7,70,100,0,physical,,,0,20
+405,Bug Buzz,selected_pokemon,7,90,100,0,special,,,0,10
+476,Rage Powder,user,7,,,0,status,,,2,20
+483,Quiver Dance,user,7,,,0,status,,,0,20
+512,Acrobatics,selected_pokemon,3,55,100,0,physical,,,0,15
+522,Struggle Bug,all_opponents,7,50,100,0,special,,,0,20
+611,Infestation,selected_pokemon,7,20,100,0,special,,,0,20
+40,Poison Sting,selected_pokemon,4,15,100,0,physical,,,0,35
+31,Fury Attack,selected_pokemon,1,15,85,0,physical,2,5,0,20
+41,Twineedle,selected_pokemon,7,25,100,0,physical,2,2,0,20
+42,Pin Missile,selected_pokemon,7,25,95,0,physical,2,5,0,20
+97,Agility,user,14,,,0,status,,,0,30
+116,Focus Energy,user,1,,,0,status,,,0,30
+206,False Swipe,selected_pokemon,1,40,100,0,physical,,,0,40
+228,Pursuit,selected_pokemon,17,40,100,0,physical,,,0,20
+283,Endeavor,selected_pokemon,1,,100,0,physical,,,0,5
+371,Payback,selected_pokemon,17,50,100,0,physical,,,0,10
+372,Assurance,selected_pokemon,17,60,100,0,physical,,,0,10
+390,Toxic Spikes,opponents_field,4,,,0,status,,,0,20
+398,Poison Jab,selected_pokemon,4,80,100,0,physical,,,0,20
+404,X Scissor,selected_pokemon,7,80,100,0,physical,,,0,15
+529,Drill Run,selected_pokemon,5,80,95,1,physical,,,0,10
+565,Fell Stinger,selected_pokemon,7,50,100,0,physical,,,0,25
 28,Sand Attack,selected_pokemon,5,,100,0,status,,,0,15
-36,Take Down,selected_pokemon,1,90,85,0,physical,,,0,20
 98,Quick Attack,selected_pokemon,1,40,100,0,physical,,,1,30
 119,Mirror Move,selected_pokemon,3,,,0,status,,,0,20
-168,Thief,selected_pokemon,17,60,100,0,physical,,,0,25
-193,Foresight,selected_pokemon,1,,,0,status,,,0,40
-197,Detect,user,2,,,0,status,,,4,5
-228,Pursuit,selected_pokemon,17,40,100,0,physical,,,0,20
-239,Twister,all_opponents,16,40,100,0,special,,,0,20
-279,Revenge,selected_pokemon,2,60,100,0,physical,,,-4,10
-310,Astonish,selected_pokemon,8,30,100,0,physical,,,0,15
-314,Air Cutter,all_opponents,3,60,95,1,special,,,0,25
-355,Roost,user,3,,,0,status,,,0,10
-366,Tailwind,users_field,3,,,0,status,,,0,15
-413,Brave Bird,selected_pokemon,3,120,100,0,physical,,,0,15
-466,Ominous Wind,selected_pokemon,8,60,100,0,special,,,0,5
-515,Final Gambit,selected_pokemon,2,,100,0,special,,,0,5
 143,Sky Attack,selected_pokemon,3,140,90,1,physical,,,0,5
+185,Feint Attack,selected_pokemon,17,60,,0,physical,,,0,20
+197,Detect,user,2,,,0,status,,,4,5
+253,Uproar,random_opponent,1,90,100,0,special,,,0,10
+297,Feather Dance,selected_pokemon,3,,100,0,status,,,0,15
+365,Pluck,selected_pokemon,3,60,100,0,physical,,,0,20
+413,Brave Bird,selected_pokemon,3,120,100,0,physical,,,0,15
+542,Hurricane,selected_pokemon,3,110,70,0,special,,,0,10
 85,Thunderbolt,selected_pokemon,13,90,100,0,special,,,0,15
 86,Thunder Wave,selected_pokemon,13,,90,0,status,,,0,20
 87,Thunder,selected_pokemon,13,110,70,0,special,,,0,10
-111,Defense Curl,user,1,,,0,status,,,0,40
-130,Skull Bash,selected_pokemon,1,130,100,0,physical,,,0,10
+103,Screech,selected_pokemon,1,,85,0,status,,,0,40
+154,Fury Swipes,selected_pokemon,1,18,80,0,physical,2,5,0,15
 158,Hyper Fang,selected_pokemon,1,80,90,0,physical,,,0,15
 162,Super Fang,selected_pokemon,1,,90,0,physical,,,0,10
-247,Shadow Ball,selected_pokemon,8,80,100,0,special,,,0,15
-316,Odor Sleuth,selected_pokemon,1,,,0,status,,,0,40
+172,Flame Wheel,selected_pokemon,10,60,100,0,physical,,,0,25
+179,Reversal,selected_pokemon,2,,100,0,physical,,,0,15
+269,Taunt,selected_pokemon,17,,100,0,status,,,0,20
+279,Revenge,selected_pokemon,2,60,100,0,physical,,,-4,10
+343,Covet,selected_pokemon,1,60,100,0,physical,,,0,25
 351,Shock Wave,selected_pokemon,13,60,,0,special,,,0,20
+382,Me First,selected_pokemon_me_first,1,,,0,status,,,0,20
 387,Last Resort,selected_pokemon,1,140,100,0,physical,,,0,5
-401,Aqua Tail,selected_pokemon,11,90,90,0,physical,,,0,10
+389,Sucker Punch,selected_pokemon,17,70,100,0,physical,,,1,5
 451,Charge Beam,selected_pokemon,13,50,90,0,special,,,0,10
-55,Water Gun,selected_pokemon,11,40,100,0,special,,,0,25
-563,Rototiller,all_pokemon,5,,,0,status,,,0,10
-81,String Shot,all_opponents,7,,95,0,status,,,0,40
-450,Bug Bite,selected_pokemon,7,60,100,0,physical,,,0,20
-522,Struggle Bug,all_opponents,7,50,100,0,special,,,0,20
-47,Sing,selected_pokemon,1,,55,0,status,,,0,15
-103,Screech,selected_pokemon,1,,85,0,status,,,0,40
-141,Leech Life,selected_pokemon,7,80,100,0,physical,,,0,10
-163,Slash,selected_pokemon,1,70,100,1,physical,,,0,20
-195,Perish Song,all_pokemon,1,,,0,status,,,0,5
-206,False Swipe,selected_pokemon,1,40,100,0,physical,,,0,40
-215,Heal Bell,user_and_allies,1,,,0,status,,,0,5
-304,Hyper Voice,all_opponents,1,90,100,0,special,,,0,10
-318,Silver Wind,selected_pokemon,7,60,100,0,special,,,0,5
-400,Night Slash,selected_pokemon,17,70,100,1,physical,,,0,15
-404,X Scissor,selected_pokemon,7,80,100,0,physical,,,0,15
-405,Bug Buzz,selected_pokemon,7,90,100,0,special,,,0,10
-564,Sticky Web,opponents_field,7,,,0,status,,,0,20
-565,Fell Stinger,selected_pokemon,7,50,100,0,physical,,,0,25
-611,Infestation,selected_pokemon,7,20,100,0,special,,,0,20
-184,Scary Face,selected_pokemon,1,,100,0,status,,,0,10
-209,Spark,selected_pokemon,13,65,100,0,physical,,,0,20
-268,Charge,user,13,,,0,status,,,0,20
-313,Fake Tears,selected_pokemon,17,,100,0,status,,,0,20
-336,Howl,user,1,,,0,status,,,0,40
-393,Magnet Rise,user,13,,,0,status,,,0,10
+514,Retaliate,selected_pokemon,1,70,100,0,physical,,,0,5
+515,Final Gambit,selected_pokemon,2,,100,0,special,,,0,5
+528,Wild Charge,selected_pokemon,13,90,100,0,physical,,,0,15
+64,Peck,selected_pokemon,3,35,100,0,physical,,,0,35
+65,Drill Peck,selected_pokemon,3,80,100,0,physical,,,0,20
+161,Tri Attack,selected_pokemon,1,80,100,0,special,,,0,10
+310,Astonish,selected_pokemon,8,30,100,0,physical,,,0,15
+21,Slam,selected_pokemon,1,80,75,0,physical,,,0,20
+35,Wrap,selected_pokemon,1,15,90,0,physical,,,0,20
+50,Disable,selected_pokemon,1,,100,0,status,,,0,20
+51,Acid,all_opponents,4,40,100,0,special,,,0,30
+137,Glare,selected_pokemon,1,,100,0,status,,,0,30
+180,Spite,selected_pokemon,8,,100,0,status,,,0,10
+254,Stockpile,user,1,,,0,status,,,0,20
+255,Spit Up,selected_pokemon,1,,100,0,special,,,0,10
+256,Swallow,user,1,,,0,status,,,0,10
+259,Torment,selected_pokemon,17,,100,0,status,,,0,15
+289,Snatch,user,17,,,0,status,,,4,10
+305,Poison Fang,selected_pokemon,4,50,100,0,physical,,,0,15
+342,Poison Tail,selected_pokemon,4,50,100,1,physical,,,0,25
+380,Gastro Acid,selected_pokemon,4,,100,0,status,,,0,10
+415,Switcheroo,selected_pokemon,17,,100,0,status,,,0,10
+426,Mud Bomb,selected_pokemon,5,65,85,0,special,,,0,10
+441,Gunk Shot,selected_pokemon,4,120,80,0,physical,,,0,5
+482,Sludge Wave,all_other_pokemon,4,95,100,0,special,,,0,10
+489,Coil,user,4,,,0,status,,,0,20
+491,Acid Spray,selected_pokemon,4,40,100,0,special,,,0,20
+562,Belch,selected_pokemon,4,120,90,0,special,,,0,10
 422,Thunder Fang,selected_pokemon,13,65,95,0,physical,,,0,15
 423,Ice Fang,selected_pokemon,15,65,95,0,physical,,,0,15
-424,Fire Fang,selected_pokemon,10,65,95,0,physical,,,0,15
-435,Discharge,all_other_pokemon,13,80,100,0,special,,,0,15
-521,Volt Switch,selected_pokemon,13,70,100,0,special,,,0,20
-528,Wild Charge,selected_pokemon,13,90,100,0,physical,,,0,15
-555,Snarl,all_opponents,17,55,95,0,special,,,0,15
-598,Eerie Impulse,selected_pokemon,13,,100,0,status,,,0,15
-608,Baby Doll Eyes,selected_pokemon,18,,100,0,status,,,1,30
-604,Electric Terrain,entire_field,13,,,0,status,,,0,10
-5,Mega Punch,selected_pokemon,1,80,85,0,physical,,,0,20
-8,Ice Punch,selected_pokemon,15,75,100,0,physical,,,0,15
-25,Mega Kick,selected_pokemon,1,120,75,0,physical,,,0,5
-69,Seismic Toss,selected_pokemon,2,,100,0,physical,,,0,20
-94,Psychic,selected_pokemon,14,90,100,0,special,,,0,10
-99,Rage,selected_pokemon,1,20,100,0,physical,,,0,20
-100,Teleport,user,14,,,0,status,,,0,20
-102,Mimic,selected_pokemon,1,,,0,status,,,0,10
-112,Barrier,user,14,,,0,status,,,0,20
-118,Metronome,user,1,,,0,status,,,0,10
-138,Dream Eater,selected_pokemon,14,100,100,0,special,,,0,15
-149,Psywave,selected_pokemon,14,,100,0,special,,,0,15
-161,Tri Attack,selected_pokemon,1,80,100,0,special,,,0,10
-171,Nightmare,selected_pokemon,8,,100,0,status,,,0,15
+6,Pay Day,selected_pokemon,1,40,100,0,physical,,,0,20
+84,Thunder Shock,selected_pokemon,13,40,100,0,special,,,0,30
 192,Zap Cannon,selected_pokemon,13,120,50,0,special,,,0,5
-223,Dynamic Punch,selected_pokemon,2,100,50,0,physical,,,0,5
-244,Psych Up,selected_pokemon,1,,,0,status,,,0,10
+209,Spark,selected_pokemon,13,65,100,0,physical,,,0,20
+270,Helping Hand,ally,1,,,0,status,,,5,20
+364,Feint,selected_pokemon,1,30,100,0,physical,,,2,10
+393,Magnet Rise,user,13,,,0,status,,,0,10
+435,Discharge,all_other_pokemon,13,80,100,0,special,,,0,15
+486,Electro Ball,selected_pokemon,13,,100,0,special,,,0,10
+521,Volt Switch,selected_pokemon,13,70,100,0,special,,,0,20
+589,Play Nice,selected_pokemon,1,,,0,status,,,0,20
+609,Nuzzle,selected_pokemon,13,20,100,0,physical,,,0,20
+222,Magnitude,all_other_pokemon,5,,100,0,physical,,,0,30
+306,Crush Claw,selected_pokemon,1,75,95,0,physical,,,0,10
+328,Sand Tomb,selected_pokemon,5,35,85,0,physical,,,0,15
+341,Mud Shot,selected_pokemon,5,55,95,0,special,,,0,15
+400,Night Slash,selected_pokemon,17,70,100,1,physical,,,0,15
+414,Earth Power,selected_pokemon,5,90,100,0,special,,,0,10
+446,Stealth Rock,opponents_field,6,,,0,status,,,0,20
+498,Chip Away,selected_pokemon,1,70,100,0,physical,,,0,20
+563,Rototiller,all_pokemon,5,,,0,status,,,0,10
+444,Stone Edge,selected_pokemon,6,100,80,1,physical,,,0,5
+24,Double Kick,selected_pokemon,2,30,100,0,physical,2,2,0,30
+260,Flatter,selected_pokemon,17,,100,0,status,,,0,15
+599,Venom Drench,all_opponents,4,,100,0,status,,,0,20
+32,Horn Drill,selected_pokemon,1,,30,0,physical,,,0,5
+276,Superpower,selected_pokemon,2,120,100,0,physical,,,0,5
+511,Quash,selected_pokemon,17,,100,0,status,,,0,15
+30,Horn Attack,selected_pokemon,1,65,100,0,physical,,,0,25
+457,Head Smash,selected_pokemon,6,150,80,0,physical,,,0,5
+684,Smart Strike,selected_pokemon,9,70,,0,physical,,,0,10
+37,Thrash,random_opponent,1,120,100,0,physical,,,0,10
+224,Megahorn,selected_pokemon,7,120,85,0,physical,,,0,10
+1,Pound,selected_pokemon,1,40,100,0,physical,,,0,35
+3,Double Slap,selected_pokemon,1,15,85,0,physical,2,5,0,10
+47,Sing,selected_pokemon,1,,55,0,status,,,0,15
+107,Minimize,user,1,,,0,status,,,0,10
+118,Metronome,user,1,,,0,status,,,0,10
+135,Soft Boiled,user,1,,,0,status,,,0,10
+215,Heal Bell,user_and_allies,1,,,0,status,,,0,5
+227,Encore,selected_pokemon,1,,100,0,status,,,0,5
+236,Moonlight,user,18,,,0,status,,,0,5
+266,Follow Me,user,1,,,0,status,,,2,20
 271,Trick,selected_pokemon,14,,100,0,status,,,0,10
+272,Role Play,selected_pokemon,14,,,0,status,,,0,10
 277,Magic Coat,user,14,,,0,status,,,4,15
 278,Recycle,user,1,,,0,status,,,0,10
-285,Skill Swap,selected_pokemon,14,,,0,status,,,0,10
-289,Snatch,user,17,,,0,status,,,4,10
+304,Hyper Voice,all_opponents,1,90,100,0,special,,,0,10
+309,Meteor Mash,selected_pokemon,9,90,90,0,physical,,,0,10
+322,Cosmic Power,user,14,,,0,status,,,0,20
+340,Bounce,selected_pokemon,3,85,85,0,physical,,,0,5
+347,Calm Mind,user,14,,,0,status,,,0,20
 356,Gravity,entire_field,14,,,0,status,,,0,5
-373,Embargo,selected_pokemon,17,,100,0,status,,,0,15
-375,Psycho Shift,selected_pokemon,14,,100,0,status,,,0,10
-379,Power Trick,user,14,,,0,status,,,0,10
-385,Guard Swap,selected_pokemon,14,,,0,status,,,0,10
+358,Wake Up Slap,selected_pokemon,2,70,100,0,physical,,,0,10
+361,Healing Wish,user,14,,,0,status,,,0,10
+381,Lucky Chant,users_field,1,,,0,status,,,0,30
 409,Drain Punch,selected_pokemon,2,75,100,0,physical,,,0,10
-428,Zen Headbutt,selected_pokemon,14,80,90,0,physical,,,0,15
-433,Trick Room,entire_field,14,,,0,status,,,-7,5
-470,Guard Split,selected_pokemon,14,,,0,status,,,0,10
 472,Wonder Room,entire_field,14,,,0,status,,,0,10
 473,Psyshock,selected_pokemon,14,80,100,0,special,,,0,10
 477,Telekinesis,selected_pokemon,14,,,0,status,,,0,15
-478,Magic Room,entire_field,14,,,0,status,,,0,10
-492,Foul Play,selected_pokemon,17,95,100,0,physical,,,0,15
-502,Ally Switch,user,14,,,0,status,,,2,15
+495,After You,selected_pokemon,1,,,0,status,,,0,15
+500,Stored Power,selected_pokemon,14,20,100,0,special,,,0,10
+516,Bestow,selected_pokemon,1,,,0,status,,,0,15
+574,Disarming Voice,all_opponents,18,40,,0,special,,,0,15
+585,Moonblast,selected_pokemon,18,95,100,0,special,,,0,15
 605,Dazzling Gleam,all_opponents,18,80,100,0,special,,,0,10
-678,Psychic Terrain,entire_field,14,,,0,status,,,0,10
-50,Disable,selected_pokemon,1,,100,0,status,,,0,20
-60,Psybeam,selected_pokemon,14,65,100,0,special,,,0,20
-93,Confusion,selected_pokemon,14,50,100,0,special,,,0,25
-105,Recover,user,1,,,0,status,,,0,10
-134,Kinesis,selected_pokemon,14,,80,0,status,,,0,15
-248,Future Sight,selected_pokemon,14,120,100,0,special,,,0,10
-357,Miracle Eye,selected_pokemon,14,,,0,status,,,0,40
-427,Psycho Cut,selected_pokemon,14,70,100,1,physical,,,0,20
-150,Splash,user,1,,,0,status,,,0,40
-340,Bounce,selected_pokemon,3,85,85,0,physical,,,0,5
-82,Dragon Rage,selected_pokemon,16,,100,0,special,,,0,10
-180,Spite,selected_pokemon,8,,100,0,status,,,0,10
-225,Dragon Breath,selected_pokemon,16,60,100,0,special,,,0,20
-349,Dragon Dance,user,16,,,0,status,,,0,20
-371,Payback,selected_pokemon,17,50,100,0,physical,,,0,10
-399,Dark Pulse,selected_pokemon,17,80,100,0,special,,,0,15
-406,Dragon Pulse,selected_pokemon,16,85,100,0,special,,,0,10
-525,Dragon Tail,selected_pokemon,16,60,90,0,physical,,,-6,10
-542,Hurricane,selected_pokemon,3,110,70,0,special,,,0,10
-693,Brutal Swing,all_other_pokemon,17,60,100,0,physical,,,0,20
-42,Pin Missile,selected_pokemon,7,25,95,0,physical,2,5,0,20
-78,Stun Spore,selected_pokemon,12,,75,0,status,,,0,30
-79,Sleep Powder,selected_pokemon,12,,75,0,status,,,0,15
-170,Mind Reader,selected_pokemon,1,,,0,status,,,0,5
-178,Cotton Spore,all_opponents,12,,100,0,status,,,0,40
-188,Sludge Bomb,selected_pokemon,4,90,100,0,special,,,0,10
-191,Spikes,opponents_field,5,,,0,status,,,0,20
-320,Grass Whistle,selected_pokemon,12,,55,0,status,,,0,15
-326,Extrasensory,selected_pokemon,14,80,100,0,special,,,0,20
-474,Venoshock,selected_pokemon,4,65,100,0,special,,,0,10
-40,Poison Sting,selected_pokemon,4,15,100,0,physical,,,0,35
-80,Petal Dance,random_opponent,12,120,100,0,special,,,0,10
-230,Sweet Scent,all_opponents,1,,100,0,status,,,0,20
-275,Ingrain,user,12,,,0,status,,,0,20
-312,Aromatherapy,user_and_allies,12,,,0,status,,,0,5
-345,Magical Leaf,selected_pokemon,12,60,,0,special,,,0,20
-390,Toxic Spikes,opponents_field,4,,,0,status,,,0,20
-438,Power Whip,selected_pokemon,12,120,85,0,physical,,,0,10
-572,Petal Blizzard,all_other_pokemon,12,90,100,0,physical,,,0,15
-311,Weather Ball,selected_pokemon,1,50,100,0,special,,,0,10
-599,Venom Drench,all_opponents,4,,100,0,status,,,0,20
-13,Razor Wind,all_opponents,1,80,100,1,special,,,0,10
-16,Gust,selected_pokemon,3,40,100,0,special,,,0,35
+671,Spotlight,selected_pokemon,1,,,0,status,,,3,15
 95,Hypnosis,selected_pokemon,14,,60,0,status,,,0,20
 109,Confuse Ray,selected_pokemon,8,,100,0,status,,,0,10
-114,Haze,entire_field,15,,,0,status,,,0,30
-185,Feint Attack,selected_pokemon,17,60,,0,physical,,,0,20
-212,Mean Look,selected_pokemon,1,,,0,status,,,0,5
-305,Poison Fang,selected_pokemon,4,50,100,0,physical,,,0,15
-403,Air Slash,selected_pokemon,3,75,95,0,special,,,0,15
-440,Cross Poison,selected_pokemon,4,70,100,1,physical,,,0,20
-88,Rock Throw,selected_pokemon,6,50,90,0,physical,,,0,15
-90,Fissure,selected_pokemon,5,,30,0,physical,,,0,5
-106,Harden,user,1,,,0,status,,,0,30
-120,Self Destruct,all_other_pokemon,1,200,100,0,physical,,,0,5
-153,Explosion,all_other_pokemon,1,250,100,0,physical,,,0,5
-222,Magnitude,all_other_pokemon,5,,100,0,physical,,,0,30
-246,Ancient Power,selected_pokemon,6,60,100,0,special,,,0,5
-350,Rock Blast,selected_pokemon,6,25,90,0,physical,2,5,0,10
-359,Hammer Arm,selected_pokemon,2,100,90,0,physical,,,0,10
-360,Gyro Ball,selected_pokemon,9,,100,0,physical,,,0,5
-389,Sucker Punch,selected_pokemon,17,70,100,0,physical,,,1,5
-475,Autotomize,user,9,,,0,status,,,0,15
-479,Smack Down,selected_pokemon,6,50,100,0,physical,,,0,15
-537,Steamroller,selected_pokemon,7,65,100,0,physical,,,0,20
-20,Bind,selected_pokemon,1,15,85,0,physical,,,0,20
-21,Slam,selected_pokemon,1,80,75,0,physical,,,0,20
-23,Stomp,selected_pokemon,1,65,100,0,physical,,,0,20
-372,Assurance,selected_pokemon,17,60,100,0,physical,,,0,10
-457,Head Smash,selected_pokemon,6,150,80,0,physical,,,0,5
-498,Chip Away,selected_pokemon,1,70,100,0,physical,,,0,20
 220,Pain Split,selected_pokemon,1,,,0,status,,,0,20
-319,Metal Sound,selected_pokemon,9,,85,0,status,,,0,40
-368,Metal Burst,specific_move,9,,100,0,physical,,,0,10
-2,Karate Chop,selected_pokemon,2,50,100,1,physical,,,0,25
-27,Rolling Kick,selected_pokemon,2,60,85,0,physical,,,0,15
-96,Meditate,user,14,,,0,status,,,0,40
-233,Vital Throw,selected_pokemon,2,70,,0,physical,,,-1,10
+286,Imprison,user,14,,,0,status,,,0,10
+288,Grudge,user,8,,,0,status,,,0,5
+326,Extrasensory,selected_pokemon,14,80,100,0,special,,,0,20
+336,Howl,user,1,,,0,status,,,0,40
+384,Power Swap,selected_pokemon,14,,,0,status,,,0,10
+492,Foul Play,selected_pokemon,17,95,100,0,physical,,,0,15
+506,Hex,selected_pokemon,8,65,100,0,special,,,0,10
+541,Tail Slap,selected_pokemon,1,25,85,0,physical,2,5,0,10
+608,Baby Doll Eyes,selected_pokemon,18,,100,0,status,,,1,30
+417,Nasty Plot,user,17,,,0,status,,,0,20
+478,Magic Room,entire_field,14,,,0,status,,,0,10
+583,Play Rough,selected_pokemon,18,90,90,0,physical,,,0,10
+71,Absorb,selected_pokemon,12,20,100,0,special,,,0,25
+141,Leech Life,selected_pokemon,7,80,100,0,physical,,,0,10
+212,Mean Look,selected_pokemon,1,,,0,status,,,0,5
+501,Quick Guard,users_field,2,,,0,status,,,3,15
+298,Teeter Dance,all_other_pokemon,1,,100,0,status,,,0,20
+321,Tickle,selected_pokemon,1,,100,0,status,,,0,20
+668,Strength Sap,selected_pokemon,12,,100,0,status,,,0,10
+312,Aromatherapy,user_and_allies,12,,,0,status,,,0,5
+147,Spore,selected_pokemon,12,,100,0,status,,,0,15
+440,Cross Poison,selected_pokemon,4,70,100,1,physical,,,0,20
+469,Wide Guard,users_field,6,,,0,status,,,3,10
+226,Baton Pass,user,1,,,0,status,,,0,40
+234,Morning Sun,user,1,,,0,status,,,0,5
+262,Memento,selected_pokemon,17,,100,0,status,,,0,10
+274,Assist,user,1,,,0,status,,,0,20
+316,Odor Sleuth,selected_pokemon,1,,,0,status,,,0,40
+386,Punishment,selected_pokemon,17,,100,0,physical,,,0,5
+373,Embargo,selected_pokemon,17,,100,0,status,,,0,15
+408,Power Gem,selected_pokemon,6,80,100,0,special,,,0,20
 238,Cross Chop,selected_pokemon,2,100,80,1,physical,,,0,5
-265,Smelling Salts,selected_pokemon,1,70,100,0,physical,,,0,10
-358,Wake Up Slap,selected_pokemon,2,70,100,0,physical,,,0,10
-418,Bullet Punch,selected_pokemon,9,40,100,0,physical,,,1,30
-6,Pay Day,selected_pokemon,1,40,100,0,physical,,,0,20
-39,Tail Whip,all_opponents,1,,100,0,status,,,0,30
-287,Refresh,user,1,,,0,status,,,0,20
-426,Mud Bomb,selected_pokemon,5,65,85,0,special,,,0,10
+248,Future Sight,selected_pokemon,14,120,100,0,special,,,0,10
+346,Water Sport,entire_field,11,,,0,status,,,0,15
 485,Synchronoise,all_other_pokemon,14,120,100,0,special,,,0,10
 487,Soak,selected_pokemon,11,,100,0,status,,,0,20
 493,Simple Beam,selected_pokemon,1,,100,0,status,,,0,15
 499,Clear Smog,selected_pokemon,4,50,,0,special,,,0,15
-382,Me First,selected_pokemon_me_first,1,,,0,status,,,0,20
-527,Electroweb,all_opponents,13,55,95,0,special,,,0,15
-483,Quiver Dance,user,7,,,0,status,,,0,20
-77,Poison Powder,selected_pokemon,4,,75,0,status,,,0,35
-293,Camouflage,user,1,,,0,status,,,0,20
-679,Lunge,selected_pokemon,7,80,100,0,physical,,,0,15
-234,Morning Sun,user,1,,,0,status,,,0,5
-236,Moonlight,user,18,,,0,status,,,0,5
-194,Destiny Bond,user,8,,,0,status,,,0,5
-408,Power Gem,selected_pokemon,6,80,100,0,special,,,0,20
-454,Attack Order,selected_pokemon,7,90,100,1,physical,,,0,15
-455,Defend Order,user,7,,,0,status,,,0,10
-456,Heal Order,user,7,,,0,status,,,0,10
-186,Sweet Kiss,selected_pokemon,18,,75,0,status,,,0,10
-204,Charm,selected_pokemon,18,,100,0,status,,,0,20
-260,Flatter,selected_pokemon,17,,100,0,status,,,0,15
-266,Follow Me,user,1,,,0,status,,,2,20
-486,Electro Ball,selected_pokemon,13,,100,0,special,,,0,10
-516,Bestow,selected_pokemon,1,,,0,status,,,0,15
-569,Ion Deluge,entire_field,13,,,0,status,,,1,25
-609,Nuzzle,selected_pokemon,13,20,100,0,physical,,,0,20
-3,Double Slap,selected_pokemon,1,15,85,0,physical,2,5,0,10
-49,Sonic Boom,selected_pokemon,1,,90,0,special,,,0,20
-226,Baton Pass,user,1,,,0,status,,,0,40
-415,Switcheroo,selected_pokemon,17,,100,0,status,,,0,10
-541,Tail Slap,selected_pokemon,1,25,85,0,physical,2,5,0,10
-361,Healing Wish,user,14,,,0,status,,,0,10
-381,Lucky Chant,users_field,1,,,0,status,,,0,30
-505,Heal Pulse,selected_pokemon,14,,,0,status,,,0,10
-579,Flower Shield,all_pokemon,18,,,0,status,,,0,10
-124,Sludge,selected_pokemon,4,65,100,0,special,,,0,20
-151,Acid Armor,user,4,,,0,status,,,0,20
-243,Mirror Coat,specific_move,14,,100,0,special,,,-5,20
-262,Memento,selected_pokemon,17,,100,0,status,,,0,10
-330,Muddy Water,all_opponents,11,90,85,0,special,,,0,10
-376,Trump Card,selected_pokemon,1,,,0,special,,,0,5
-482,Sludge Wave,all_other_pokemon,4,95,100,0,special,,,0,10
-30,Horn Attack,selected_pokemon,1,65,100,0,physical,,,0,25
-179,Reversal,selected_pokemon,2,,100,0,physical,,,0,15
-224,Megahorn,selected_pokemon,7,120,85,0,physical,,,0,10
-292,Arm Thrust,selected_pokemon,2,15,100,0,physical,2,5,0,20
-251,Beat Up,selected_pokemon,17,,100,0,physical,6,6,0,10
-107,Minimize,user,1,,,0,status,,,0,10
-132,Constrict,selected_pokemon,1,10,100,0,physical,,,0,35
-506,Hex,selected_pokemon,8,65,100,0,special,,,0,10
-566,Phantom Force,selected_pokemon,8,90,100,0,physical,,,0,10
-26,Jump Kick,selected_pokemon,2,100,95,0,physical,,,0,10
-146,Dizzy Punch,selected_pokemon,1,70,100,0,physical,,,0,10
-298,Teeter Dance,all_other_pokemon,1,,100,0,status,,,0,20
-322,Cosmic Power,user,14,,,0,status,,,0,20
-327,Sky Uppercut,selected_pokemon,2,85,90,0,physical,,,0,15
-383,Copycat,user,1,,,0,status,,,0,20
-494,Entrainment,selected_pokemon,1,,100,0,status,,,0,15
-495,After You,selected_pokemon,1,,,0,status,,,0,15
-509,Circle Throw,selected_pokemon,2,60,90,0,physical,,,-6,10
-136,High Jump Kick,selected_pokemon,2,130,90,0,physical,,,0,10
-101,Night Shade,selected_pokemon,8,,100,0,special,,,0,15
-122,Lick,selected_pokemon,8,30,100,0,physical,,,0,30
-123,Smog,selected_pokemon,4,30,70,0,special,,,0,20
-288,Grudge,user,8,,,0,status,,,0,5
-513,Reflect Type,selected_pokemon,1,,,0,status,,,0,15
-325,Shadow Punch,selected_pokemon,8,60,,0,physical,,,0,20
-286,Imprison,user,14,,,0,status,,,0,10
-425,Shadow Sneak,selected_pokemon,8,40,100,0,physical,,,1,30
-595,Mystical Fire,selected_pokemon,10,75,100,0,special,,,0,10
-583,Play Rough,selected_pokemon,18,90,90,0,physical,,,0,10
-32,Horn Drill,selected_pokemon,1,,30,0,physical,,,0,5
-341,Mud Shot,selected_pokemon,5,55,95,0,special,,,0,15
-529,Drill Run,selected_pokemon,5,80,95,1,physical,,,0,10
-684,Smart Strike,selected_pokemon,9,70,,0,physical,,,0,10
-562,Belch,selected_pokemon,4,120,90,0,special,,,0,10
-35,Wrap,selected_pokemon,1,15,90,0,physical,,,0,20
-273,Wish,user,1,,,0,status,,,0,10
-500,Stored Power,selected_pokemon,14,20,100,0,special,,,0,10
-578,Crafty Shield,users_field,18,,,0,status,,,3,10
-108,Smokescreen,selected_pokemon,1,,100,0,status,,,0,20
-139,Poison Gas,all_opponents,4,,90,0,status,,,0,40
-481,Flame Burst,selected_pokemon,10,70,100,0,special,,,0,15
-491,Acid Spray,selected_pokemon,4,40,100,0,special,,,0,20
-367,Acupressure,user_or_ally,1,,,0,status,,,0,30
-384,Power Swap,selected_pokemon,14,,,0,status,,,0,10
-395,Force Palm,selected_pokemon,2,60,100,0,physical,,,0,10
-377,Heal Block,all_opponents,14,,100,0,status,,,0,15
-517,Inferno,selected_pokemon,10,100,50,0,special,,,0,5
-667,High Horsepower,selected_pokemon,5,95,95,0,physical,,,0,10
-715,Tearful Look,selected_pokemon,1,,,0,status,,,0,20
-471,Power Split,selected_pokemon,14,,,0,status,,,0,10
-581,Misty Terrain,entire_field,18,,,0,status,,,0,10
-217,Present,selected_pokemon,1,,90,0,physical,,,0,15
-121,Egg Bomb,selected_pokemon,1,100,75,0,physical,,,0,10
-135,Soft Boiled,user,1,,,0,status,,,0,10
-187,Belly Drum,user,1,,,0,status,,,0,10
-309,Meteor Mash,selected_pokemon,9,90,90,0,physical,,,0,10
-574,Disarming Voice,all_opponents,18,40,,0,special,,,0,15
-585,Moonblast,selected_pokemon,18,95,100,0,special,,,0,15
-671,Spotlight,selected_pokemon,1,,,0,status,,,3,15
-448,Chatter,selected_pokemon,3,65,100,0,special,,,0,20
-586,Boomburst,all_other_pokemon,1,140,100,0,special,,,0,10
-84,Thunder Shock,selected_pokemon,13,40,100,0,special,,,0,30
-344,Volt Tackle,selected_pokemon,13,120,100,0,physical,,,0,15
-589,Play Nice,selected_pokemon,1,,,0,status,,,0,20
-337,Dragon Claw,selected_pokemon,16,80,100,0,physical,,,0,15
-407,Dragon Rush,selected_pokemon,16,100,75,0,physical,,,0,10
-434,Draco Meteor,selected_pokemon,16,130,90,0,special,,,0,5
-198,Bone Rush,selected_pokemon,5,25,90,0,physical,2,5,0,10
+67,Low Kick,selected_pokemon,2,,100,0,physical,,,0,20
+490,Low Sweep,selected_pokemon,2,65,100,0,physical,,,0,20
+2,Karate Chop,selected_pokemon,2,50,100,1,physical,,,0,25
+96,Meditate,user,14,,,0,status,,,0,40
+265,Smelling Salts,selected_pokemon,1,70,100,0,physical,,,0,10
+339,Bulk Up,user,2,,,0,status,,,0,20
+370,Close Combat,selected_pokemon,2,120,100,0,physical,,,0,5
+410,Vacuum Wave,selected_pokemon,2,40,100,0,special,,,1,30
+530,Dual Chop,selected_pokemon,16,40,90,0,physical,2,2,0,15
+681,Power Trip,selected_pokemon,17,20,100,0,physical,,,0,10
+707,Stomping Tantrum,selected_pokemon,5,75,100,0,physical,,,0,10
+555,Snarl,all_opponents,17,55,95,0,special,,,0,15
+682,Burn Up,selected_pokemon,10,130,100,0,special,,,0,5
 245,Extreme Speed,selected_pokemon,1,80,100,0,physical,,,2,5
-396,Aura Sphere,selected_pokemon,2,80,,0,special,,,0,20
-673,Laser Focus,user,1,,,0,status,,,0,30
-507,Sky Drop,selected_pokemon,3,60,100,0,physical,,,0,10
-706,Psychic Fangs,selected_pokemon,14,85,100,0,physical,,,0,10
-41,Twineedle,selected_pokemon,7,25,100,0,physical,2,2,0,20
-342,Poison Tail,selected_pokemon,4,50,100,1,physical,,,0,25
-22,Vine Whip,selected_pokemon,12,45,100,0,physical,,,0,25
+442,Iron Head,selected_pokemon,9,80,100,0,physical,,,0,15
+150,Splash,user,1,,,0,status,,,0,40
+170,Mind Reader,selected_pokemon,1,,,0,status,,,0,5
+301,Ice Ball,selected_pokemon,15,30,90,0,physical,,,0,20
+509,Circle Throw,selected_pokemon,2,60,90,0,physical,,,-6,10
+112,Barrier,user,14,,,0,status,,,0,20
+375,Psycho Shift,selected_pokemon,14,,100,0,status,,,0,10
+379,Power Trick,user,14,,,0,status,,,0,10
+385,Guard Swap,selected_pokemon,14,,,0,status,,,0,10
+433,Trick Room,entire_field,14,,,0,status,,,-7,5
+470,Guard Split,selected_pokemon,14,,,0,status,,,0,10
+502,Ally Switch,user,14,,,0,status,,,2,15
+678,Psychic Terrain,entire_field,14,,,0,status,,,0,10
+105,Recover,user,1,,,0,status,,,0,10
+134,Kinesis,selected_pokemon,14,,80,0,status,,,0,15
+357,Miracle Eye,selected_pokemon,14,,,0,status,,,0,40
+427,Psycho Cut,selected_pokemon,14,70,100,1,physical,,,0,20
+27,Rolling Kick,selected_pokemon,2,60,85,0,physical,,,0,15
+233,Vital Throw,selected_pokemon,2,70,,0,physical,,,-1,10
+418,Bullet Punch,selected_pokemon,9,40,100,0,physical,,,1,30
+484,Heavy Slam,selected_pokemon,9,,100,0,physical,,,0,10
+311,Weather Ball,selected_pokemon,1,50,100,0,special,,,0,10
 378,Wring Out,selected_pokemon,1,,100,0,special,,,0,5
-380,Gastro Acid,selected_pokemon,4,,100,0,status,,,0,10
-476,Rage Powder,user,7,,,0,status,,,2,20
+348,Leaf Blade,selected_pokemon,12,90,100,1,physical,,,0,15
 536,Leaf Tornado,selected_pokemon,12,65,90,0,special,,,0,10
 62,Aurora Beam,selected_pokemon,15,65,100,0,special,,,0,20
-190,Octazooka,selected_pokemon,11,65,85,0,special,,,0,10
+132,Constrict,selected_pokemon,1,10,100,0,physical,,,0,35
+367,Acupressure,user_or_ally,1,,,0,status,,,0,30
+513,Reflect Type,selected_pokemon,1,,,0,status,,,0,15
+88,Rock Throw,selected_pokemon,6,50,90,0,physical,,,0,15
+120,Self Destruct,all_other_pokemon,1,200,100,0,physical,,,0,5
+153,Explosion,all_other_pokemon,1,250,100,0,physical,,,0,5
+350,Rock Blast,selected_pokemon,6,25,90,0,physical,2,5,0,10
+359,Hammer Arm,selected_pokemon,2,100,90,0,physical,,,0,10
+397,Rock Polish,user,6,,,0,status,,,0,20
+475,Autotomize,user,9,,,0,status,,,0,15
+537,Steamroller,selected_pokemon,7,65,100,0,physical,,,0,20
+23,Stomp,selected_pokemon,1,65,100,0,physical,,,0,20
+667,High Horsepower,selected_pokemon,5,95,95,0,physical,,,0,10
+303,Slack Off,user,1,,,0,status,,,0,10
+505,Heal Pulse,selected_pokemon,14,,,0,status,,,0,10
+49,Sonic Boom,selected_pokemon,1,,90,0,special,,,0,20
 199,Lock On,selected_pokemon,1,,,0,status,,,0,5
-323,Water Spout,all_opponents,11,150,100,0,special,,,0,5
-51,Acid,all_opponents,4,40,100,0,special,,,0,30
-229,Rapid Spin,selected_pokemon,1,50,100,0,physical,,,0,40
-489,Coil,user,4,,,0,status,,,0,20
-181,Powder Snow,all_opponents,15,40,100,0,special,,,0,25
-329,Sheer Cold,selected_pokemon,15,,30,0,special,,,0,5
-420,Ice Shard,selected_pokemon,15,40,100,0,physical,,,1,30
-524,Frost Breath,selected_pokemon,15,60,90,6,special,,,0,10
-306,Crush Claw,selected_pokemon,1,75,95,0,physical,,,0,10
-556,Icicle Crash,selected_pokemon,15,85,90,0,physical,,,0,10
-675,Throat Chop,selected_pokemon,17,80,100,0,physical,,,0,15
-459,Roar Of Time,selected_pokemon,16,150,90,0,special,,,0,5
-460,Spacial Rend,selected_pokemon,16,100,95,1,special,,,0,5
-294,Tail Glow,user,7,,,0,status,,,0,20
-391,Heart Swap,selected_pokemon,14,,,0,status,,,0,10
-12,Guillotine,selected_pokemon,1,,30,0,physical,,,0,5
-443,Magnet Bomb,selected_pokemon,9,60,,0,physical,,,0,20
-602,Magnetic Flux,user_and_allies,13,,,0,status,,,0,20
-577,Draining Kiss,selected_pokemon,18,50,100,0,special,,,0,10
-348,Leaf Blade,selected_pokemon,12,90,100,1,physical,,,0,15
-436,Lava Plume,all_other_pokemon,10,80,100,0,special,,,0,15
-694,Aurora Veil,users_field,15,,,0,status,,,0,20
-538,Cotton Guard,user,12,,,0,status,,,0,10
-584,Fairy Wind,selected_pokemon,18,40,100,0,special,,,0,30
+319,Metal Sound,selected_pokemon,9,,85,0,status,,,0,40
 429,Mirror Shot,selected_pokemon,9,65,85,0,special,,,0,10
-692,Dragon Hammer,selected_pokemon,16,90,100,0,physical,,,0,15
-439,Rock Wrecker,selected_pokemon,6,150,90,0,physical,,,0,5
+443,Magnet Bomb,selected_pokemon,9,60,,0,physical,,,0,20
+604,Electric Terrain,entire_field,13,,,0,status,,,0,10
+376,Trump Card,selected_pokemon,1,,,0,special,,,0,5
+660,First Impression,selected_pokemon,7,90,100,0,physical,,,2,10
+26,Jump Kick,selected_pokemon,2,100,95,0,physical,,,0,10
+458,Double Hit,selected_pokemon,1,35,90,0,physical,2,2,0,10
+122,Lick,selected_pokemon,8,30,100,0,physical,,,0,30
+195,Perish Song,all_pokemon,1,,,0,status,,,0,5
+333,Icicle Spear,selected_pokemon,15,25,100,0,physical,2,5,0,30
+420,Ice Shard,selected_pokemon,15,40,100,0,physical,,,1,30
+494,Entrainment,selected_pokemon,1,,100,0,status,,,0,15
+329,Sheer Cold,selected_pokemon,15,,30,0,special,,,0,5
+524,Frost Breath,selected_pokemon,15,60,90,6,special,,,0,10
+139,Poison Gas,all_opponents,4,,90,0,status,,,0,40
+151,Acid Armor,user,4,,,0,status,,,0,20
+325,Shadow Punch,selected_pokemon,8,60,,0,physical,,,0,20
+425,Shadow Sneak,selected_pokemon,8,40,100,0,physical,,,1,30
+128,Clamp,selected_pokemon,11,35,85,0,physical,,,0,15
+504,Shell Smash,user,1,,,0,status,,,0,15
+534,Razor Shell,selected_pokemon,11,75,95,0,physical,,,0,10
+131,Spike Cannon,selected_pokemon,1,20,100,0,physical,2,5,0,15
+191,Spikes,opponents_field,5,,,0,status,,,0,20
+556,Icicle Crash,selected_pokemon,15,85,90,0,physical,,,0,10
+101,Night Shade,selected_pokemon,8,,100,0,special,,,0,15
+123,Smog,selected_pokemon,4,30,70,0,special,,,0,20
+194,Destiny Bond,user,8,,,0,status,,,0,5
+471,Power Split,selected_pokemon,14,,,0,status,,,0,10
+11,Vise Grip,selected_pokemon,1,55,100,0,physical,,,0,30
+12,Guillotine,selected_pokemon,1,,30,0,physical,,,0,5
+152,Crabhammer,selected_pokemon,11,100,90,1,physical,,,0,10
+268,Charge,user,13,,,0,status,,,0,20
+598,Eerie Impulse,selected_pokemon,13,,100,0,status,,,0,15
+602,Magnetic Flux,user_and_allies,13,,,0,status,,,0,20
+121,Egg Bomb,selected_pokemon,1,100,75,0,physical,,,0,10
+140,Barrage,selected_pokemon,1,15,85,0,physical,2,5,0,20
+452,Wood Hammer,selected_pokemon,12,120,100,0,physical,,,0,15
+125,Bone Club,selected_pokemon,5,65,85,0,physical,,,0,20
+155,Bonemerang,selected_pokemon,5,50,90,0,physical,2,2,0,10
+198,Bone Rush,selected_pokemon,5,25,90,0,physical,2,5,0,10
+136,High Jump Kick,selected_pokemon,2,130,90,0,physical,,,0,10
+299,Blaze Kick,selected_pokemon,10,85,90,1,physical,,,0,10
+4,Comet Punch,selected_pokemon,1,18,85,0,physical,2,5,0,15
+183,Mach Punch,selected_pokemon,2,40,100,0,physical,,,1,30
+327,Sky Uppercut,selected_pokemon,2,85,90,0,physical,,,0,15
+368,Metal Burst,specific_move,9,,100,0,physical,,,0,10
+217,Present,selected_pokemon,1,,90,0,physical,,,0,15
+146,Dizzy Punch,selected_pokemon,1,70,100,0,physical,,,0,10
+190,Octazooka,selected_pokemon,11,65,85,0,special,,,0,10
+293,Camouflage,user,1,,,0,status,,,0,20
+383,Copycat,user,1,,,0,status,,,0,20
+581,Misty Terrain,entire_field,18,,,0,status,,,0,10
+142,Lovely Kiss,selected_pokemon,1,,75,0,status,,,0,10
+181,Powder Snow,all_opponents,15,40,100,0,special,,,0,25
+313,Fake Tears,selected_pokemon,17,,100,0,status,,,0,20
+531,Heart Stamp,selected_pokemon,14,60,100,0,physical,,,0,25
+577,Draining Kiss,selected_pokemon,18,50,100,0,special,,,0,10
+694,Aurora Veil,users_field,15,,,0,status,,,0,20
+436,Lava Plume,all_other_pokemon,10,80,100,0,special,,,0,15
+480,Storm Throw,selected_pokemon,2,60,100,6,physical,,,0,10
+573,Freeze Dry,selected_pokemon,15,70,100,0,special,,,0,20
+144,Transform,selected_pokemon,1,,,0,status,,,0,10
+273,Wish,user,1,,,0,status,,,0,10
 159,Sharpen,user,1,,,0,status,,,0,30
 160,Conversion,user,1,,,0,status,,,0,30
 176,Conversion 2,selected_pokemon,1,,,0,status,,,0,30
-333,Icicle Spear,selected_pokemon,15,25,100,0,physical,2,5,0,30
-573,Freeze Dry,selected_pokemon,15,70,100,0,special,,,0,20
+434,Draco Meteor,selected_pokemon,16,130,90,0,special,,,0,5
+540,Psystrike,selected_pokemon,14,100,100,0,special,,,0,10
+673,Laser Focus,user,1,,,0,status,,,0,30
+284,Eruption,all_opponents,10,150,100,0,special,,,0,5
+169,Spider Web,selected_pokemon,7,,,0,status,,,0,10
+564,Sticky Web,opponents_field,7,,,0,status,,,0,20
+672,Toxic Thread,selected_pokemon,4,,100,0,status,,,0,20
+679,Lunge,selected_pokemon,7,80,100,0,physical,,,0,15
+569,Ion Deluge,entire_field,13,,,0,status,,,1,25
+186,Sweet Kiss,selected_pokemon,18,,75,0,status,,,0,10
+344,Volt Tackle,selected_pokemon,13,120,100,0,physical,,,0,15
+584,Fairy Wind,selected_pokemon,18,40,100,0,special,,,0,30
+178,Cotton Spore,all_opponents,12,,100,0,status,,,0,40
+538,Cotton Guard,user,12,,,0,status,,,0,10
+715,Tearful Look,selected_pokemon,1,,,0,status,,,0,20
+579,Flower Shield,all_pokemon,18,,,0,status,,,0,10
+706,Psychic Fangs,selected_pokemon,14,85,100,0,physical,,,0,10
+292,Arm Thrust,selected_pokemon,2,15,100,0,physical,2,5,0,20
+675,Throat Chop,selected_pokemon,17,80,100,0,physical,,,0,15
+710,Liquidation,selected_pokemon,11,85,100,0,physical,,,0,10
+166,Sketch,selected_pokemon,1,,,0,status,,,0,1
+167,Triple Kick,selected_pokemon,2,10,90,0,physical,3,3,0,10
+208,Milk Drink,user,1,,,0,status,,,0,10
+221,Sacred Fire,selected_pokemon,10,100,95,0,physical,,,0,5
+177,Aeroblast,selected_pokemon,3,100,95,1,special,,,0,5
+377,Heal Block,all_opponents,14,,100,0,status,,,0,15
+586,Boomburst,all_other_pokemon,1,140,100,0,special,,,0,10
+395,Force Palm,selected_pokemon,2,60,100,0,physical,,,0,10
+566,Phantom Force,selected_pokemon,8,90,100,0,physical,,,0,10
+294,Tail Glow,user,7,,,0,status,,,0,20
+568,Noble Roar,selected_pokemon,1,,100,0,status,,,0,30
+302,Needle Arm,selected_pokemon,12,60,100,0,physical,,,0,15
+596,Spiky Shield,user,12,,,0,status,,,4,10
+692,Dragon Hammer,selected_pokemon,16,90,100,0,physical,,,0,15
+578,Crafty Shield,users_field,18,,,0,status,,,3,10
+296,Mist Ball,selected_pokemon,14,70,100,0,special,,,0,5
+295,Luster Purge,selected_pokemon,14,70,100,0,special,,,0,5
+618,Origin Pulse,all_opponents,11,110,85,0,special,,,0,10
+619,Precipice Blades,all_opponents,5,120,85,0,physical,,,0,10
+620,Dragon Ascent,selected_pokemon,3,120,100,0,physical,,,0,5
+353,Doom Desire,selected_pokemon,9,140,100,0,special,,,0,5
+354,Psycho Boost,selected_pokemon,14,140,90,0,special,,,0,5
+454,Attack Order,selected_pokemon,7,90,100,1,physical,,,0,15
+455,Defend Order,user,7,,,0,status,,,0,10
+456,Heal Order,user,7,,,0,status,,,0,10
+595,Mystical Fire,selected_pokemon,10,75,100,0,special,,,0,10
+448,Chatter,selected_pokemon,3,65,100,0,special,,,0,20
+439,Rock Wrecker,selected_pokemon,6,150,90,0,physical,,,0,5
+459,Roar Of Time,selected_pokemon,16,150,90,0,special,,,0,5
+460,Spacial Rend,selected_pokemon,16,100,95,1,special,,,0,5
+463,Magma Storm,selected_pokemon,10,100,75,0,special,,,0,5
+462,Crush Grip,selected_pokemon,1,,100,0,physical,,,0,5
 467,Shadow Force,selected_pokemon,8,120,100,0,physical,,,0,5
+461,Lunar Dance,user,14,,,0,status,,,0,10
+391,Heart Swap,selected_pokemon,14,,,0,status,,,0,10
+464,Dark Void,all_opponents,17,,50,0,status,,,0,10
+465,Seed Flare,selected_pokemon,12,120,85,0,special,,,0,5
+449,Judgment,selected_pokemon,1,100,100,0,special,,,0,10
+545,Searing Shot,all_other_pokemon,10,100,100,0,special,,,0,5
+535,Heat Crash,selected_pokemon,10,,100,0,physical,,,0,10
+533,Sacred Sword,selected_pokemon,2,90,100,0,physical,,,0,15
+561,Mat Block,users_field,2,,,0,status,,,0,10
+539,Night Daze,selected_pokemon,17,85,95,0,special,,,0,10
+532,Horn Leech,selected_pokemon,12,75,100,0,physical,,,0,10
+683,Speed Swap,selected_pokemon,14,,,0,status,,,0,10
+508,Shift Gear,user,9,,,0,status,,,0,10
+544,Gear Grind,selected_pokemon,9,50,85,0,physical,2,2,0,15
+674,Gear Up,user_and_allies,9,,,0,status,,,0,20
+594,Water Shuriken,selected_pokemon,11,15,100,0,special,2,5,1,20
+543,Head Charge,selected_pokemon,1,120,100,0,physical,,,0,15
+680,Fire Lash,selected_pokemon,10,80,100,0,physical,,,0,15
+552,Fiery Dance,selected_pokemon,10,80,100,0,special,,,0,10
+551,Blue Flare,selected_pokemon,10,130,85,0,special,,,0,5
+558,Fusion Flare,selected_pokemon,10,100,100,0,special,,,0,5
+550,Bolt Strike,selected_pokemon,13,130,85,0,physical,,,0,5
+559,Fusion Bolt,selected_pokemon,13,100,100,0,physical,,,0,5
+549,Glaciate,all_opponents,15,65,95,0,special,,,0,10
+548,Secret Sword,selected_pokemon,2,85,100,0,special,,,0,10
+547,Relic Song,all_opponents,1,75,100,0,special,,,0,10
+546,Techno Blast,selected_pokemon,1,120,100,0,special,,,0,5
+600,Powder,selected_pokemon,7,,100,0,status,,,1,20
+575,Parting Shot,selected_pokemon,17,,100,0,status,,,0,20
+588,Kings Shield,user,9,,,0,status,,,4,10
+597,Aromatic Mist,ally,18,,,0,status,,,0,20
+576,Topsy Turvy,selected_pokemon,17,,,0,status,,,0,20
+570,Parabolic Charge,all_other_pokemon,13,65,100,0,special,,,0,20
+582,Electrify,selected_pokemon,13,,,0,status,,,0,20
+560,Flying Press,selected_pokemon,2,100,95,0,physical,,,0,10
+587,Fairy Lock,entire_field,18,,,0,status,,,0,10
+571,Forests Curse,selected_pokemon,12,,100,0,status,,,0,20
+567,Trick Or Treat,selected_pokemon,8,,100,0,status,,,0,20
+601,Geomancy,user,18,,,0,status,,,0,10
+613,Oblivion Wing,selected_pokemon,3,80,100,0,special,,,0,10
+616,Lands Wrath,all_opponents,5,90,100,0,physical,,,0,10
+591,Diamond Storm,all_opponents,6,100,95,0,physical,,,0,5
+593,Hyperspace Hole,selected_pokemon,14,80,,0,special,,,0,5
+592,Steam Eruption,selected_pokemon,11,110,95,0,special,,,0,5
+670,Leafage,selected_pokemon,12,40,100,0,physical,,,0,40
+662,Spirit Shackle,selected_pokemon,8,80,100,0,physical,,,0,10
+663,Darkest Lariat,selected_pokemon,17,85,100,0,physical,,,0,10
+664,Sparkling Aria,all_other_pokemon,11,90,100,0,special,,,0,10
+690,Beak Blast,selected_pokemon,3,100,100,0,physical,,,-3,15
+665,Ice Hammer,selected_pokemon,15,100,90,0,physical,,,0,10
+686,Revelation Dance,selected_pokemon,1,90,100,0,special,,,0,15
+676,Pollen Puff,selected_pokemon,7,90,100,0,special,,,0,15
+709,Accelerock,selected_pokemon,6,40,100,0,physical,,,1,20
+661,Baneful Bunker,user,4,,,0,status,,,4,10
+669,Solar Blade,selected_pokemon,12,125,100,0,physical,,,0,10
+688,Trop Kick,selected_pokemon,12,70,100,0,physical,,,0,15
+666,Floral Healing,selected_pokemon,18,,,0,status,,,0,10
+689,Instruct,selected_pokemon,14,,,0,status,,,0,15
+659,Shore Up,user,5,,,0,status,,,0,10
+685,Purify,selected_pokemon,4,,,0,status,,,0,20
+718,Multi Attack,selected_pokemon,1,90,100,0,physical,,,0,10
+704,Shell Trap,all_opponents,10,150,100,0,special,,,-3,5
+716,Zing Zap,selected_pokemon,13,80,100,0,physical,,,0,10
+677,Anchor Shot,selected_pokemon,9,80,100,0,physical,,,0,20
+691,Clanging Scales,all_opponents,16,110,100,0,special,,,0,5
+717,Natures Madness,selected_pokemon,18,,90,0,special,,,0,10
+713,Sunsteel Strike,selected_pokemon,9,100,100,0,physical,,,0,5
+714,Moongeist Beam,selected_pokemon,8,100,100,0,special,,,0,5
+711,Prismatic Laser,selected_pokemon,14,160,100,0,special,,,0,10
+722,Photon Geyser,selected_pokemon,14,100,100,0,special,,,0,5
+705,Fleur Cannon,selected_pokemon,18,130,90,0,special,,,0,5
+712,Spectral Thief,selected_pokemon,8,90,100,0,physical,,,0,10
+720,Mind Blown,all_other_pokemon,10,150,100,0,special,,,0,5
+721,Plasma Fists,selected_pokemon,13,100,100,0,physical,,,0,15
