@@ -109,8 +109,9 @@ def inventory():
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    trainer = session.query(Trainer).filter(Trainer.trainer_id == current_user.trainers[0].trainer_id).one_or_none()
-    pokemon = session.query(Pokemon).filter(Pokemon.generation_id == current_user.trainers[0].game.generation_id).all()
+    user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
+    trainer = session.query(Trainer).filter(Trainer.trainer_id == user.trainers[0].trainer_id).one_or_none()
+    pokemon = session.query(Pokemon).filter(Pokemon.generation_id == user.trainers[0].game.generation_id).all()
     pokemon_choices = [(p.poke_id, p.name) for p in pokemon]
     print("my tp_ids:", [p.tp_id for p in trainer.trainer_pokemon])
     return render_template('inventory.html', trainer=trainer, pokemon_choices=pokemon_choices)
@@ -140,9 +141,9 @@ def add(id):
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-
+    user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
     added = TrainerPokemon()
-    added.trainer_id = current_user.trainers[0].trainer_id
+    added.trainer_id = user.trainers[0].trainer_id
     added.poke_id = id
     session.add(added)
     session.commit()
