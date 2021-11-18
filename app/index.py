@@ -153,10 +153,10 @@ class EditForm(FlaskForm):
     special_attack = IntegerField(_l('Special Attack:'))
     special_defense = IntegerField(_l('Special Defense:'))
     speed = IntegerField(_l('Speed:'))
-    # move1 = IntegerField(_l('Move 1'), validators=[DataRequired()])
-    # move2 = IntegerField(_l('Move 2'))
-    # move3 = IntegerField(_l('Move 3'))
-    # move4 = IntegerField(_l('Move 4'))
+    move1 = SelectField(_l('Move 1'), validators=[DataRequired()], coerce=int)
+    move2 = SelectField(_l('Move 2'), coerce=int)
+    move3 = SelectField(_l('Move 3'), coerce=int)
+    move4 = SelectField(_l('Move 4'), coerce=int)
     submit = SubmitField(_l('Save'))
 
 @bp.route('/pokemonedit/<int:id>', methods=['GET', 'POST'])
@@ -177,6 +177,14 @@ def pokemonedit(id):
     form.gender.choices = [(GenderClass.male.value, "Male"), (GenderClass.female.value, "Female")]
     form.gender.data = 2
     form.level.data = pokemon.level
+    form.move1.choices = [(move.move.move_id, move.move.move_name) for move in available_moves]
+    form.move2.choices = [(move.move.move_id, move.move.move_name) for move in available_moves]
+    form.move3.choices = [(move.move.move_id, move.move.move_name) for move in available_moves]
+    form.move4.choices = [(move.move.move_id, move.move.move_name) for move in available_moves]
+    form.move1.data = pokemon.move1_id
+    form.move2.data = pokemon.move2_id
+    form.move3.data = pokemon.move3_id
+    form.move4.data = pokemon.move4_id
     
     print("about to validate")
     if form.validate_on_submit():
@@ -185,4 +193,4 @@ def pokemonedit(id):
         # flash("Test")
         return redirect(url_for('index.pokemonedit', id=id))
     
-    return render_template('pokemonedit.html', pokemon=pokemon, moves=moves, available_moves=available_moves, form=form)
+    return render_template('pokemonedit.html', pokemon=pokemon, moves=moves, form=form)

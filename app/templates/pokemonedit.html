@@ -104,21 +104,35 @@
                     </div>
                     <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
                         <span class="h4 card-title mb-0">Moves: </span> <br><br>
-                        {% for move in moves%}
+
                         <div class="card shadow mb-3">
                             <div class = "row">
                                 <div class="col-4 m-2">
-                                    <span class="h5 card-title mb-0">{{move.move_name}}</span>
-                                </div>
-                                <div class="col-2 m-2">
-                                    <a class="btn disabled btn-sm {{move.move_type.type_name}}" style="opacity: 1">{{move.move_type.type_name.title()}}</a>
-                                </div>
-                                <div class="col -0 m-2">
-                                    <span class="h5 card-title mb-0">{{move.pp}} / {{move.pp}}</span>
+                                    <span class="h5 card-title mb-0">{{form.move1)}}</span>
                                 </div>
                             </div>
                         </div>
-                        {% endfor %}
+                        <div class="card shadow mb-3">
+                            <div class = "row">
+                                <div class="col-4 m-2">
+                                    <span class="h5 card-title mb-0">{{form.move2}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow mb-3">
+                            <div class = "row">
+                                <div class="col-4 m-2">
+                                    <span class="h5 card-title mb-0">{{form.move3}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow mb-3">
+                            <div class = "row">
+                                <div class="col-4 m-2">
+                                    <span class="h5 card-title mb-0">{{form.move4}}</span>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                     <p>{{ form.submit() }}</p>
