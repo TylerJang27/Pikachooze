@@ -596,14 +596,6 @@ width: 50%;
   z-index: 1;
 }
 
-.dropdown-two {
-  position: absolute;
-  background-color: #f6f6f6;
-  min-width: 230px;
-  border: 1px solid #ddd;
-  z-index: 1;
-}
-
 /* Links inside the dropdown */
 .dropdown-content a {
   color: black;
