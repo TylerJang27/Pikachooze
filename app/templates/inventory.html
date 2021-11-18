@@ -6,6 +6,8 @@
 
     <main>
         
+        
+        
         <!-- Hero -->
         <div class="section-header pb-6 text-black">
             <div class="container">
@@ -13,11 +15,24 @@
                     <div class="col-12 text-left mb-3 mt-4">
                         <h2>Pikachooze</h2>
                         <h1>Inventory</h1>
-                        <a class="btn btn-black" style="opacity: 1" href="{{ url_for('index.add', id=67) }}">Add</a>
+                        <select id="add_pokemon" name="add_pokemon">
+                            {% for option in pokemon_choices %}
+                            <option value="{{option[0]}}">{{option[1]}}</option>
+                            {% endfor %}
+                        </select>
+                        <a class="btn btn-black" id="add" style="opacity: 1">Add</a>
                     </div>
                 </div>
             </div>
         </div>
+
+        <script type="text/javascript">
+            document.getElementById("add").onclick = function () {
+                let selection = document.getElementById("add_pokemon").value;
+                // console.log("/add/" + selection);
+                location.href = "/add/" + selection;
+            };
+        </script>
         <!-- End of Hero -->
 
         <!--End of Title section-->

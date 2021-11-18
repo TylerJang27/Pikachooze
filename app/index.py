@@ -3,8 +3,7 @@ from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
 from wtforms.fields.core import IntegerField
-from wtforms.fields import Flags
-from wtforms.validators import Optional, Required, ValidationError, DataRequired, Email, EqualTo
+from wtforms.validators import Optional, ValidationError, DataRequired
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from flask_babel import _, lazy_gettext as _l
@@ -14,6 +13,7 @@ from app.models.trainer import Trainer
 from app.models.trainer_pokemon import TrainerPokemon, GenderClass
 from app.models.can_learn import CanLearn
 from app.models.user import User
+from app.models.pokemon import Pokemon
 
 from app.scoring_algo import score_teams
 from app.config import Config
@@ -110,8 +110,10 @@ def inventory():
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
     trainer = session.query(Trainer).filter(Trainer.trainer_id == current_user.trainers[0].trainer_id).one_or_none()
+    pokemon = session.query(Pokemon).filter(Pokemon.generation_id == current_user.trainers[0].game.generation_id).all()
+    pokemon_choices = [(p.poke_id, p.name) for p in pokemon]
     print("my tp_ids:", [p.tp_id for p in trainer.trainer_pokemon])
-    return render_template('inventory.html', trainer=trainer)
+    return render_template('inventory.html', trainer=trainer, pokemon_choices=pokemon_choices)
 
 @bp.route('/leaders')
 def leaders():
@@ -215,7 +217,7 @@ def pokemonedit(id):
     
     if form.validate_on_submit():
         curr_pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.tp_id == id).one_or_none()
-        curr_pokemon.nickname = form.nickname.data
+        curr_pokemon.nickname = form.nickname.data if form.nickname.data != "" else curr_pokemon.pokemon.name
         curr_pokemon.gender = {1: "male", 2: "female"}[form.gender.data]
         curr_pokemon.level = form.level.data
 
