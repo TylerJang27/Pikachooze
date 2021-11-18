@@ -17,6 +17,7 @@ from app.models.pokemon import Pokemon
 
 from app.scoring_algo import score_teams
 from app.config import Config
+import uuid
 
 from flask import Blueprint
 
@@ -148,16 +149,17 @@ def add(id):
     session.add(added)
     session.commit()
     print("THE NEW ID IS ", added.tp_id)
-    return redirect(url_for('index.pokemonedit', id=added.tp_id))
+    return redirect(url_for('index.pokemonedit', id=added.uuid))
 
-@bp.route('/pokemon/<int:id>')
+@bp.route('/pokemon/<id>')
 def pokemon(id):
     if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
         return redirect("/login", code=302)
+    u = uuid.UUID(id)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.tp_id == id).one_or_none()
+    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
     moves = []
     for m in [pokemon.move1, pokemon.move2, pokemon.move3, pokemon.move4]:
         if m is not None:
@@ -195,14 +197,15 @@ class EditForm(FlaskForm):
         if move4.data != -1 and move4.data in [self.move1.data, self.move2.data, self.move3.data]:
             raise ValidationError(_('Please select unique moves'))
 
-@bp.route('/pokemonedit/<int:id>', methods=['GET', 'POST'])
+@bp.route('/pokemonedit/<id>', methods=['GET', 'POST'])
 def pokemonedit(id):
     if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon
         return redirect("/login", code=302)
+    u = uuid.UUID(id)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=False) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.tp_id == id).one_or_none()
+    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
     available_moves = session.query(CanLearn).filter(CanLearn.poke_id == pokemon.poke_id).all()
     move_choices = [(-1, "")] + [(move.move.move_id, move.move.move_name) for move in available_moves]
     moves = []
@@ -221,7 +224,7 @@ def pokemonedit(id):
     form.gender.choices = [(GenderClass.male.value, "Male"), (GenderClass.female.value, "Female")]
     
     if form.validate_on_submit():
-        curr_pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.tp_id == id).one_or_none()
+        curr_pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
         curr_pokemon.nickname = form.nickname.data if form.nickname.data != "" else curr_pokemon.pokemon.name
         curr_pokemon.gender = {1: "male", 2: "female"}[form.gender.data]
         curr_pokemon.level = form.level.data
@@ -235,7 +238,7 @@ def pokemonedit(id):
 
         session.add(curr_pokemon)
         session.commit()
-        return redirect(url_for('index.pokemon', id=id))
+        return redirect(url_for('index.pokemon', id=u))
     form.nickname.data = pokemon.nickname
     form.gender.data = pokemon.gender.value
     form.level.data = pokemon.level
