@@ -237,15 +237,19 @@ def get_pokemon_csv():
 # populates Evolution.csv with [poke1_id, poke2_id]
 def get_evolutions():
     for pokemon in df_pokemon:
-        res = request_to_api(SPECIES_LIST_EXT.format(pokemon))
+        res = request_to_api(SPECIES_LIST_EXT.format(pokemon.lower().replace(" ", "-")))
         prev = res["evolves_from_species"]
         post = df_pokemon[pokemon][0]
-        if prev != null:
-            pand = pokemon["evolve_from_species"]["url"]
+        if prev != None:
+            pand = res["evolves_from_species"]["url"]
             ext = pand.split("https://pokeapi.co/api/v2/pokemon-species/")
-            prev = ext[1]
+            prev = ext[1].replace("/","")
+           # print([prev,post])
             evolutions.append([prev, post])
-    print(evolutions)
+    #print(evolutions)
+    df_evolution = pd.DataFrame(evolutions)
+    df_evolution = df_evolution.to_csv('db/data/Evolution.csv', index = False, header = False)
+   
 
 # reads in from Stats.csv to populate df_stats
 def get_stats_csv():
