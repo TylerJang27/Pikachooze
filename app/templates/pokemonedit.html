@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% include 'navbar.html' %}
+
+{% block content %}
+
+    <main>
+        
+        <!-- Hero -->
+        <div class="section-header pb-6 text-black">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 text-left mb-3 mt-4">
+                        <h2>Inventory</h2>
+                        <h1>{{ pokemon.pokemon.name }}</h1>
+                        <a class="btn btn-sm rock" style="opacity: 1" href="{{ url_for('index.pokemon', id=pokemon.tp_id) }}">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Hero -->
+
+        <!-- Section -->
+    <section class="section section-md">
+        <form action="" method="post">
+        <div class="container mb-5">
+            <div class="row align-items-center justify-content-around">
+                    {{ form.hidden_tag() }}
+                    <div class="col-md-6 col-xl-4 text-center text-md-left text-black">
+                        <img class="img-fluid" src="{{ pokemon.pokemon.pic }}" alt="Pikachu Image">
+                    </div>
+                
+                    <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
+                        <span class="h4 card-title mb-0">Name: </span> <span class="h5 card-title mb-0">{{ pokemon.pokemon.name }}</span> <br><br>
+                        
+                        <span class="h4 card-title mb-0">{{ form.nickname.label }} </span> 
+                        <span class="h5 card-title mb-0">{{ form.nickname }} </span> 
+                        {% for error in form.nickname.errors %}
+                        <br>
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                        <br><br>
+
+                        <span class="h4 card-title mb-0">{{ form.gender.label }} </span> 
+                        <span class="h5 card-title mb-0">{{ form.gender }} </span> 
+                        {% for error in form.gender.errors %}
+                        <br>
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                        <br><br>
+
+                        <span class="h4 card-title mb-0">{{ form.level.label }} </span> 
+                        <span class="h5 card-title mb-0">{{ form.level }} </span> 
+                        {% for error in form.level.errors %}
+                        <br>
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                        <br><br>
+
+                        <span class="h4 card-title mb-0">Type: </span> 
+                        <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
+                        {% if pokemon.pokemon.type2 %}
+                        <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
+                        {% endif %} <br><br>
+
+                        <span class="h4 card-title mb-0">Stats: </span><br><br>
+                        <ul>
+                            <span class="h5 card-title mb-0">{{ form.hp.label }}</span> <span class="h6 card-title mb-0">{{ form.hp(size=10) }}</span> <br>
+                            {% for error in form.hp.errors %}
+                            <br>
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+
+                            <span class="h5 card-title mb-0">{{ form.speed.label }}</span> <span class="h6 card-title mb-0">{{ form.speed(size=10) }}</span> <br>
+                            {% for error in form.speed.errors %}
+                            <br>
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+
+                            <span class="h5 card-title mb-0">{{ form.attack.label }}</span> <span class="h6 card-title mb-0">{{ form.attack(size=10) }}</span> <br>
+                            {% for error in form.attack.errors %}
+                            <br>
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+
+                            <span class="h5 card-title mb-0">{{ form.defense.label }}</span> <span class="h6 card-title mb-0">{{ form.defense(size=10) }}</span> <br>
+                            {% for error in form.defense.errors %}
+                            <br>
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+
+                            <span class="h5 card-title mb-0">{{ form.special_attack.label }}</span> <span class="h6 card-title mb-0">{{ form.special_attack(size=10) }}</span> <br>
+                            {% for error in form.special_attack.errors %}
+                            <br>
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+
+                            <span class="h5 card-title mb-0">{{ form.special_defense.label }}</span> <span class="h6 card-title mb-0">{{ form.special_defense(size=10) }}</span> <br>
+                            {% for error in form.special_defense.errors %}
+                            <br>
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
+                        <span class="h4 card-title mb-0">Moves: </span> <br><br>
+
+                        <div class="card shadow mb-3">
+                            <div class = "row">
+                                <div class="col-4 m-2">
+                                    <span class="h5 card-title mb-0">{{form.move1)}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow mb-3">
+                            <div class = "row">
+                                <div class="col-4 m-2">
+                                    <span class="h5 card-title mb-0">{{form.move2}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow mb-3">
+                            <div class = "row">
+                                <div class="col-4 m-2">
+                                    <span class="h5 card-title mb-0">{{form.move3}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow mb-3">
+                            <div class = "row">
+                                <div class="col-4 m-2">
+                                    <span class="h5 card-title mb-0">{{form.move4}}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <p>{{ form.submit() }}</p>
+                </div>
+            </div>
+        </form>
+    </section>
+    <!-- End of section -->
+
+    </main>
+
+{% endblock content %}
