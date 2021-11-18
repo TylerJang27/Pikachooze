@@ -10,7 +10,7 @@ from flask_babel import _, lazy_gettext as _l
 
 from app.models.purchase import Purchase
 from app.models.trainer import Trainer
-from app.models.trainer_pokemon import TrainerPokemon
+from app.models.trainer_pokemon import TrainerPokemon, GenderClass
 from app.models.can_learn import CanLearn
 from app.models.user import User
 
@@ -145,13 +145,14 @@ def pokemon(id):
 
 class EditForm(FlaskForm):
     nickname = StringField(_l('Nickname:'))
+    gender = SelectField(_l('Gender:'), validate_choice=True, coerce=int)
     level = IntegerField(_l('Level:'), validators=[DataRequired()])
     hp = IntegerField(_l('HP:'))
-    # attack = IntegerField(_l('Attack:'))
-    # defense = IntegerField(_l('Defense:'))
-    # special_attack_stat = IntegerField(_l('Special Attack:'))
-    # special_defense_stat = IntegerField(_l('Special Defense:'))
-    # speed = IntegerField(_l('Speed:'))
+    attack = IntegerField(_l('Attack:'))
+    defense = IntegerField(_l('Defense:'))
+    special_attack = IntegerField(_l('Special Attack:'))
+    special_defense = IntegerField(_l('Special Defense:'))
+    speed = IntegerField(_l('Speed:'))
     # move1 = IntegerField(_l('Move 1'), validators=[DataRequired()])
     # move2 = IntegerField(_l('Move 2'))
     # move3 = IntegerField(_l('Move 3'))
@@ -171,12 +172,17 @@ def pokemonedit(id):
     for m in [pokemon.move1, pokemon.move2, pokemon.move3, pokemon.move4]:
         if m is not None:
             moves.append(m)
-    editForm = EditForm()
-    editForm.nickname.data = "Bobby"
-    if editForm.is_submitted():
-        # TODO: DO WE NEED AN ELSE
-        print("form has been submitted", editForm.nickname.data, editForm.level.data)
-        flash("Test")
-        return redirect(url_for('index.pokemon', id=id))
+    form = EditForm()
+    form.nickname.data = pokemon.nickname
+    form.gender.choices = [(GenderClass.male.value, "Male"), (GenderClass.female.value, "Female")]
+    form.gender.data = 2
+    form.level.data = pokemon.level
     
-    return render_template('pokemonedit.html', pokemon=pokemon, moves=moves, available_moves=available_moves, form=editForm)
+    print("about to validate")
+    if form.validate_on_submit():
+        # TODO: DO WE NEED AN ELSE
+        print("form has been submitted", form.nickname.data, form.level.data)
+        # flash("Test")
+        return redirect(url_for('index.pokemonedit', id=id))
+    
+    return render_template('pokemonedit.html', pokemon=pokemon, moves=moves, available_moves=available_moves, form=form)
