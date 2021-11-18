@@ -11,7 +11,7 @@ from flask_babel import _, lazy_gettext as _l
 
 from app.models.purchase import Purchase
 from app.models.trainer import Trainer
-from app.models.trainer_pokemon import TrainerPokemon, GenderClass, get_tp_i
+from app.models.trainer_pokemon import TrainerPokemon, GenderClass
 from app.models.can_learn import CanLearn
 from app.models.user import User
 
@@ -104,6 +104,8 @@ def fight(trainer):
 
 @bp.route('/inventory')
 def inventory():
+    if not current_user.is_authenticated:
+        return redirect("/login", code=302)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
@@ -138,12 +140,11 @@ def add(id):
     session = Session()
 
     added = TrainerPokemon()
-    added.tp_id = get_tp_i()
-    print("THE NEW ID IS ", added.tp_id)
     added.trainer_id = current_user.trainers[0].trainer_id
     added.poke_id = id
     session.add(added)
     session.commit()
+    print("THE NEW ID IS ", added.tp_id)
     return redirect(url_for('index.pokemonedit', id=added.tp_id))
 
 @bp.route('/pokemon/<int:id>')
@@ -177,8 +178,17 @@ class EditForm(FlaskForm):
     submit = SubmitField(_l('Save'))
 
     def validate_move1(self, move1):
-        if move1.data == -1:
+        if move1.data == -1 or move1.data in [self.move2.data, self.move3.data, self.move4.data]:
             raise ValidationError(_('Please select a move'))
+    def validate_move2(self, move2):
+        if move2.data != -1 and move2.data in [self.move1.data, self.move3.data, self.move4.data]:
+            raise ValidationError(_('Please select unique moves'))
+    def validate_move3(self, move3):
+        if move3.data != -1 and move3.data in [self.move1.data, self.move2.data, self.move4.data]:
+            raise ValidationError(_('Please select unique moves'))
+    def validate_move4(self, move4):
+        if move4.data != -1 and move4.data in [self.move1.data, self.move2.data, self.move3.data]:
+            raise ValidationError(_('Please select unique moves'))
 
 @bp.route('/pokemonedit/<int:id>', methods=['GET', 'POST'])
 def pokemonedit(id):
@@ -203,21 +213,18 @@ def pokemonedit(id):
     form.move4.choices = move_choices
     form.gender.choices = [(GenderClass.male.value, "Male"), (GenderClass.female.value, "Female")]
     
-    if form.submit():
-        print("about to validate", form.move1.data, form.move2.data, form.move3.data, form.move4.data)
-        print(move_choices)
-        # print(move_choices)
     if form.validate_on_submit():
-        print("form has been submitted", form.nickname.data, form.level.data)
         curr_pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.tp_id == id).one_or_none()
         curr_pokemon.nickname = form.nickname.data
         curr_pokemon.gender = {1: "male", 2: "female"}[form.gender.data]
         curr_pokemon.level = form.level.data
+
         # TODO: ADD OTHER ATTRIBUTES/STATS
-        curr_pokemon.move1_id = form.move1.data
-        curr_pokemon.move2_id = form.move2.data
-        curr_pokemon.move3_id = form.move3.data
-        curr_pokemon.move4_id = form.move4.data
+
+        curr_pokemon.move1_id = form.move1.data if form.move1.data != -1 else None
+        curr_pokemon.move2_id = form.move2.data if form.move2.data != -1 else None
+        curr_pokemon.move3_id = form.move3.data if form.move3.data != -1 else None
+        curr_pokemon.move4_id = form.move4.data if form.move4.data != -1 else None
 
         session.add(curr_pokemon)
         session.commit()
@@ -226,9 +233,9 @@ def pokemonedit(id):
     form.gender.data = pokemon.gender.value
     form.level.data = pokemon.level
 
-    # form.move1.data = pokemon.move1_id
-    # form.move2.data = pokemon.move2_id
-    # form.move3.data = pokemon.move3_id
-    # form.move4.data = pokemon.move4_id
+    form.move1.data = pokemon.move1_id
+    form.move2.data = pokemon.move2_id
+    form.move3.data = pokemon.move3_id
+    form.move4.data = pokemon.move4_id
     
     return render_template('pokemonedit.html', pokemon=pokemon, moves=moves, form=form)

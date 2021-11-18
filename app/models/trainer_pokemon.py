@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Enum, Sequence
 from sqlalchemy.orm import relationship
 from app.models.base import Base
 import enum
@@ -7,17 +7,12 @@ class GenderClass(enum.Enum):
     male = 1
     female = 2
 
-tp_i = 172
-def get_tp_i():
-    global tp_i
-    tp_i += 1
-    return tp_i
-
 # TODO: CAN EXTRACT INTO THE ASSOCIATION TABLE, SEE DOCS
 class TrainerPokemon(Base):
     __tablename__ = 'trainer_pokemon'
 
-    tp_id = Column(Integer, primary_key = True)
+    trainer_pokemon_seq = Sequence('trainer_pokemon_seq', start=172) # TODO: CHANGE NUMBER IF MORE TRAINER POKEMON ADDED
+    tp_id = Column(Integer, trainer_pokemon_seq, server_default=trainer_pokemon_seq.next_value(), primary_key = True)
     trainer_id = Column(Integer, ForeignKey('trainer.trainer_id')) # TODO: ADD INDEXES
     poke_id = Column(Integer, ForeignKey('pokemon.poke_id'))
     nickname = Column(String(25))
