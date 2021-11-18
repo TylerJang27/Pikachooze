@@ -181,8 +181,10 @@ class EditForm(FlaskForm):
     submit = SubmitField(_l('Save'))
 
     def validate_move1(self, move1):
-        if move1.data == -1 or move1.data in [self.move2.data, self.move3.data, self.move4.data]:
+        if move1.data == -1:
             raise ValidationError(_('Please select a move'))
+        elif move1.data in [self.move2.data, self.move3.data, self.move4.data]:
+            raise ValidationError(_('Please select unique moves'))
     def validate_move2(self, move2):
         if move2.data != -1 and move2.data in [self.move1.data, self.move3.data, self.move4.data]:
             raise ValidationError(_('Please select unique moves'))
@@ -208,7 +210,9 @@ def pokemonedit(id):
 
     for m in [pokemon.move1, pokemon.move2, pokemon.move3, pokemon.move4]:
         if m is not None:
-            moves.append(m)
+            moves.append(m.move_name)
+        else:
+            moves.append("")
     form = EditForm()
     form.move1.choices = move_choices
     form.move2.choices = move_choices
@@ -241,4 +245,4 @@ def pokemonedit(id):
     form.move3.data = pokemon.move3_id
     form.move4.data = pokemon.move4_id
     
-    return render_template('pokemonedit.html', pokemon=pokemon, moves=moves, form=form)
+    return render_template('pokemonedit.html', pokemon=pokemon, moves=moves, form=form, move_choices=move_choices)
