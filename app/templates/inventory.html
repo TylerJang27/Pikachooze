@@ -40,22 +40,6 @@
                             </div>
                         </div>
                         {% endfor %}
-                        {% for pokemon in trainer.trainer_pokemon %}
-                        <div class="card shadow col-3">
-                            <a href="{{ url_for('index.pokemon', id=pokemon.tp_id) }}">
-                                <img src="{{pokemon.pokemon.pic}}" alt="Togepi" class="card-img-top rounded-top">
-                            </a>
-                            <div class="card-body">
-                                <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
-                                {% if pokemon.pokemon.type2 %}
-                                <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
-                                {% endif %}
-                                <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Lv. </span></span>{{pokemon.level}}</span>
-                                <h3 class="h5 card-title mt-3">{{pokemon.nickname}}</h3>
-                            </div>
-                        </div>
-                        {% endfor %}
-
                     <!-- </div> -->
                 </div>
             </div>

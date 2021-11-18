@@ -3,7 +3,8 @@ from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
 from wtforms.fields.core import IntegerField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms.fields import Flags
+from wtforms.validators import Optional, Required, ValidationError, DataRequired, Email, EqualTo
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from flask_babel import _, lazy_gettext as _l
@@ -20,7 +21,6 @@ from app.config import Config
 from flask import Blueprint
 
 bp = Blueprint('index', __name__)
-
 
 @bp.route('/')
 def index():
@@ -107,8 +107,8 @@ def inventory():
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    trainer = session.query(Trainer).filter(Trainer.trainer_id == 2).one_or_none()
-    print([p.pokemon.type1 for p in trainer.trainer_pokemon])
+    trainer = session.query(Trainer).filter(Trainer.trainer_id == current_user.trainers[0].trainer_id).one_or_none()
+    print("my tp_ids:", [p.tp_id for p in trainer.trainer_pokemon])
     return render_template('inventory.html', trainer=trainer)
 
 @bp.route('/leaders')
@@ -139,6 +139,7 @@ def add(id):
 
     added = TrainerPokemon()
     added.tp_id = get_tp_i()
+    print("THE NEW ID IS ", added.tp_id)
     added.trainer_id = current_user.trainers[0].trainer_id
     added.poke_id = id
     session.add(added)
@@ -163,12 +164,12 @@ class EditForm(FlaskForm):
     nickname = StringField(_l('Nickname:'))
     gender = SelectField(_l('Gender:'), validate_choice=True, coerce=int)
     level = IntegerField(_l('Level:'), validators=[DataRequired()])
-    hp = IntegerField(_l('HP:'))
-    attack = IntegerField(_l('Attack:'))
-    defense = IntegerField(_l('Defense:'))
-    special_attack = IntegerField(_l('Special Attack:'))
-    special_defense = IntegerField(_l('Special Defense:'))
-    speed = IntegerField(_l('Speed:'))
+    hp = IntegerField(_l('HP:'), validators=[Optional()]) # TODO: RIGHT NOW CREATING A TRAINER_POKEMON GIVES A DEFAULT LEVEL OF 50
+    attack = IntegerField(_l('Attack:'), validators=[Optional()])
+    defense = IntegerField(_l('Defense:'), validators=[Optional()])
+    special_attack = IntegerField(_l('Special Attack:'), validators=[Optional()])
+    special_defense = IntegerField(_l('Special Defense:'), validators=[Optional()])
+    speed = IntegerField(_l('Speed:'), validators=[Optional()])
     move1 = SelectField(_l('Move 1'), coerce=int)
     move2 = SelectField(_l('Move 2'), coerce=int)
     move3 = SelectField(_l('Move 3'), coerce=int)
@@ -200,19 +201,28 @@ def pokemonedit(id):
     form.move2.choices = move_choices
     form.move3.choices = move_choices
     form.move4.choices = move_choices
+    form.gender.choices = [(GenderClass.male.value, "Male"), (GenderClass.female.value, "Female")]
     
     if form.submit():
         print("about to validate", form.move1.data, form.move2.data, form.move3.data, form.move4.data)
         print(move_choices)
         # print(move_choices)
     if form.validate_on_submit():
-            
-        # TODO: DO WE NEED AN ELSE
         print("form has been submitted", form.nickname.data, form.level.data)
-        # flash("Test")
-        return redirect(url_for('index.pokemonedit', id=id))
+        curr_pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.tp_id == id).one_or_none()
+        curr_pokemon.nickname = form.nickname.data
+        curr_pokemon.gender = {1: "male", 2: "female"}[form.gender.data]
+        curr_pokemon.level = form.level.data
+        # TODO: ADD OTHER ATTRIBUTES/STATS
+        curr_pokemon.move1_id = form.move1.data
+        curr_pokemon.move2_id = form.move2.data
+        curr_pokemon.move3_id = form.move3.data
+        curr_pokemon.move4_id = form.move4.data
+
+        session.add(curr_pokemon)
+        session.commit()
+        return redirect(url_for('index.pokemon', id=id))
     form.nickname.data = pokemon.nickname
-    form.gender.choices = [(GenderClass.male.value, "Male"), (GenderClass.female.value, "Female")]
     form.gender.data = pokemon.gender.value
     form.level.data = pokemon.level
 
