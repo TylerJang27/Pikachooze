@@ -108,28 +108,44 @@
                         <div class="card shadow mb-3">
                             <div class = "row">
                                 <div class="col-4 m-2">
-                                    <span class="h5 card-title mb-0">{{form.move1}}</span>
+                                    <span class="h5 card-title mb-0">{{ form.move1 }}</span>
+                                    {% for error in form.move1.errors %}
+                                    <br>
+                                    <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
                         <div class="card shadow mb-3">
                             <div class = "row">
                                 <div class="col-4 m-2">
-                                    <span class="h5 card-title mb-0">{{form.move2}}</span>
+                                    <span class="h5 card-title mb-0">{{ form.move2 }}</span>
+                                    {% for error in form.move2.errors %}
+                                    <br>
+                                    <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
                         <div class="card shadow mb-3">
                             <div class = "row">
                                 <div class="col-4 m-2">
-                                    <span class="h5 card-title mb-0">{{form.move3}}</span>
+                                    <span class="h5 card-title mb-0">{{ form.move3 }}</span>
+                                    {% for error in form.move3.errors %}
+                                    <br>
+                                    <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
                         <div class="card shadow mb-3">
                             <div class = "row">
                                 <div class="col-4 m-2">
-                                    <span class="h5 card-title mb-0">{{form.move4}}</span>
+                                    <span class="h5 card-title mb-0">{{ form.move4 }}</span>
+                                    {% for error in form.move4.errors %}
+                                    <br>
+                                    <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>

@@ -10,7 +10,7 @@ from flask_babel import _, lazy_gettext as _l
 
 from app.models.purchase import Purchase
 from app.models.trainer import Trainer
-from app.models.trainer_pokemon import TrainerPokemon, GenderClass
+from app.models.trainer_pokemon import TrainerPokemon, GenderClass, get_tp_i
 from app.models.can_learn import CanLearn
 from app.models.user import User
 
@@ -129,6 +129,22 @@ def leaders():
 
     return render_template('leaders.html', trainers=trainers, trainer_types=trainer_types)
 
+@bp.route('/add/<int:id>')
+def add(id):
+    if not current_user.is_authenticated:
+        return redirect("/login", code=302)
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+    Session = sessionmaker(engine, expire_on_commit=False)
+    session = Session()
+
+    added = TrainerPokemon()
+    added.tp_id = get_tp_i()
+    added.trainer_id = current_user.trainers[0].trainer_id
+    added.poke_id = id
+    session.add(added)
+    session.commit()
+    return redirect(url_for('index.pokemonedit', id=added.tp_id))
+
 @bp.route('/pokemon/<int:id>')
 def pokemon(id):
     if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
@@ -153,11 +169,15 @@ class EditForm(FlaskForm):
     special_attack = IntegerField(_l('Special Attack:'))
     special_defense = IntegerField(_l('Special Defense:'))
     speed = IntegerField(_l('Speed:'))
-    move1 = SelectField(_l('Move 1'), validators=[DataRequired()], coerce=int)
+    move1 = SelectField(_l('Move 1'), coerce=int)
     move2 = SelectField(_l('Move 2'), coerce=int)
     move3 = SelectField(_l('Move 3'), coerce=int)
     move4 = SelectField(_l('Move 4'), coerce=int)
     submit = SubmitField(_l('Save'))
+
+    def validate_move1(self, move1):
+        if move1.data == -1:
+            raise ValidationError(_('Please select a move'))
 
 @bp.route('/pokemonedit/<int:id>', methods=['GET', 'POST'])
 def pokemonedit(id):
@@ -168,29 +188,37 @@ def pokemonedit(id):
     session = Session()
     pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.tp_id == id).one_or_none()
     available_moves = session.query(CanLearn).filter(CanLearn.poke_id == pokemon.poke_id).all()
+    move_choices = [(-1, "")] + [(move.move.move_id, move.move.move_name) for move in available_moves]
     moves = []
+
+
     for m in [pokemon.move1, pokemon.move2, pokemon.move3, pokemon.move4]:
         if m is not None:
             moves.append(m)
     form = EditForm()
-    form.nickname.data = pokemon.nickname
-    form.gender.choices = [(GenderClass.male.value, "Male"), (GenderClass.female.value, "Female")]
-    form.gender.data = 2
-    form.level.data = pokemon.level
-    form.move1.choices = [(move.move.move_id, move.move.move_name) for move in available_moves]
-    form.move2.choices = [(move.move.move_id, move.move.move_name) for move in available_moves]
-    form.move3.choices = [(move.move.move_id, move.move.move_name) for move in available_moves]
-    form.move4.choices = [(move.move.move_id, move.move.move_name) for move in available_moves]
-    form.move1.data = pokemon.move1_id
-    form.move2.data = pokemon.move2_id
-    form.move3.data = pokemon.move3_id
-    form.move4.data = pokemon.move4_id
+    form.move1.choices = move_choices
+    form.move2.choices = move_choices
+    form.move3.choices = move_choices
+    form.move4.choices = move_choices
     
-    print("about to validate")
+    if form.submit():
+        print("about to validate", form.move1.data, form.move2.data, form.move3.data, form.move4.data)
+        print(move_choices)
+        # print(move_choices)
     if form.validate_on_submit():
+            
         # TODO: DO WE NEED AN ELSE
         print("form has been submitted", form.nickname.data, form.level.data)
         # flash("Test")
         return redirect(url_for('index.pokemonedit', id=id))
+    form.nickname.data = pokemon.nickname
+    form.gender.choices = [(GenderClass.male.value, "Male"), (GenderClass.female.value, "Female")]
+    form.gender.data = pokemon.gender.value
+    form.level.data = pokemon.level
+
+    # form.move1.data = pokemon.move1_id
+    # form.move2.data = pokemon.move2_id
+    # form.move3.data = pokemon.move3_id
+    # form.move4.data = pokemon.move4_id
     
     return render_template('pokemonedit.html', pokemon=pokemon, moves=moves, form=form)
