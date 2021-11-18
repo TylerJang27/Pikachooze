@@ -12,6 +12,7 @@ import re
 import time
 
 from bs4 import BeautifulSoup
+from sqlalchemy.sql.expression import null
 from sqlalchemy.sql.sqltypes import MatchType
 # Database reference, only missing the Move-Pokemon connecting table (assume just a (poke_id, move_id)) relation.
 # https://dbdiagram.io/d/6158de67825b5b01461dfd3f
@@ -19,7 +20,7 @@ from sqlalchemy.sql.sqltypes import MatchType
 # %% Constants
 POKEAPI_HOSTNAME = "https://pokeapi.co/api/v2/{:}"
 POKEIMAGES_URL = "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/{:}"
-SPECIES_LIST_EXT = "pokemon-species"
+SPECIES_LIST_EXT = "pokemon-species/{:}"
 POKEMON_EXT = "pokemon/{:}"
 MOVES = "move/{:}"
 TYPES = "type"
@@ -49,6 +50,7 @@ version_game = []
 locations = {}
 trainer_list = []
 trainer_pokemon_list = []
+evolutions = []
 
 # trainers to scrape
 diamond_pearl_gym_leaders = ["Roark", "Gardenia", "Maylene", "Crasher Wake", "Fantina", "Byron", "Candice", "Volkner"]
@@ -231,6 +233,19 @@ def get_pokemon_csv():
         pic = df.iloc[ind,5]
         df_pokemon[name] = [id, generation, type_1, type_2, pic]
     #print(df_pokemon)
+
+# populates Evolution.csv with [poke1_id, poke2_id]
+def get_evolutions():
+    for pokemon in df_pokemon:
+        res = request_to_api(SPECIES_LIST_EXT.format(pokemon))
+        prev = res["evolves_from_species"]
+        post = df_pokemon[pokemon][0]
+        if prev != null:
+            pand = pokemon["evolve_from_species"]["url"]
+            ext = pand.split("https://pokeapi.co/api/v2/pokemon-species/")
+            prev = ext[1]
+            evolutions.append([prev, post])
+    print(evolutions)
 
 # reads in from Stats.csv to populate df_stats
 def get_stats_csv():
@@ -475,11 +490,12 @@ if __name__ == "__main__":
     #get_moves()
 
     # Populate from csvs
-    get_games_csv()
+    #get_games_csv()
     get_pokemon_csv()
-    get_stats_csv()
-    get_learn_csv()
-    get_moves_csv()
-    get_types_csv()
+    get_evolutions()
+    # get_stats_csv()
+    # get_learn_csv()
+    # get_moves_csv()
+    # get_types_csv()
 
-    get_gym_leaders()
+    # get_gym_leaders()
