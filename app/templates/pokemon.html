@@ -13,6 +13,7 @@
                     <div class="col-12 text-left mb-3 mt-4">
                         <h2>Inventory</h2>
                         <h1>{{ pokemon.pokemon.name }}</h1>
+                        <a class="btn btn-sm rock" style="opacity: 1" href="{{ url_for('index.pokemonedit', id=pokemon.tp_id) }}">Edit</a>
                     </div>
                 </div>
             </div>

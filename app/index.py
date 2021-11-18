@@ -1,12 +1,17 @@
-from flask import render_template, redirect
+from flask import render_template, redirect, flash, url_for
 from flask_login import current_user
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, SelectField
+from wtforms.fields.core import IntegerField
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from flask_babel import _, lazy_gettext as _l
 
-from app.models.product import Product
 from app.models.purchase import Purchase
 from app.models.trainer import Trainer
 from app.models.trainer_pokemon import TrainerPokemon
+from app.models.can_learn import CanLearn
 from app.models.user import User
 
 from app.scoring_algo import score_teams
@@ -126,7 +131,7 @@ def leaders():
 
 @bp.route('/pokemon/<int:id>')
 def pokemon(id):
-    if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon
+    if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
         return redirect("/login", code=302)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
@@ -137,3 +142,41 @@ def pokemon(id):
         if m is not None:
             moves.append(m)
     return render_template('pokemon.html', pokemon=pokemon, moves=moves)
+
+class EditForm(FlaskForm):
+    nickname = StringField(_l('Nickname:'))
+    level = IntegerField(_l('Level:'), validators=[DataRequired()])
+    hp = IntegerField(_l('HP:'))
+    # attack = IntegerField(_l('Attack:'))
+    # defense = IntegerField(_l('Defense:'))
+    # special_attack_stat = IntegerField(_l('Special Attack:'))
+    # special_defense_stat = IntegerField(_l('Special Defense:'))
+    # speed = IntegerField(_l('Speed:'))
+    # move1 = IntegerField(_l('Move 1'), validators=[DataRequired()])
+    # move2 = IntegerField(_l('Move 2'))
+    # move3 = IntegerField(_l('Move 3'))
+    # move4 = IntegerField(_l('Move 4'))
+    submit = SubmitField(_l('Save'))
+
+@bp.route('/pokemonedit/<int:id>', methods=['GET', 'POST'])
+def pokemonedit(id):
+    if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon
+        return redirect("/login", code=302)
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=False) #TODO: GET FROM OTHER ONE
+    Session = sessionmaker(engine, expire_on_commit=False)
+    session = Session()
+    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.tp_id == id).one_or_none()
+    available_moves = session.query(CanLearn).filter(CanLearn.poke_id == pokemon.poke_id).all()
+    moves = []
+    for m in [pokemon.move1, pokemon.move2, pokemon.move3, pokemon.move4]:
+        if m is not None:
+            moves.append(m)
+    editForm = EditForm()
+    editForm.nickname.data = "Bobby"
+    if editForm.is_submitted():
+        # TODO: DO WE NEED AN ELSE
+        print("form has been submitted", editForm.nickname.data, editForm.level.data)
+        flash("Test")
+        return redirect(url_for('index.pokemon', id=id))
+    
+    return render_template('pokemonedit.html', pokemon=pokemon, moves=moves, available_moves=available_moves, form=editForm)
