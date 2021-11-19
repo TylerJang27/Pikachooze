@@ -11,9 +11,16 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-12 text-left mb-3 mt-4">
-                        <h2>Inventory</h2>
-                        <h1>{{ pokemon.pokemon.name }}</h1>
-                        <a class="btn btn-sm rock" style="opacity: 1" href="{{ url_for('index.pokemonedit', id=pokemon.uuid) }}">Edit</a>
+                        <div class="row"><h2>Inventory</h2></div>
+                        <div class="row" style="align-items: center;">
+                            <h1>{{ pokemon.pokemon.name }}</h1>
+                            <div class="ml-4">
+                                <a class="btn btn-warning" style="opacity: 1" href="{{ url_for('index.pokemonedit', id=pokemon.uuid) }}">Edit</a>
+                            </div>
+                            <div class="ml-4">
+                                <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.inventory', id=pokemon.uuid) }}">Back to Inventory</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

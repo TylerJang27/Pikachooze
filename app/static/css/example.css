@@ -116,12 +116,6 @@ width: 50%;
     .navbar .navbar-nav .dropdown-megamenu-md {
       min-width: 960px; } }
   
-  @media (min-width: 992px) {
-    .navbar .navbar-nav .dropdown-toggle.show .nav-link-arrow {
-      transform: rotate(180deg); }
-    .navbar .navbar-nav .dropdown-toggle:hover .nav-link-arrow {
-      transform: rotate(180deg); } }
-  
   .navbar .navbar-nav .dropdown-submenu {
     position: relative; }
     .navbar .navbar-nav .dropdown-submenu .dropdown-menu {
@@ -552,18 +546,21 @@ width: 50%;
 /* Borrowed from https://www.w3schools.com/howto/howto_js_filter_dropdown.asp */
 /* Dropdown Button */
 .dropbtn {
-  background-color: #04AA6D;
+  /* background-color: #04AA6D;
   color: white;
   padding: 16px;
   font-size: 16px;
-  border: none;
+  border: none; */
+  color: #212529;
+  background-color: #ffc107;
+  border-color: #ffc107;
   cursor: pointer;
 }
 
 /* Dropdown button on hover & focus */
-.dropbtn:hover, .dropbtn:focus {
-  background-color: #3e8e41;
-}
+/* .dropbtn:hover, .dropbtn:focus { */
+  /* background-color: #3e8e41; */
+/* } */
 
 /* The search field */
 #myInput {

@@ -11,9 +11,13 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-12 text-left mb-3 mt-4">
-                        <h2>Inventory</h2>
-                        <h1>{{ pokemon.pokemon.name }}</h1>
-                        <a class="btn btn-sm rock" style="opacity: 1" href="{{ url_for('index.pokemon', id=pokemon.uuid) }}">Back</a>
+                        <div class="row"><h2>Inventory</h2></div>
+                        <div class="row" style="align-items: center;">
+                            <h1>{{ pokemon.pokemon.name }}</h1>
+                            <div class="ml-4">
+                                <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.pokemon', id=pokemon.uuid) }}">Back</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -189,7 +193,7 @@
                         <div class="card shadow mb-3">
                             <!-- <div class = "row"> -->
                                 <div class="dropdown">
-                                    <button type="button" onclick="toggleDropdown(1)" id="movebutton1" class="dropbtn">{{ form.move1.data }}</button>
+                                    <button type="button" onclick="toggleDropdown(1)" id="movebutton1" class="btn dropbtn">{{ form.move1.data }}</button>
                                     <div id="myDropdown1" class="dropdown-content">
                                         <input type="text" placeholder="Search.." id="searchBar1" onkeyup="filterFunction(1)" style="width: 100%; height: 45px;">
                                         {% for option in move_choices %}
@@ -208,7 +212,7 @@
                         <div class="card shadow mb-3">
                             <!-- <div class = "row"> -->
                                 <div class="dropdown">
-                                    <button type="button" onclick="toggleDropdown(2)" id="movebutton2" class="dropbtn">{{ form.move2.data }}</button>
+                                    <button type="button" onclick="toggleDropdown(2)" id="movebutton2" class="btn dropbtn">{{ form.move2.data }}</button>
                                     <div id="myDropdown2" class="dropdown-content">
                                         <input type="text" placeholder="Search.." id="searchBar2" onkeyup="filterFunction(2)" style="width: 100%; height: 45px;">
                                         {% for option in move_choices %}
@@ -226,7 +230,7 @@
                         <div class="card shadow mb-3">
                             <!-- <div class = "row"> -->
                                 <div class="dropdown">
-                                    <button type="button" onclick="toggleDropdown(3)" id="movebutton3" class="dropbtn">{{ form.move3.data }}</button>
+                                    <button type="button" onclick="toggleDropdown(3)" id="movebutton3" class="btn dropbtn">{{ form.move3.data }}</button>
                                     <div id="myDropdown3" class="dropdown-content">
                                         <input type="text" placeholder="Search.." id="searchBar3" onkeyup="filterFunction(3)" style="width: 100%; height: 45px;">
                                         {% for option in move_choices %}
@@ -244,7 +248,7 @@
                         <div class="card shadow mb-3">
                             <!-- <div class = "row"> -->
                                 <div class="dropdown">
-                                    <button type="button" onclick="toggleDropdown(4)" id="movebutton4" class="dropbtn">{{ form.move4.data }}</button>
+                                    <button type="button" onclick="toggleDropdown(4)" id="movebutton4" class="btn dropbtn">{{ form.move4.data }}</button>
                                     <div id="myDropdown4" class="dropdown-content">
                                         <input type="text" placeholder="Search.." id="searchBar4" onkeyup="filterFunction(4)" style="width: 100%; height: 45px;">
                                         {% for option in move_choices %}
