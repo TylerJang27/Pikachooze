@@ -13,7 +13,7 @@
                     <div class="col-12 text-left mb-3 mt-4">
                         <h2>Inventory</h2>
                         <h1>{{ pokemon.pokemon.name }}</h1>
-                        <a class="btn btn-sm rock" style="opacity: 1" href="{{ url_for('index.pokemon', id=pokemon.tp_id) }}">Back</a>
+                        <a class="btn btn-sm rock" style="opacity: 1" href="{{ url_for('index.pokemon', id=pokemon.uuid) }}">Back</a>
                     </div>
                 </div>
             </div>
@@ -103,38 +103,142 @@
                         </ul>
                     </div>
                     <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
+
+                        <script>
+                            /* When the user clicks on the button,
+                            toggle between hiding and showing the dropdown content */
+                            function toggleDropdown(id) {
+                                document.getElementById("myDropdown"+id).classList.toggle("show");
+                            }
+                
+                            function filterFunction(id) {
+                                var input, filter, ul, li, a, i;
+                                input = document.getElementById("searchBar"+id);
+                                filter = input.value.toUpperCase();
+                                div = document.getElementById("myDropdown"+id);
+                                a = div.getElementsByTagName("a");
+                                for (i = 0; i < a.length; i++) {
+                                    txtValue = a[i].textContent || a[i].innerText;
+                                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                        a[i].style.display = "";
+                                    } else {
+                                        a[i].style.display = "none";
+                                    }
+                                }
+                            }
+
+                            function setMove(num, id, name) {
+                                console.log("Clicked!");
+                                if (id == -1) {
+                                    document.getElementById("movebutton"+num).textContent = "Click to Search";
+                                } else {
+                                    document.getElementById("movebutton"+num).textContent = name;
+                                }
+                                document.getElementById("move"+num).value = id;
+                                toggleDropdown(num);
+                                
+                                // form.move1.data = id;
+                                // console.log("Clicked")
+                            }
+                        </script>
                         <span class="h4 card-title mb-0">Moves: </span> <br><br>
 
                         <div class="card shadow mb-3">
                             <div class = "row">
-                                <div class="col-4 m-2">
-                                    <span class="h5 card-title mb-0">{{form.move1)}}</span>
+                                <div class="dropdown">
+                                    <button type="button" onclick="toggleDropdown(1)" id="movebutton1" class="dropbtn">{{ form.move1.data }}</button>
+                                    <div id="myDropdown1" class="dropdown-content">
+                                        <input type="text" placeholder="Search.." id="searchBar1" onkeyup="filterFunction(1)">
+                                        {% for option in move_choices %}
+                                        <a name={{option[0]}} onclick="setMove(1, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
+                                        {% endfor %}
+                                    </div>
+                                    <span class="h5 card-title mb-0" hidden=true>{{ form.move1 }}</span>
+                                    {% for error in form.move1.errors %}
+                                    <br>
+                                    <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card shadow mb-3">
+                            <div class = "row">
+                                <div class="dropdown">
+                                    <button type="button" onclick="toggleDropdown(2)" id="movebutton2" class="dropbtn">{{ form.move2.data }}</button>
+                                    <div id="myDropdown2" class="dropdown-content">
+                                        <input type="text" placeholder="Search.." id="searchBar2" onkeyup="filterFunction(2)">
+                                        {% for option in move_choices %}
+                                        <a name={{option[0]}} onclick="setMove(2, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
+                                        {% endfor %}
+                                    </div>
+                                    <span class="h5 card-title mb-0" hidden=true>{{ form.move2 }}</span>
+                                    {% for error in form.move2.errors %}
+                                    <br>
+                                    <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
                         <div class="card shadow mb-3">
                             <div class = "row">
-                                <div class="col-4 m-2">
-                                    <span class="h5 card-title mb-0">{{form.move2}}</span>
+                                <div class="dropdown">
+                                    <button type="button" onclick="toggleDropdown(3)" id="movebutton3" class="dropbtn">{{ form.move3.data }}</button>
+                                    <div id="myDropdown3" class="dropdown-content">
+                                        <input type="text" placeholder="Search.." id="searchBar3" onkeyup="filterFunction(3)">
+                                        {% for option in move_choices %}
+                                        <a name={{option[0]}} onclick="setMove(3, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
+                                        {% endfor %}
+                                    </div>
+                                    <span class="h5 card-title mb-0" hidden=true>{{ form.move3 }}</span>
+                                    {% for error in form.move3.errors %}
+                                    <br>
+                                    <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
                         <div class="card shadow mb-3">
                             <div class = "row">
-                                <div class="col-4 m-2">
-                                    <span class="h5 card-title mb-0">{{form.move3}}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card shadow mb-3">
-                            <div class = "row">
-                                <div class="col-4 m-2">
-                                    <span class="h5 card-title mb-0">{{form.move4}}</span>
+                                <div class="dropdown">
+                                    <button type="button" onclick="toggleDropdown(4)" id="movebutton4" class="dropbtn">{{ form.move4.data }}</button>
+                                    <div id="myDropdown4" class="dropdown-content">
+                                        <input type="text" placeholder="Search.." id="searchBar4" onkeyup="filterFunction(4)">
+                                        {% for option in move_choices %}
+                                        <a name={{option[0]}} onclick="setMove(4, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
+                                        {% endfor %}
+                                    </div>
+                                    <span class="h5 card-title mb-0" hidden=true>{{ form.move4 }}</span>
+                                    {% for error in form.move4.errors %}
+                                    <br>
+                                    <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
 
                     </div>
+                    <script>
+                        function updateMoves() {
+                            var move1Select = document.getElementById("move1");
+                            var move1Text = move1Select.options[move1Select.selectedIndex].text;
+                            move1Text = (move1Text == "" ? "Click to Search" : move1Text);
+                            document.getElementById("movebutton1").textContent = move1Text;
+                            var move2Select = document.getElementById("move2")
+                            var move2Text = move2Select.options[move1Select.selectedIndex].text;
+                            move2Text = (move2Text == "" ? "Click to Search" : move2Text);
+                            document.getElementById("movebutton2").textContent = move2Text;
+                            var move3Select = document.getElementById("move3")
+                            var move3Text = move3Select.options[move3Select.selectedIndex].text;
+                            move3Text = (move3Text == "" ? "Click to Search" : move3Text);
+                            document.getElementById("movebutton3").textContent = move3Text;
+                            var move4Select = document.getElementById("move4")
+                            var move4Text = move4Select.options[move4Select.selectedIndex].text;
+                            move4Text = (move4Text == "" ? "Click to Search" : move4Text);
+                            document.getElementById("movebutton4").textContent = move4Text;
+                        }
+                        window.onload = updateMoves();
+                    </script>
                     <p>{{ form.submit() }}</p>
                 </div>
             </div>

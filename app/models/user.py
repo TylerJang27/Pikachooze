@@ -21,7 +21,6 @@ def get_random_string(length):
 
 class User(Base, UserMixin):
     __tablename__ = 'users'
-
     users_id_seq = Sequence('users_id_seq')
     uid = Column(Integer, users_id_seq, server_default=users_id_seq.next_value(), primary_key = True)
     username = Column(String(20), nullable=False)

@@ -3,7 +3,7 @@ from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
 from wtforms.fields.core import IntegerField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms.validators import Optional, ValidationError, DataRequired
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from flask_babel import _, lazy_gettext as _l
@@ -13,14 +13,15 @@ from app.models.trainer import Trainer
 from app.models.trainer_pokemon import TrainerPokemon, GenderClass
 from app.models.can_learn import CanLearn
 from app.models.user import User
+from app.models.pokemon import Pokemon
 
 from app.scoring_algo import score_teams
 from app.config import Config
+import uuid
 
 from flask import Blueprint
 
 bp = Blueprint('index', __name__)
-
 
 @bp.route('/')
 def index():
@@ -104,12 +105,17 @@ def fight(trainer):
 
 @bp.route('/inventory')
 def inventory():
+    if not current_user.is_authenticated:
+        return redirect("/login", code=302)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    trainer = session.query(Trainer).filter(Trainer.trainer_id == 2).one_or_none()
-    print([p.pokemon.type1 for p in trainer.trainer_pokemon])
-    return render_template('inventory.html', trainer=trainer)
+    user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
+    trainer = session.query(Trainer).filter(Trainer.trainer_id == user.trainers[0].trainer_id).one_or_none()
+    pokemon = session.query(Pokemon).filter(Pokemon.generation_id == user.trainers[0].game.generation_id).all()
+    pokemon_choices = [(p.poke_id, p.name) for p in pokemon]
+    print("my tp_ids:", [p.tp_id for p in trainer.trainer_pokemon])
+    return render_template('inventory.html', trainer=trainer, pokemon_choices=pokemon_choices)
 
 @bp.route('/leaders')
 def leaders():
@@ -129,14 +135,31 @@ def leaders():
 
     return render_template('leaders.html', trainers=trainers, trainer_types=trainer_types)
 
-@bp.route('/pokemon/<int:id>')
-def pokemon(id):
-    if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
+@bp.route('/add/<int:id>')
+def add(id):
+    if not current_user.is_authenticated:
         return redirect("/login", code=302)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.tp_id == id).one_or_none()
+    user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
+    added = TrainerPokemon()
+    added.trainer_id = user.trainers[0].trainer_id
+    added.poke_id = id
+    session.add(added)
+    session.commit()
+    print("THE NEW ID IS ", added.tp_id)
+    return redirect(url_for('index.pokemonedit', id=added.uuid))
+
+@bp.route('/pokemon/<id>')
+def pokemon(id):
+    if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
+        return redirect("/login", code=302)
+    u = uuid.UUID(id)
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+    Session = sessionmaker(engine, expire_on_commit=False)
+    session = Session()
+    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
     moves = []
     for m in [pokemon.move1, pokemon.move2, pokemon.move3, pokemon.move4]:
         if m is not None:
@@ -147,50 +170,82 @@ class EditForm(FlaskForm):
     nickname = StringField(_l('Nickname:'))
     gender = SelectField(_l('Gender:'), validate_choice=True, coerce=int)
     level = IntegerField(_l('Level:'), validators=[DataRequired()])
-    hp = IntegerField(_l('HP:'))
-    attack = IntegerField(_l('Attack:'))
-    defense = IntegerField(_l('Defense:'))
-    special_attack = IntegerField(_l('Special Attack:'))
-    special_defense = IntegerField(_l('Special Defense:'))
-    speed = IntegerField(_l('Speed:'))
-    move1 = SelectField(_l('Move 1'), validators=[DataRequired()], coerce=int)
+    hp = IntegerField(_l('HP:'), validators=[Optional()]) # TODO: RIGHT NOW CREATING A TRAINER_POKEMON GIVES A DEFAULT LEVEL OF 50
+    attack = IntegerField(_l('Attack:'), validators=[Optional()])
+    defense = IntegerField(_l('Defense:'), validators=[Optional()])
+    special_attack = IntegerField(_l('Special Attack:'), validators=[Optional()])
+    special_defense = IntegerField(_l('Special Defense:'), validators=[Optional()])
+    speed = IntegerField(_l('Speed:'), validators=[Optional()])
+    move1 = SelectField(_l('Move 1'), coerce=int)
     move2 = SelectField(_l('Move 2'), coerce=int)
     move3 = SelectField(_l('Move 3'), coerce=int)
     move4 = SelectField(_l('Move 4'), coerce=int)
     submit = SubmitField(_l('Save'))
 
-@bp.route('/pokemonedit/<int:id>', methods=['GET', 'POST'])
+    def validate_move1(self, move1):
+        if move1.data == -1:
+            raise ValidationError(_('Please select a move'))
+        elif move1.data in [self.move2.data, self.move3.data, self.move4.data]:
+            raise ValidationError(_('Please select unique moves'))
+    def validate_move2(self, move2):
+        if move2.data != -1 and move2.data in [self.move1.data, self.move3.data, self.move4.data]:
+            raise ValidationError(_('Please select unique moves'))
+    def validate_move3(self, move3):
+        if move3.data != -1 and move3.data in [self.move1.data, self.move2.data, self.move4.data]:
+            raise ValidationError(_('Please select unique moves'))
+    def validate_move4(self, move4):
+        if move4.data != -1 and move4.data in [self.move1.data, self.move2.data, self.move3.data]:
+            raise ValidationError(_('Please select unique moves'))
+
+@bp.route('/pokemonedit/<id>', methods=['GET', 'POST'])
 def pokemonedit(id):
     if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon
         return redirect("/login", code=302)
+    u = uuid.UUID(id)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=False) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.tp_id == id).one_or_none()
+    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
     available_moves = session.query(CanLearn).filter(CanLearn.poke_id == pokemon.poke_id).all()
+    move_choices = [(-1, "")] + [(move.move.move_id, move.move.move_name) for move in available_moves]
     moves = []
+
+
     for m in [pokemon.move1, pokemon.move2, pokemon.move3, pokemon.move4]:
         if m is not None:
-            moves.append(m)
+            moves.append(m.move_name)
+        else:
+            moves.append("")
     form = EditForm()
-    form.nickname.data = pokemon.nickname
+    form.move1.choices = move_choices
+    form.move2.choices = move_choices
+    form.move3.choices = move_choices
+    form.move4.choices = move_choices
     form.gender.choices = [(GenderClass.male.value, "Male"), (GenderClass.female.value, "Female")]
-    form.gender.data = 2
+    
+    if form.validate_on_submit():
+        curr_pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
+        curr_pokemon.nickname = form.nickname.data if form.nickname.data != "" else curr_pokemon.pokemon.name
+        curr_pokemon.gender = {1: "male", 2: "female"}[form.gender.data]
+        curr_pokemon.level = form.level.data
+
+        # TODO: ADD OTHER ATTRIBUTES/STATS
+
+        curr_pokemon.move1_id = form.move1.data if form.move1.data != -1 else None
+        curr_pokemon.move2_id = form.move2.data if form.move2.data != -1 else None
+        curr_pokemon.move3_id = form.move3.data if form.move3.data != -1 else None
+        curr_pokemon.move4_id = form.move4.data if form.move4.data != -1 else None
+
+        session.add(curr_pokemon)
+        session.commit()
+        return redirect(url_for('index.pokemon', id=u))
+    form.nickname.data = pokemon.nickname
+    form.gender.data = pokemon.gender.value
     form.level.data = pokemon.level
-    form.move1.choices = [(move.move.move_id, move.move.move_name) for move in available_moves]
-    form.move2.choices = [(move.move.move_id, move.move.move_name) for move in available_moves]
-    form.move3.choices = [(move.move.move_id, move.move.move_name) for move in available_moves]
-    form.move4.choices = [(move.move.move_id, move.move.move_name) for move in available_moves]
+
     form.move1.data = pokemon.move1_id
     form.move2.data = pokemon.move2_id
     form.move3.data = pokemon.move3_id
     form.move4.data = pokemon.move4_id
     
-    print("about to validate")
-    if form.validate_on_submit():
-        # TODO: DO WE NEED AN ELSE
-        print("form has been submitted", form.nickname.data, form.level.data)
-        # flash("Test")
-        return redirect(url_for('index.pokemonedit', id=id))
-    
-    return render_template('pokemonedit.html', pokemon=pokemon, moves=moves, form=form)
+    return render_template('pokemonedit.html', pokemon=pokemon, moves=moves, form=form, move_choices=move_choices)

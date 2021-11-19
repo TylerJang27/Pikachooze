@@ -5,6 +5,29 @@
 {% block content %}
 
     <main>
+        <script>
+            /* When the user clicks on the button,
+            toggle between hiding and showing the dropdown content */
+            function toggleDropdown() {
+                document.getElementById("myDropdown").classList.toggle("show");
+            }
+
+            function filterFunction() {
+                var input, filter, ul, li, a, i;
+                input = document.getElementById("searchBar");
+                filter = input.value.toUpperCase();
+                div = document.getElementById("myDropdown");
+                a = div.getElementsByTagName("a");
+                for (i = 0; i < a.length; i++) {
+                    txtValue = a[i].textContent || a[i].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        a[i].style.display = "";
+                    } else {
+                        a[i].style.display = "none";
+                    }
+                }
+            }
+        </script>
         
         <!-- Hero -->
         <div class="section-header pb-6 text-black">
@@ -13,10 +36,27 @@
                     <div class="col-12 text-left mb-3 mt-4">
                         <h2>Pikachooze</h2>
                         <h1>Inventory</h1>
+                        <div class="dropdown">
+                            <button onclick="toggleDropdown()" class="dropbtn">Add</button>
+                            <div id="myDropdown" class="dropdown-content">
+                              <input type="text" placeholder="Search.." id="searchBar" onkeyup="filterFunction()">
+                              {% for option in pokemon_choices %}
+                                <a href="{{ url_for('index.add', id=option[0]) }}">{{option[1]}}</a>
+                              {% endfor %}
+                            </div>
+                          </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <script type="text/javascript">
+            document.getElementById("add").onclick = function () {
+                let selection = document.getElementById("add_pokemon").value;
+                // console.log("/add/" + selection);
+                location.href = "/add/" + selection;
+            };
+        </script>
         <!-- End of Hero -->
 
         <!--End of Title section-->
@@ -26,7 +66,7 @@
                     <!-- <div class="col-12 col-md-6 col-lg-3 mb-5 mb-lg-0"> -->
                         {% for pokemon in trainer.trainer_pokemon %}
                         <div class="card shadow col-3">
-                            <a href="{{ url_for('index.pokemon', id=pokemon.tp_id) }}">
+                            <a href="{{ url_for('index.pokemon', id=pokemon.uuid) }}">
                                 <img src="{{pokemon.pokemon.pic}}" alt="Togepi" class="card-img-top rounded-top">
                             </a>
                             <div class="card-body">
@@ -39,22 +79,6 @@
                             </div>
                         </div>
                         {% endfor %}
-                        {% for pokemon in trainer.trainer_pokemon %}
-                        <div class="card shadow col-3">
-                            <a href="{{ url_for('index.pokemon', id=pokemon.tp_id) }}">
-                                <img src="{{pokemon.pokemon.pic}}" alt="Togepi" class="card-img-top rounded-top">
-                            </a>
-                            <div class="card-body">
-                                <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
-                                {% if pokemon.pokemon.type2 %}
-                                <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
-                                {% endif %}
-                                <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Lv. </span></span>{{pokemon.level}}</span>
-                                <h3 class="h5 card-title mt-3">{{pokemon.nickname}}</h3>
-                            </div>
-                        </div>
-                        {% endfor %}
-
                     <!-- </div> -->
                 </div>
             </div>
