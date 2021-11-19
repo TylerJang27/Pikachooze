@@ -30,9 +30,9 @@ def create_app():
     session = Session()
     tps = session.query(TrainerPokemon).all()
     for tp in tps:
-        print(tp.uuid)
-        tp.uuid = uuid.uuid4()
-        session.add(tp)
+        if tp.uuid is None:
+            tp.uuid = uuid.uuid4()
+            session.add(tp)
     session.commit()
 
     login.init_app(app)

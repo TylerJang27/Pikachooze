@@ -151,6 +151,19 @@ def add(id):
     print("THE NEW ID IS ", added.tp_id)
     return redirect(url_for('index.pokemonedit', id=added.uuid))
 
+@bp.route('/delete/<id>')
+def delete(id):
+    if not current_user.is_authenticated:
+        return redirect("/login", code=302)
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+    Session = sessionmaker(engine, expire_on_commit=False)
+    session = Session()
+    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == id).one_or_none()
+    # TODO: VERIFY CURRENT USER CAN DELETE THIS POKEMON
+    session.delete(pokemon)
+    session.commit()
+    return redirect(url_for('index.inventory'))
+
 @bp.route('/pokemon/<id>')
 def pokemon(id):
     if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer

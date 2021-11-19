@@ -5,7 +5,20 @@
 {% block content %}
 
     <main>
-        
+        <script>
+        // from https://stackoverflow.com/questions/16849117/html-how-to-do-a-confirmation-popup-to-a-submit-button-and-then-send-the-reque
+        function clicked(e) {
+            // if(!confirm('Are you sure?')) {
+            //     e.preventDefault();
+            // }
+            let name = document.getElementById("mynamespan").textContent;
+            if (confirm('Are you sure that you want to delete ' + name + '?')) {
+                window.location.href = window.location.href.replace("pokemon", "delete");
+            } else {
+                return false;
+            }
+        }
+        </script>
         <!-- Hero -->
         <div class="section-header pb-6 text-black">
             <div class="container">
@@ -19,6 +32,9 @@
                             </div>
                             <div class="ml-4">
                                 <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.inventory', id=pokemon.uuid) }}">Back to Inventory</a>
+                            </div>
+                            <div class="ml-4">
+                                <input type="submit" value="Delete" onclick="clicked(event)" />
                             </div>
                         </div>
                     </div>
@@ -36,7 +52,7 @@
                 </div>
                 <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
                     <span class="h4 card-title mb-0">Name: </span> <span class="h5 card-title mb-0">{{ pokemon.pokemon.name }}</span> <br><br>
-                    <span class="h4 card-title mb-0">Nickname: </span> <span class="h5 card-title mb-0">{{ pokemon.nickname }}</span> <br><br>
+                    <span class="h4 card-title mb-0">Nickname: </span> <span class="h5 card-title mb-0" id="mynamespan">{{ pokemon.nickname }}</span> <br><br>
                     <span class="h4 card-title mb-0">Gender: </span> <span class="h5 card-title mb-0">{{ pokemon.gender }}</span> <br><br>
                     <span class="h4 card-title mb-0">Level: </span> <span class="h5 card-title mb-0">{{ pokemon.level }}</span> <br><br>
                     <span class="h4 card-title mb-0">Type: </span> 
