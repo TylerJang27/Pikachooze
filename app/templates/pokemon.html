@@ -30,6 +30,7 @@
                 <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
                     <span class="h4 card-title mb-0">Name: </span> <span class="h5 card-title mb-0">{{ pokemon.pokemon.name }}</span> <br><br>
                     <span class="h4 card-title mb-0">Nickname: </span> <span class="h5 card-title mb-0">{{ pokemon.nickname }}</span> <br><br>
+                    <span class="h4 card-title mb-0">Gender: </span> <span class="h5 card-title mb-0">{{ pokemon.gender }}</span> <br><br>
                     <span class="h4 card-title mb-0">Level: </span> <span class="h5 card-title mb-0">{{ pokemon.level }}</span> <br><br>
                     <span class="h4 card-title mb-0">Type: </span> 
                     <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
@@ -51,14 +52,14 @@
                     {% for move in moves%}
                     <div class="card shadow mb-3">
                         <div class = "row">
-                            <div class="col-4 m-2">
+                            <div class="col-5 m-2">
                                 <span class="h5 card-title mb-0">{{move.move_name}}</span>
                             </div>
                             <div class="col-2 m-2">
                                 <a class="btn disabled btn-sm {{move.move_type.type_name}}" style="opacity: 1">{{move.move_type.type_name.title()}}</a>
                             </div>
                             <div class="col -0 m-2">
-                                <span class="h5 card-title mb-0">{{move.pp}} / {{move.pp}}</span>
+                                <span class="h5 card-title mb-0" style="float:right">{{move.pp}} / {{move.pp}}</span>
                             </div>
                         </div>
                     </div>

@@ -39,7 +39,7 @@
                         <div class="dropdown">
                             <button onclick="toggleDropdown()" class="dropbtn">Add</button>
                             <div id="myDropdown" class="dropdown-content">
-                              <input type="text" placeholder="Search.." id="searchBar" onkeyup="filterFunction()">
+                              <input type="text" placeholder="Search.." id="searchBar" onkeyup="filterFunction()" style="width: 100%; height: 45px;">
                               {% for option in pokemon_choices %}
                                 <a href="{{ url_for('index.add', id=option[0]) }}">{{option[1]}}</a>
                               {% endfor %}
