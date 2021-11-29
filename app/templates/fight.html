@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% include 'navbar.html' %}
+
+{% block content %}
+
+<main>
+    <!-- Hero -->
+    <div class="section-header pb-6 text-black">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 text-left mb-3 mt-4">
+                    <h2>Pikachooze</h2>
+                    <h1>Fight</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Hero -->
+
+    <!--End of Title section-->
+    <div class="section section-md">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-4">
+                    <h4 class="h4 mb-3">{{trainer.name}}'s Pokemon</h4>
+
+                    {% for pokemon in trainer.trainer_pokemon%}
+                    <div class="card shadow mb-3">
+                        <div class = "row">
+                            <div class="col-4 m-2">
+                                <img src="{{pokemon.pokemon.pic}}" alt="{{pokemon.pokemon.name}}" class="card-img-top rounded-top">
+                            </div>
+                            <div class="col -0">
+                                <div class="card-body p-2">
+                                    <h3 class="h5 card-title mb-0">{% if pokemon.pokemon.name != pokemon.nickname%} {{pokemon.pokemon.name}} - {{pokemon.nickname}} {% else %} {{pokemon.pokemon.name}} {% endif %}</h3>
+                                    <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
+                                    {% if pokemon.pokemon.type2 %}
+                                    <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
+                                    {% endif %}
+                                    <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Lv. {{pokemon.level}}</span><br>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+
+                <div class="col">
+                    <h4 class="h4 mb-3">Top Picks</h4>
+
+                    {% for score in scores %}
+                    <div class="row align-items-center">
+                        <div class="col-3" style="text-align: center;">
+                            <p>{{loop.index}}</p>
+                        </div>
+                        <div class="col-3">
+                            <p class="mb-1">{% if score[0].pokemon.name != score[0].nickname%} {{score[0].pokemon.name}} - {{score[0].nickname}} {% else %} {{score[0].pokemon.name}} {% endif %}</p>
+                            <a class="btn disabled btn-sm {{score[0].pokemon.type1.type_name}}" style="opacity: 1">{{score[0].pokemon.type1.type_name.title()}}</a>
+                            {% if score[0].pokemon.type2 %}
+                            <a class="btn disabled btn-sm {{score[0].pokemon.type2.type_name}}" style="opacity: 1">{{score[0].pokemon.type2.type_name.title()}}</a>
+                            {% endif %}
+                            <!-- Should this be name or nickname -->
+                        </div>
+                        <div class="col-3"> 
+                            <img src="{{score[0].pokemon.pic}}" alt="{{score[0].pokemon.name}}" class="rounded-top w-75">
+                            <!-- Can we make this link to the edit page? -->
+                        </div>
+                        <div class="col-3">
+                            <p>{{score[1]}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock content %}

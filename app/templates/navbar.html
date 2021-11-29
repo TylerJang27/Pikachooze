@@ -1,0 +1,60 @@
+<header class="header-global">
+    <nav id="navbar-main" aria-label="Primary navigation" class="navbar navbar-main navbar-expand-lg navbar-theme-primary headroom navbar-dark">
+        <div class="container position-relative">
+            <a class="navbar-brand me-lg-5" href="{{ url_for('index.index') }}">
+                <img class="navbar-brand" src="/static/assets/img/logo.png" alt="Logo">
+            </a>
+            <div class="navbar-collapse collapse me-auto" id="navbar_global">
+                <div class="navbar-collapse-header">
+                    <div class="row">
+                        <div class="col-6 collapse-brand">
+                            <a href="{{ url_for('index.index') }}">
+                                <img src="/static/assets/img/logo.png" alt="Logo">
+                            </a>
+                        </div>
+                        <div class="col-6 collapse-close">
+                            <a href="#navbar_global" class="fas fa-times" data-bs-toggle="collapse" data-bs-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" title="close" aria-label="Toggle navigation"></a>
+                        </div>
+                    </div>
+                </div>
+                <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
+                    <li class="nav-item dropdown mr-4 ml-4">
+                        <a href="{{ url_for('index.fight') }}" class="nav-link" id="frontPagesDropdown" aria-expanded="false" data-bs-toggle="dropdown">
+                            Fight
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown mr-4">
+                        <a href="{{ url_for('index.inventory') }}" class="nav-link" id="componentsDropdown" aria-expanded="false" data-bs-toggle="dropdown">
+                            Inventory
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown mr-4">
+                        <a href="{{ url_for('index.leaders') }}" class="nav-link" data-bs-toggle="dropdown" id="supportDropdown" aria-expanded="false">
+                            Gym Leaders
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="{{ url_for('index.faq') }}" class="nav-link" data-bs-toggle="dropdown" id="supportDropdown" aria-expanded="false">
+                            FAQ
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="sidenav">
+            {% block msg %}
+            <!-- <h1 style="color:aliceblue">Welcome to CompSci 316 Pikachooze!</h1> -->
+            <div style="color: aliceblue; text-align: right; margin-right: 25px">
+                {% if current_user.is_authenticated %}
+                Hello {{current_user.username}}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
+                {% else %}
+                <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
+                {% endif %}
+            </div>
+            {% endblock %}
+        </div>
+        <div class="main">
+            {% block content %}{% endblock %}
+        </div>
+    </nav>
+</header>

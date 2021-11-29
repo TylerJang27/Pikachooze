@@ -1,7 +1,9 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Enum, Sequence
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from app.models.base import Base
 import enum
+import uuid
 
 class GenderClass(enum.Enum):
     male = 1
@@ -11,11 +13,13 @@ class GenderClass(enum.Enum):
 class TrainerPokemon(Base):
     __tablename__ = 'trainer_pokemon'
 
-    tp_id = Column(Integer, primary_key = True)
+    uuid = Column(UUID(as_uuid=True), unique=True, index=True, default=uuid.uuid4)
+    trainer_pokemon_seq = Sequence('trainer_pokemon_seq', start=172) # TODO: CHANGE NUMBER IF MORE TRAINER POKEMON ADDED
+    tp_id = Column(Integer, trainer_pokemon_seq, server_default=trainer_pokemon_seq.next_value(), primary_key = True)
     trainer_id = Column(Integer, ForeignKey('trainer.trainer_id')) # TODO: ADD INDEXES
     poke_id = Column(Integer, ForeignKey('pokemon.poke_id'))
     nickname = Column(String(25))
-    gender = Column(Enum(GenderClass), default=0, nullable=True) # TODO: MAKE ENUM
+    gender = Column(Enum(GenderClass), default=GenderClass.male, nullable=True) # TODO: MAKE ENUM
     level = Column(Integer, default=50)
     inParty = Column(Boolean, default=False)
     move1_id = Column(Integer, ForeignKey('move.move_id'), nullable=True)
@@ -31,7 +35,7 @@ class TrainerPokemon(Base):
     move4 = relationship("Move", foreign_keys=[move4_id])
 
     def __repr__(self):
-        return "<TrainerPokemon(trainer='%s', pokemon='%s', nickname='%s', inParty='%b', level='%d', move1='%s', move2='%s', move3='%s', move4='%s')>" % (
+        return "<TrainerPokemon(trainer='%s', pokemon='%s', nickname='%s', inParty='%r', level='%d', move1='%s', move2='%s', move3='%s', move4='%s')>" % (
                              self.trainer.name, self.pokemon.name, self.nickname, self.inParty, self.level,
                              (self.move1.move_name if self.move1 is not None else "None"),
                              (self.move2.move_name if self.move2 is not None else "None"),

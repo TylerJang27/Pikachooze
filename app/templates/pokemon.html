@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% include 'navbar.html' %}
+
+{% block content %}
+
+    <main>
+        <script>
+        // from https://stackoverflow.com/questions/16849117/html-how-to-do-a-confirmation-popup-to-a-submit-button-and-then-send-the-reque
+        function clicked(e) {
+            // if(!confirm('Are you sure?')) {
+            //     e.preventDefault();
+            // }
+            let name = document.getElementById("mynamespan").textContent;
+            if (confirm('Are you sure that you want to delete ' + name + '?')) {
+                window.location.href = window.location.href.replace("pokemon", "delete");
+            } else {
+                return false;
+            }
+        }
+        </script>
+        <!-- Hero -->
+        <div class="section-header pb-6 text-black">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 text-left mb-3 mt-4">
+                        <div class="row"><h2>Inventory</h2></div>
+                        <div class="row" style="align-items: center;">
+                            <h1>{{ pokemon.pokemon.name }}</h1>
+                            <div class="ml-4">
+                                <a class="btn btn-warning" style="opacity: 1" href="{{ url_for('index.pokemonedit', id=pokemon.uuid) }}">Edit</a>
+                            </div>
+                            <div class="ml-4">
+                                <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.inventory', id=pokemon.uuid) }}">Back to Inventory</a>
+                            </div>
+                            <div class="ml-4">
+                                <input type="submit" value="Delete" onclick="clicked(event)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Hero -->
+
+        <!-- Section -->
+    <section class="section section-md">
+        <div class="container mb-5">
+            <div class="row align-items-center justify-content-around">
+                <div class="col-md-6 col-xl-4 text-center text-md-left text-black">
+                    <img class="img-fluid" src="{{ pokemon.pokemon.pic }}" alt="Pikachu Image">
+                </div>
+                <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
+                    <span class="h4 card-title mb-0">Name: </span> <span class="h5 card-title mb-0">{{ pokemon.pokemon.name }}</span> <br><br>
+                    <span class="h4 card-title mb-0">Nickname: </span> <span class="h5 card-title mb-0" id="mynamespan">{{ pokemon.nickname }}</span> <br><br>
+                    <span class="h4 card-title mb-0">Gender: </span> <span class="h5 card-title mb-0">{{ pokemon.gender }}</span> <br><br>
+                    <span class="h4 card-title mb-0">Level: </span> <span class="h5 card-title mb-0">{{ pokemon.level }}</span> <br><br>
+                    <span class="h4 card-title mb-0">Type: </span> 
+                    <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
+                    {% if pokemon.pokemon.type2 %}
+                    <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
+                    {% endif %} <br><br>
+                    <span class="h4 card-title mb-0">Stats: </span><br><br>
+                    <ul>
+                        <span class="h5 card-title mb-0">HP: </span> <span class="h6 card-title mb-0">211</span> <br>
+                        <span class="h5 card-title mb-0">Attack: </span> <span class="h6 card-title mb-0">122</span> <br>
+                        <span class="h5 card-title mb-0">Defense: </span> <span class="h6 card-title mb-0">122</span> <br>
+                        <span class="h5 card-title mb-0">Speed: </span> <span class="h6 card-title mb-0">240</span> <br>
+                        <span class="h5 card-title mb-0">Sp. Def: </span> <span class="h6 card-title mb-0">145</span> <br>
+                        <span class="h5 card-title mb-0">Sp. Att: </span> <span class="h6 card-title mb-0">148</span> <br>
+                    </ul>
+                </div>
+                <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
+                    <span class="h4 card-title mb-0">Moves: </span> <br><br>
+                    {% for move in moves%}
+                    <div class="card shadow mb-3">
+                        <div class = "row">
+                            <div class="col-5 m-2">
+                                <span class="h5 card-title mb-0">{{move.move_name}}</span>
+                            </div>
+                            <div class="col-2 m-2">
+                                <a class="btn disabled btn-sm {{move.move_type.type_name}}" style="opacity: 1">{{move.move_type.type_name.title()}}</a>
+                            </div>
+                            <div class="col -0 m-2">
+                                <span class="h5 card-title mb-0" style="float:right">{{move.pp}} / {{move.pp}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End of section -->
+
+    </main>
+
+{% endblock content %}

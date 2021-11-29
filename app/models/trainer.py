@@ -24,4 +24,4 @@ class Trainer(Base):
 
     def __repr__(self):
         return "<Trainer(trainer_id='%d', name='%s', location_id='%d', added_by='%s')>" % (
-                             self.trainer_id, self.name, self.location_id, (self.added_by.name if self.added_by is not None else "None"))
+                             self.trainer_id, self.name, (self.location_id if self.location_id else -1), (self.added_by.username if self.added_by is not None else "None"))

@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% include 'navbar.html' %}
+
+{% block content %}
+
+    <main>
+        
+        <!-- Hero -->
+        <div class="section-header pb-6 text-black">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 text-left mb-3 mt-4">
+                        <div class="row"><h2>Inventory</h2></div>
+                        <div class="row" style="align-items: center;">
+                            <h1>{{ pokemon.pokemon.name }}</h1>
+                            <div class="ml-4">
+                                <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.pokemon', id=pokemon.uuid) }}">Back</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Hero -->
+
+        <!-- Section -->
+    <section class="section section-md">
+        <form action="" method="post">
+        <div class="container mb-5">
+            <div class="row align-items-center justify-content-around">
+                    {{ form.hidden_tag() }}
+                    <div class="col-md-6 col-xl-4 text-center text-md-left text-black">
+                        <img class="img-fluid" src="{{ pokemon.pokemon.pic }}" alt="Pikachu Image">
+                    </div>
+                
+                    <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
+                        <span class="h4 card-title mb-0">Name: </span> <span class="h5 card-title mb-0">{{ pokemon.pokemon.name }}</span> <br><br>
+                        
+                        <span class="h4 card-title mb-0">{{ form.nickname.label }} </span> 
+                        <span class="h5 card-title mb-0">{{ form.nickname }} </span> 
+                        {% for error in form.nickname.errors %}
+                        <br>
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                        <br><br>
+
+                        <span class="h4 card-title mb-0">{{ form.gender.label }} </span> 
+                        <span class="h5 card-title mb-0">{{ form.gender }} </span> 
+                        {% for error in form.gender.errors %}
+                        <br>
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                        <br><br>
+
+                        <span class="h4 card-title mb-0">{{ form.level.label }} </span> 
+                        <span class="h5 card-title mb-0">{{ form.level }} </span> 
+                        {% for error in form.level.errors %}
+                        <br>
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                        <br><br>
+
+                        <span class="h4 card-title mb-0">Type: </span> 
+                        <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
+                        {% if pokemon.pokemon.type2 %}
+                        <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
+                        {% endif %} <br><br>
+
+                        <span class="h4 card-title mb-0">Stats: </span><br><br>
+                        <ul>
+                        <div class="row">
+                            <div style="text-align: left; width: 60%;">
+                                <span class="h5 card-title mb-0">{{ form.hp.label }}</span> <br>
+                            </div>
+                            <div style="text-align: left; width: 40%;">
+                                <span class="h6 card-title mb-0">{{ form.hp(size=10) }}</span> <br>
+                            </div>
+                        </div>
+                        <div class="pb-2">
+                            {% for error in form.hp.errors %}
+                            <span style="color: red; float: right">[{{ error }}]</span><br>
+                            {% endfor %} 
+                        </div>
+                        <div class="row">
+                            <div style="text-align: left; width: 60%;">
+                                <span class="h5 card-title mb-0">{{ form.speed.label }}</span> <br>
+                            </div>
+                            <div style="text-align: left; width: 40%;">
+                                <span class="h6 card-title mb-0">{{ form.speed(size=10) }}</span> <br>
+                            </div>
+                        </div>
+                        <div class="pb-2">
+                            {% for error in form.speed.errors %}
+                            <span style="color: red; float: right">[{{ error }}]</span><br>
+                            {% endfor %} 
+                        </div>
+                        <div class="row">
+                            <div style="text-align: left; width: 60%;">
+                                <span class="h5 card-title mb-0">{{ form.attack.label }}</span> <br>
+                            </div>
+                            <div style="text-align: left; width: 40%;">
+                                <span class="h6 card-title mb-0">{{ form.attack(size=10) }}</span> <br>
+                            </div>
+                        </div>
+                        <div class="pb-2">
+                            {% for error in form.attack.errors %}
+                            <span style="color: red; float: right">[{{ error }}]</span><br>
+                            {% endfor %} 
+                        </div>
+                        <div class="row">
+                            <div style="text-align: left; width: 60%;">
+                                <span class="h5 card-title mb-0">{{ form.defense.label }}</span> <br>
+                            </div>
+                            <div style="text-align: left; width: 40%;">
+                                <span class="h6 card-title mb-0">{{ form.defense(size=10) }}</span> <br>
+                            </div>
+                        </div>
+                        <div class="pb-2">
+                            {% for error in form.defense.errors %}
+                            <span style="color: red; float: right">[{{ error }}]</span><br>
+                            {% endfor %} 
+                        </div>
+                        <div class="row">
+                            <div style="text-align: left; width: 60%;">
+                                <span class="h5 card-title mb-0">{{ form.special_attack.label }}</span> <br>
+                            </div>
+                            <div style="text-align: left; width: 40%;">
+                                <span class="h6 card-title mb-0">{{ form.special_attack(size=10) }}</span> <br>
+                            </div>
+                        </div>
+                        <div class="pb-2">
+                            {% for error in form.special_attack.errors %}
+                            <span style="color: red; float: right">[{{ error }}]</span><br>
+                            {% endfor %} 
+                        </div>
+                        <div class="row">
+                            <div style="text-align: left; width: 60%;">
+                                <span class="h5 card-title mb-0">{{ form.special_defense.label }}</span> <br>
+                            </div>
+                            <div style="text-align: left; width: 40%;">
+                                <span class="h6 card-title mb-0">{{ form.special_defense(size=10) }}</span> <br>
+                            </div>
+                        </div>
+                        <div class="pb-2">
+                            {% for error in form.special_defense.errors %}
+                            <span style="color: red; float: right">[{{ error }}]</span><br>
+                            {% endfor %} 
+                        </div>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
+
+                        <script>
+                            /* When the user clicks on the button,
+                            toggle between hiding and showing the dropdown content */
+                            function toggleDropdown(id) {
+                                document.getElementById("myDropdown"+id).classList.toggle("show");
+                            }
+                
+                            function filterFunction(id) {
+                                var input, filter, ul, li, a, i;
+                                input = document.getElementById("searchBar"+id);
+                                filter = input.value.toUpperCase();
+                                div = document.getElementById("myDropdown"+id);
+                                a = div.getElementsByTagName("a");
+                                for (i = 0; i < a.length; i++) {
+                                    txtValue = a[i].textContent || a[i].innerText;
+                                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                        a[i].style.display = "";
+                                    } else {
+                                        a[i].style.display = "none";
+                                    }
+                                }
+                            }
+
+                            function setMove(num, id, name) {
+                                console.log("Clicked!");
+                                if (id == -1) {
+                                    document.getElementById("movebutton"+num).textContent = "Click to Search";
+                                } else {
+                                    document.getElementById("movebutton"+num).textContent = name;
+                                }
+                                document.getElementById("move"+num).value = id;
+                                toggleDropdown(num);
+                                
+                                // form.move1.data = id;
+                                // console.log("Clicked")
+                            }
+                        </script>
+                        <span class="h4 card-title mb-0">Moves: </span> <br><br>
+
+                        <div class="card shadow mb-3">
+                            <!-- <div class = "row"> -->
+                                <div class="dropdown">
+                                    <button type="button" onclick="toggleDropdown(1)" id="movebutton1" class="btn dropbtn">{{ form.move1.data }}</button>
+                                    <div id="myDropdown1" class="dropdown-content">
+                                        <input type="text" placeholder="Search.." id="searchBar1" onkeyup="filterFunction(1)" style="width: 100%; height: 45px;">
+                                        {% for option in move_choices %}
+                                        <a name={{option[0]}} onclick="setMove(1, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
+                                        {% endfor %}
+                                    </div>
+                                    <span class="h5 card-title mb-0" hidden=true>{{ form.move1 }}</span>
+                                    {% for error in form.move1.errors %}
+                                    <br>
+                                    <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
+                                </div>
+                            <!-- </div> -->
+                        </div>
+
+                        <div class="card shadow mb-3">
+                            <!-- <div class = "row"> -->
+                                <div class="dropdown">
+                                    <button type="button" onclick="toggleDropdown(2)" id="movebutton2" class="btn dropbtn">{{ form.move2.data }}</button>
+                                    <div id="myDropdown2" class="dropdown-content">
+                                        <input type="text" placeholder="Search.." id="searchBar2" onkeyup="filterFunction(2)" style="width: 100%; height: 45px;">
+                                        {% for option in move_choices %}
+                                        <a name={{option[0]}} onclick="setMove(2, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
+                                        {% endfor %}
+                                    </div>
+                                    <span class="h5 card-title mb-0" hidden=true>{{ form.move2 }}</span>
+                                    {% for error in form.move2.errors %}
+                                    <br>
+                                    <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
+                                </div>
+                            <!-- </div> -->
+                        </div>
+                        <div class="card shadow mb-3">
+                            <!-- <div class = "row"> -->
+                                <div class="dropdown">
+                                    <button type="button" onclick="toggleDropdown(3)" id="movebutton3" class="btn dropbtn">{{ form.move3.data }}</button>
+                                    <div id="myDropdown3" class="dropdown-content">
+                                        <input type="text" placeholder="Search.." id="searchBar3" onkeyup="filterFunction(3)" style="width: 100%; height: 45px;">
+                                        {% for option in move_choices %}
+                                        <a name={{option[0]}} onclick="setMove(3, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
+                                        {% endfor %}
+                                    </div>
+                                    <span class="h5 card-title mb-0" hidden=true>{{ form.move3 }}</span>
+                                    {% for error in form.move3.errors %}
+                                    <br>
+                                    <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
+                                </div>
+                            <!-- </div> -->
+                        </div>
+                        <div class="card shadow mb-3">
+                            <!-- <div class = "row"> -->
+                                <div class="dropdown">
+                                    <button type="button" onclick="toggleDropdown(4)" id="movebutton4" class="btn dropbtn">{{ form.move4.data }}</button>
+                                    <div id="myDropdown4" class="dropdown-content">
+                                        <input type="text" placeholder="Search.." id="searchBar4" onkeyup="filterFunction(4)" style="width: 100%; height: 45px;">
+                                        {% for option in move_choices %}
+                                        <a name={{option[0]}} onclick="setMove(4, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
+                                        {% endfor %}
+                                    </div>
+                                    <span class="h5 card-title mb-0" hidden=true>{{ form.move4 }}</span>
+                                    {% for error in form.move4.errors %}
+                                    <br>
+                                    <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
+                                </div>
+                            <!-- </div> -->
+                        </div>
+
+                    </div>
+                    <script>
+                        function updateMoves() {
+                            var move1Select = document.getElementById("move1");
+                            var move1Text = move1Select.options[move1Select.selectedIndex].text;
+                            move1Text = (move1Text == "" ? "Click to Search" : move1Text);
+                            document.getElementById("movebutton1").textContent = move1Text;
+                            var move2Select = document.getElementById("move2")
+                            var move2Text = move2Select.options[move1Select.selectedIndex].text;
+                            move2Text = (move2Text == "" ? "Click to Search" : move2Text);
+                            document.getElementById("movebutton2").textContent = move2Text;
+                            var move3Select = document.getElementById("move3")
+                            var move3Text = move3Select.options[move3Select.selectedIndex].text;
+                            move3Text = (move3Text == "" ? "Click to Search" : move3Text);
+                            document.getElementById("movebutton3").textContent = move3Text;
+                            var move4Select = document.getElementById("move4")
+                            var move4Text = move4Select.options[move4Select.selectedIndex].text;
+                            move4Text = (move4Text == "" ? "Click to Search" : move4Text);
+                            document.getElementById("movebutton4").textContent = move4Text;
+                        }
+                        window.onload = updateMoves();
+                    </script>
+                    <p>{{ form.submit() }}</p>
+                </div>
+            </div>
+        </form>
+    </section>
+    <!-- End of section -->
+
+    </main>
+
+{% endblock content %}

@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 
+{% include 'navbar.html' %}
+
 {% block content %}
 
 <h1>Register</h1>
-
+<div class="container left-force">
+  <div class="row align-items-start">
+    <div class="col">
 <form action="" method="post">
   {{ form.hidden_tag() }}
   <p>
@@ -14,7 +18,14 @@
     {% endfor %}
   </p>
   <p>
-    {{ form.email.label }} (Could be fake email address)<br/>
+    {{ form.game.label }}<br/>
+    {{ form.game }}<br/>
+    {% for error in form.game.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.email.label }}<br/>
     {{ form.email(size=64) }}<br/>
     {% for error in form.email.errors %}
     <span style="color: red;">[{{ error }}]</span>
@@ -36,5 +47,11 @@
   </p>
   <p>{{ form.submit() }}</p>
 </form>
+</div>
+<div class="col">
+  <img src="https://cdn2.bulbagarden.net/upload/thumb/b/b1/393Piplup.png/1200px-393Piplup.png" alt="Happy Togepi" style="width:300px;height:300px;">
+</div>
+</div>
+</div>
 
 {% endblock %}
