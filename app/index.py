@@ -85,18 +85,26 @@ def fight(trainer):
     if not current_user.is_authenticated:
         return redirect("/login", code=302)
     print("THIS IS MY TRAINER", trainer)
-    if trainer == 'dummy':
-        return redirect("/leaders", code=302)
     
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
     trainer_name = trainer.replace("%20", " ")
     user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
+    
+    if trainer == 'dummy':
+        if user.last_trainer is not None:
+            return redirect("/fight/" + user.last_trainer, code=302)
+        return redirect("/leaders", code=302)
+    else:
+        user.last_trainer = trainer
+        session.add(user)
+        session.commit()
+    
     trainer = session.query(Trainer).filter(Trainer.name == trainer_name, Trainer.game_id==user.trainers[0].game_id).one_or_none()
-    # user_trainer = user.trainers[0] // TODO: ONCE USER CAN ADD POKEMON, INPUT HERE
-    dummy_trainer = session.query(Trainer).filter(Trainer.trainer_id == 4).one_or_none()
-    user_trainer = dummy_trainer
+    user_trainer = user.trainers[0] # TODO: ONCE USER CAN ADD POKEMON, INPUT HERE
+    #dummy_trainer = session.query(Trainer).filter(Trainer.trainer_id == 4).one_or_none()
+    #user_trainer = dummy_trainer
 
     score_results = score_teams(user_trainer.trainer_pokemon, trainer.trainer_pokemon)[::-1]
     # print(score_results)

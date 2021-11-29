@@ -34,7 +34,11 @@
                         <div class="row" style="align-items: center;">
                             <h1>{{ pokemon.pokemon.name }}</h1>
                             <div class="ml-4">
+                                {% if not pokemon.trainer.is_user %}
+                                <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.leader_inventory', trainer=pokemon.trainer.name.replace(' ', '%20')) }}">Back to Inventory</a>
+                                {% else %}
                                 <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.inventory', id=pokemon.uuid) }}">Back to Inventory</a>
+                                {% endif %}
                             </div>
                             {% if not read_only %}
                             <div class="ml-4">

@@ -29,7 +29,9 @@
                     <div class="card shadow mb-3">
                         <div class = "row">
                             <div class="col-4 m-2">
+                                <a href="{{ url_for('index.pokemon', id=pokemon.uuid) }}">
                                 <img src="{{pokemon.pokemon.pic}}" alt="{{pokemon.pokemon.name}}" class="card-img-top rounded-top">
+                                </a>
                             </div>
                             <div class="col -0">
                                 <div class="card-body p-2">
@@ -43,7 +45,6 @@
 
                             </div>
                         </div>
-
                     </div>
                     {% endfor %}
                     
@@ -51,7 +52,17 @@
 
                 <div class="col">
                     <h4 class="h4 mb-3">Top Picks</h4>
-
+                    {% if scores|length == 0 %}
+                    <div class="card shadow mb-3">
+                        <div class = "row">
+                            <div class="col -0">
+                                <div class="card-body p-2">
+                                    <h3 class="h5 card-title mb-0">Go to <a href="{{ url_for('index.inventory') }}">Inventory</a> to add Pokemon</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                     {% for score in scores %}
                     <div class="row align-items-center">
                         <div class="col-3" style="text-align: center;">
@@ -66,8 +77,9 @@
                             <!-- Should this be name or nickname -->
                         </div>
                         <div class="col-3"> 
+                            <a href="{{ url_for('index.pokemon', id=score[0].uuid) }}">
                             <img src="{{score[0].pokemon.pic}}" alt="{{score[0].pokemon.name}}" class="rounded-top w-75">
-                            <!-- Can we make this link to the edit page? -->
+                            </a>
                         </div>
                         <div class="col-3">
                             <p>{{score[1]}}</p>

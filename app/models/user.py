@@ -27,6 +27,7 @@ class User(Base, UserMixin):
     email = Column(String(50), nullable=False)
     password = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    last_trainer = Column(String(40), nullable=True)
 
     purchases = relationship("Purchase", back_populates="user")
 
