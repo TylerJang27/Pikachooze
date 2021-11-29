@@ -27,6 +27,13 @@ class TrainerPokemon(Base):
     move3_id = Column(Integer, ForeignKey('move.move_id'), nullable=True)
     move4_id = Column(Integer, ForeignKey('move.move_id'), nullable=True)
 
+    custom_hp = Column(Integer, nullable=True)
+    custom_attack_stat = Column(Integer, nullable=True)
+    custom_defense_stat = Column(Integer, nullable=True)
+    custom_special_attack_stat = Column(Integer, nullable=True)
+    custom_special_defense_stat = Column(Integer, nullable=True)
+    custom_speed = Column(Integer, nullable=True)
+
     trainer = relationship("Trainer", back_populates="trainer_pokemon")
     pokemon = relationship("Pokemon") # Can add back populates in Pokemon if needed
     move1 = relationship("Move", foreign_keys=[move1_id])
