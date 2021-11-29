@@ -57,11 +57,11 @@ def index():
             print("There would have been purchases!")
         else:
             purchases = None
-            trainer1 = session.query(Trainer).filter(Trainer.trainer_id==2).one_or_none()
-            trainer2 = session.query(Trainer).filter(Trainer.trainer_id==4).one_or_none()
-            trainer1_pkmn = trainer1.trainer_pokemon
-            trainer2_pkmn = trainer2.trainer_pokemon
-            print(score_teams(trainer2_pkmn, trainer1_pkmn))
+            # trainer1 = session.query(Trainer).filter(Trainer.trainer_id==2).one_or_none()
+            # trainer2 = session.query(Trainer).filter(Trainer.trainer_id==4).one_or_none()
+            # trainer1_pkmn = trainer1.trainer_pokemon
+            # trainer2_pkmn = trainer2.trainer_pokemon
+            # print(score_teams(trainer2_pkmn, trainer1_pkmn))
 
         # render the page by adding information to the index.html file
 

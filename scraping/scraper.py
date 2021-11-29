@@ -82,7 +82,8 @@ def sanitize_poke(poke_name):
 # extract a field from the trainer text
 def extract_field(field_name, source_text, replace_spaces=False, manual_regex="\|{:}.*[\|\n]"):
     regex_pattern = re.compile(manual_regex.format(field_name))
-    matching_fields = regex_pattern.findall(source_text)[0]
+    matching_fields = regex_pattern.findall(source_text)
+    matching_fields = matching_fields[0]
     matching_text = matching_fields.split("=")[1].strip()
     if replace_spaces:
         matching_text = matching_text.replace(" ", "_")
@@ -397,13 +398,15 @@ def get_gym_leaders():
         text = soup.find("textarea", {"id": "wpTextbox1"})
 
         # split trainer data by games
-        pokemon_game_data_list = text.string.split("===Pokémon===")[1].split("===={{game|")[1:]
+        pokemon_game_data_list = text.string.split("===Pokémon===")[1].split("===={{g")[1:]
+        # print(leader, len(pokemon_game_data_list))
         pokemon_scenarios = {}
 
         # parse games for relevant games and their respective scenarios if multiple encounters
         for game_data in pokemon_game_data_list:
-            game_name_temp = game_data[:20]
+            game_name_temp = game_data[:25]
             if not ("Diamond" in game_name_temp or "Pearl" in game_name_temp or "Platinum" in game_name_temp):
+                # print("SKIPPING BECAUSE IRRELEVANT GAME")
                 continue
 
             if "=====" in game_data:
@@ -418,18 +421,25 @@ def get_gym_leaders():
                     pokemon_scenarios[scenario] = game_scenario_data
                 
             else:
-                pokemon_scenarios[""] = game_data
+                new_str = ""
+                if "" in pokemon_scenarios:
+                    new_str = " "
+                pokemon_scenarios[new_str] = game_data
                 pokemon_data = game_data.split("{{Pokémon/4")
 
         # iterate through game scenarios
         for scenario in pokemon_scenarios:
             game_data = pokemon_scenarios[scenario]
+            scenario = scenario.strip()
             # split to separate trainer information from pokemon information
             pokemon_data = game_data.split("{{Pokémon/4")
             trainer_section = pokemon_data[0]
             
             # extract trainer name
-            poke_trainer_name = extract_field("name", trainer_section)
+            try:
+                poke_trainer_name = extract_field("name", trainer_section)
+            except:
+                continue
             poke_trainer_name = poke_trainer_name + (" " + scenario if len(scenario) > 0 and "{" not in scenario else "")
 
             # extract trainer image
@@ -456,8 +466,9 @@ def get_gym_leaders():
             elif game_name == "Pt":
                 game_ids = [df_games["platinum"]]
             else:
-                print("NOT A GAME WE KNOW HOW TO PARSE")
+                print("NOT A GAME WE KNOW HOW TO PARSE", game_name)
                 game_ids = []
+            # print(poke_trainer_name, game_name, game_ids)
 
             # extract trainer location(s)
             try:
@@ -472,6 +483,7 @@ def get_gym_leaders():
             # make trainers for each game 
             trainer_ids = []
             for game_id in game_ids:
+                print("adding for game_id: ", game_id)
                 location_id = locations[(location_name, game_id)]
                 trainer_id = len(trainer_list)
                 trainer_ids.append(trainer_id)
