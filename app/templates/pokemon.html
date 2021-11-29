@@ -18,6 +18,12 @@
                 return false;
             }
         }
+        function evolve_clicked() {
+            let to_id = document.getElementById("evolve_dropdown").value;
+            if(to_id != "") {
+                window.location.href = window.location.href.replace("pokemon", "evolve") + "/" + to_id;
+            }
+        }
         </script>
         <!-- Hero -->
         <div class="section-header pb-6 text-black">
@@ -36,6 +42,30 @@
                             <div class="ml-4">
                                 <input type="submit" value="Delete" onclick="clicked(event)" />
                             </div>
+                            {% if evolution|length > 0 %}
+                            <div class="ml-4">
+                                {% if evolution|length > 1 %}
+                                <select id = "evolve_dropdown">
+                                    <option value="" disabled selected>Evolve!</option>
+                                    {% for e in evolution %}
+                                        <option value = "{{ e.poke_id }}">{{ e.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% else %}
+                                <a class="btn btn-warning" style="opacity: 1" href="{{ url_for('index.evolve', id=pokemon.uuid, to_id=evolution[0].poke_id) }}">Evolve!</a>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            {% if devolution|length > 0 %}
+                            <div class="ml-4">
+                                <a class="btn btn-warning" style="opacity: 1" href="{{ url_for('index.devolve', id=pokemon.uuid, to_id=devolution[0].poke_id) }}">Devolve!</a>
+                            </div>
+                            {% endif %}
+                            <script>
+                                $('#evolve_dropdown').on('change', function(){
+                                    evolve_clicked();
+                                });
+                            </script>
                         </div>
                     </div>
                 </div>
@@ -53,7 +83,7 @@
                 <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
                     <span class="h4 card-title mb-0">Name: </span> <span class="h5 card-title mb-0">{{ pokemon.pokemon.name }}</span> <br><br>
                     <span class="h4 card-title mb-0">Nickname: </span> <span class="h5 card-title mb-0" id="mynamespan">{{ pokemon.nickname }}</span> <br><br>
-                    <span class="h4 card-title mb-0">Gender: </span> <span class="h5 card-title mb-0">{{ pokemon.gender }}</span> <br><br>
+                    <span class="h4 card-title mb-0">Gender: </span> <span class="h5 card-title mb-0">{{ pokemon.gender.name.title() }}</span> <br><br>
                     <span class="h4 card-title mb-0">Level: </span> <span class="h5 card-title mb-0">{{ pokemon.level }}</span> <br><br>
                     <span class="h4 card-title mb-0">Type: </span> 
                     <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>

@@ -164,6 +164,48 @@ def delete(id):
     session.commit()
     return redirect(url_for('index.inventory'))
 
+@bp.route('/evolve/<id>/<int:to_id>')
+def evolve(id, to_id):
+    if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
+        return redirect("/login", code=302)
+    u = uuid.UUID(id)
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+    Session = sessionmaker(engine, expire_on_commit=False)
+    session = Session()
+    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
+    evolution = [p.poke2.poke_id for p in pokemon.pokemon.evolutions]
+    if to_id in evolution:
+        old_name = pokemon.nickname
+        evolution_index = evolution.index(to_id)
+        new_name = pokemon.pokemon.evolutions[evolution_index].poke2.name
+        if old_name == pokemon.pokemon.name:
+            pokemon.nickname = new_name 
+        pokemon.poke_id = to_id
+        session.add(pokemon)
+        session.commit()
+        return redirect("/pokemon/"+ id, code=302)
+
+@bp.route('/devolve/<id>/<int:to_id>')
+def devolve(id, to_id):
+    if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
+        return redirect("/login", code=302)
+    u = uuid.UUID(id)
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+    Session = sessionmaker(engine, expire_on_commit=False)
+    session = Session()
+    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
+    devolution = [p.poke1.poke_id for p in pokemon.pokemon.devolutions]
+    if to_id in devolution:
+        old_name = pokemon.nickname
+        devolution_index = devolution.index(to_id)
+        new_name = pokemon.pokemon.devolutions[devolution_index].poke1.name
+        if old_name == pokemon.pokemon.name:
+            pokemon.nickname = new_name 
+        pokemon.poke_id = to_id
+        session.add(pokemon)
+        session.commit()
+        return redirect("/pokemon/"+ id, code=302)
+
 @bp.route('/pokemon/<id>')
 def pokemon(id):
     if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
@@ -173,11 +215,13 @@ def pokemon(id):
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
     pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
+    evolution = [p.poke2 for p in pokemon.pokemon.evolutions]
+    devolution = [p.poke1 for p in pokemon.pokemon.devolutions]
     moves = []
     for m in [pokemon.move1, pokemon.move2, pokemon.move3, pokemon.move4]:
         if m is not None:
             moves.append(m)
-    return render_template('pokemon.html', pokemon=pokemon, moves=moves)
+    return render_template('pokemon.html', pokemon=pokemon, moves=moves, evolution=evolution, devolution=devolution)
 
 class EditForm(FlaskForm):
     nickname = StringField(_l('Nickname:'))
