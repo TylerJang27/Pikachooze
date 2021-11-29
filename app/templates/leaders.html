@@ -40,6 +40,7 @@
                                         {% endfor %}
                                     </span><br>
                                     <a href="{{ url_for('index.fight', trainer=trainer.name.replace(' ', '%20')) }}" class="btn btn-light">Fight</a>
+                                    <a href="{{ url_for('index.leader_inventory', trainer=trainer.name.replace(' ', '%20')) }}" class="btn btn-light">View Inventory</a>
                                 </div>
                             </div>
                         </div>
@@ -63,6 +64,7 @@
                                         {% endfor %}
                                     </span><br>
                                     <a href="{{ url_for('index.fight', trainer=trainer.name.replace(' ', '%20')) }}" class="btn btn-light">Fight</a>
+                                    <a href="{{ url_for('index.leader_inventory', trainer=trainer.name.replace(' ', '%20')) }}" class="btn btn-light">View Inventory</a>
                                 </div>
                             </div>
                         </div>

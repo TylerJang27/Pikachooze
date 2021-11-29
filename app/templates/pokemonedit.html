@@ -84,19 +84,6 @@
                         </div>
                         <div class="row">
                             <div style="text-align: left; width: 60%;">
-                                <span class="h5 card-title mb-0">{{ form.speed.label }}</span> <br>
-                            </div>
-                            <div style="text-align: left; width: 40%;">
-                                <span class="h6 card-title mb-0">{{ form.speed(size=10) }}</span> <br>
-                            </div>
-                        </div>
-                        <div class="pb-2">
-                            {% for error in form.speed.errors %}
-                            <span style="color: red; float: right">[{{ error }}]</span><br>
-                            {% endfor %} 
-                        </div>
-                        <div class="row">
-                            <div style="text-align: left; width: 60%;">
                                 <span class="h5 card-title mb-0">{{ form.attack.label }}</span> <br>
                             </div>
                             <div style="text-align: left; width: 40%;">
@@ -144,6 +131,19 @@
                         </div>
                         <div class="pb-2">
                             {% for error in form.special_defense.errors %}
+                            <span style="color: red; float: right">[{{ error }}]</span><br>
+                            {% endfor %} 
+                        </div>
+                        <div class="row">
+                            <div style="text-align: left; width: 60%;">
+                                <span class="h5 card-title mb-0">{{ form.speed.label }}</span> <br>
+                            </div>
+                            <div style="text-align: left; width: 40%;">
+                                <span class="h6 card-title mb-0">{{ form.speed(size=10) }}</span> <br>
+                            </div>
+                        </div>
+                        <div class="pb-2">
+                            {% for error in form.speed.errors %}
                             <span style="color: red; float: right">[{{ error }}]</span><br>
                             {% endfor %} 
                         </div>

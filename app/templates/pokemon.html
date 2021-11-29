@@ -34,10 +34,11 @@
                         <div class="row" style="align-items: center;">
                             <h1>{{ pokemon.pokemon.name }}</h1>
                             <div class="ml-4">
-                                <a class="btn btn-warning" style="opacity: 1" href="{{ url_for('index.pokemonedit', id=pokemon.uuid) }}">Edit</a>
-                            </div>
-                            <div class="ml-4">
                                 <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.inventory', id=pokemon.uuid) }}">Back to Inventory</a>
+                            </div>
+                            {% if not read_only %}
+                            <div class="ml-4">
+                                <a class="btn btn-warning" style="opacity: 1" href="{{ url_for('index.pokemonedit', id=pokemon.uuid) }}">Edit</a>
                             </div>
                             <div class="ml-4">
                                 <input type="submit" value="Delete" onclick="clicked(event)" />
@@ -60,6 +61,7 @@
                             <div class="ml-4">
                                 <a class="btn btn-warning" style="opacity: 1" href="{{ url_for('index.devolve', id=pokemon.uuid, to_id=devolution[0].poke_id) }}">Devolve!</a>
                             </div>
+                            {% endif %}
                             {% endif %}
                             <script>
                                 $('#evolve_dropdown').on('change', function(){
@@ -92,12 +94,12 @@
                     {% endif %} <br><br>
                     <span class="h4 card-title mb-0">Stats: </span><br><br>
                     <ul>
-                        <span class="h5 card-title mb-0">HP: </span> <span class="h6 card-title mb-0">211</span> <br>
-                        <span class="h5 card-title mb-0">Attack: </span> <span class="h6 card-title mb-0">122</span> <br>
-                        <span class="h5 card-title mb-0">Defense: </span> <span class="h6 card-title mb-0">122</span> <br>
-                        <span class="h5 card-title mb-0">Speed: </span> <span class="h6 card-title mb-0">240</span> <br>
-                        <span class="h5 card-title mb-0">Sp. Def: </span> <span class="h6 card-title mb-0">145</span> <br>
-                        <span class="h5 card-title mb-0">Sp. Att: </span> <span class="h6 card-title mb-0">148</span> <br>
+                        <span class="h5 card-title mb-0">HP: </span> <span class="h6 card-title mb-0">{{ stats["hp"] }}</span> <br>
+                        <span class="h5 card-title mb-0">Attack: </span> <span class="h6 card-title mb-0">{{ stats["attack"] }}</span> <br>
+                        <span class="h5 card-title mb-0">Defense: </span> <span class="h6 card-title mb-0">{{ stats["defense"] }}</span> <br>
+                        <span class="h5 card-title mb-0">Sp. Att: </span> <span class="h6 card-title mb-0">{{ stats["sp_attack"] }}</span> <br>
+                        <span class="h5 card-title mb-0">Sp. Def: </span> <span class="h6 card-title mb-0">{{ stats["sp_defense"] }}</span> <br>
+                        <span class="h5 card-title mb-0">Speed: </span> <span class="h6 card-title mb-0">{{ stats["speed"] }}</span> <br>
                     </ul>
                 </div>
                 <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">

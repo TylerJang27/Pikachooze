@@ -135,6 +135,19 @@ def leaders():
 
     return render_template('leaders.html', trainers=trainers, trainer_types=trainer_types)
 
+@bp.route('/leader_inventory/<trainer>')
+def leader_inventory(trainer):
+    if not current_user.is_authenticated:
+        return redirect("/login", code=302)
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+    Session = sessionmaker(engine, expire_on_commit=False)
+    session = Session()
+    trainer_name = trainer.replace("%20", " ")
+    user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
+    trainer = session.query(Trainer).filter(Trainer.name == trainer_name, Trainer.game_id==user.trainers[0].game_id).one_or_none()
+    #TODO:ERROR HANDLING IF BAD TRAINER
+    return render_template('inventory.html', trainer=trainer, pokemon_choices = [])
+
 @bp.route('/add/<int:id>')
 def add(id):
     if not current_user.is_authenticated:
@@ -217,11 +230,15 @@ def pokemon(id):
     pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
     evolution = [p.poke2 for p in pokemon.pokemon.evolutions]
     devolution = [p.poke1 for p in pokemon.pokemon.devolutions]
+    stats = {"hp": pokemon.custom_hp, "attack": pokemon.custom_attack_stat, "defense": pokemon.custom_defense_stat, "sp_attack" : pokemon.custom_special_attack_stat,
+    "sp_defense" : pokemon.custom_special_defense_stat, "speed": pokemon.custom_speed} #TODO:Autocalculate for missing stats
     moves = []
     for m in [pokemon.move1, pokemon.move2, pokemon.move3, pokemon.move4]:
         if m is not None:
             moves.append(m)
-    return render_template('pokemon.html', pokemon=pokemon, moves=moves, evolution=evolution, devolution=devolution)
+    read_only = pokemon.trainer.added_by is None or (pokemon.trainer.added_by.uid != current_user.uid)
+    print(read_only)
+    return render_template('pokemon.html', pokemon=pokemon, moves=moves, evolution=evolution, devolution=devolution, stats=stats, read_only=read_only)
 
 class EditForm(FlaskForm):
     nickname = StringField(_l('Nickname:'))
@@ -288,6 +305,13 @@ def pokemonedit(id):
 
         # TODO: ADD OTHER ATTRIBUTES/STATS
 
+        curr_pokemon.custom_hp = form.hp.data
+        curr_pokemon.custom_attack_stat = form.attack.data
+        curr_pokemon.custom_defense_stat = form.defense.data
+        curr_pokemon.custom_special_attack_stat = form.special_attack.data
+        curr_pokemon.custom_special_defense_stat = form.special_defense.data 
+        curr_pokemon.custom_speed = form.speed.data
+
         curr_pokemon.move1_id = form.move1.data if form.move1.data != -1 else None
         curr_pokemon.move2_id = form.move2.data if form.move2.data != -1 else None
         curr_pokemon.move3_id = form.move3.data if form.move3.data != -1 else None
@@ -299,6 +323,13 @@ def pokemonedit(id):
     form.nickname.data = pokemon.nickname
     form.gender.data = pokemon.gender.value
     form.level.data = pokemon.level
+
+    form.hp.data = pokemon.custom_hp 
+    form.attack.data = pokemon.custom_attack_stat 
+    form.defense.data = pokemon.custom_defense_stat 
+    form.special_attack.data = pokemon.custom_special_attack_stat 
+    form.special_defense.data = pokemon.custom_special_defense_stat 
+    form.speed.data = pokemon.custom_speed 
 
     form.move1.data = pokemon.move1_id
     form.move2.data = pokemon.move2_id
