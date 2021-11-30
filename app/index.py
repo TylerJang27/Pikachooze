@@ -170,6 +170,10 @@ def add(id):
     added = TrainerPokemon()
     added.trainer_id = user.trainers[0].trainer_id
     added.poke_id = id
+    pokemon = session.query(Pokemon).filter(Pokemon.poke_id == id).one_or_none()
+    if pokemon is None:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
+    added.nickname = pokemon.name
     session.add(added)
     try:
         session.commit()
