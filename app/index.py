@@ -101,7 +101,9 @@ def fight(trainer):
         session.add(user)
         session.commit()
     
-    trainer = session.query(Trainer).filter(Trainer.name == trainer_name, Trainer.game_id==user.trainers[0].game_id).one_or_none()
+    trainer = session.query(Trainer).filter(Trainer.name == trainer_name, Trainer.game_id==user.trainers[0].game_id, Trainer.is_user == False).one_or_none()
+    if trainer is None:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     user_trainer = user.trainers[0] # TODO: ONCE USER CAN ADD POKEMON, INPUT HERE
     #dummy_trainer = session.query(Trainer).filter(Trainer.trainer_id == 4).one_or_none()
     #user_trainer = dummy_trainer
@@ -152,8 +154,10 @@ def leader_inventory(trainer):
     session = Session()
     trainer_name = trainer.replace("%20", " ")
     user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
-    trainer = session.query(Trainer).filter(Trainer.name == trainer_name, Trainer.game_id==user.trainers[0].game_id).one_or_none()
+    trainer = session.query(Trainer).filter(Trainer.name == trainer_name, Trainer.game_id==user.trainers[0].game_id, Trainer.is_user == False).one_or_none()
     #TODO:ERROR HANDLING IF BAD TRAINER
+    if trainer is None:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     return render_template('inventory.html', trainer=trainer, pokemon_choices = [])
 
 @bp.route('/add/<int:id>')
@@ -168,7 +172,10 @@ def add(id):
     added.trainer_id = user.trainers[0].trainer_id
     added.poke_id = id
     session.add(added)
-    session.commit()
+    try:
+        session.commit()
+    except:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     print("THE NEW ID IS ", added.tp_id)
     return redirect(url_for('index.pokemonedit', id=added.uuid))
 
@@ -179,7 +186,12 @@ def delete(id):
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == id).one_or_none()
+    try:
+        pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == id).one_or_none()
+    except:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
+    if pokemon is None or pokemon.trainer.added_by_id != current_user.uid:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     # TODO: VERIFY CURRENT USER CAN DELETE THIS POKEMON
     session.delete(pokemon)
     session.commit()
@@ -189,11 +201,16 @@ def delete(id):
 def evolve(id, to_id):
     if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
         return redirect("/login", code=302)
-    u = uuid.UUID(id)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
+    try:
+        u = uuid.UUID(id)
+        pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
+    except:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
+    if pokemon is None or pokemon.trainer.created_by_id != current_user.uid:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     evolution = [p.poke2.poke_id for p in pokemon.pokemon.evolutions]
     if to_id in evolution:
         old_name = pokemon.nickname
@@ -205,16 +222,22 @@ def evolve(id, to_id):
         session.add(pokemon)
         session.commit()
         return redirect("/pokemon/"+ id, code=302)
+    return redirect("/404"), 404, {"Refresh": "1; url=/404"}
 
 @bp.route('/devolve/<id>/<int:to_id>')
 def devolve(id, to_id):
     if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
         return redirect("/login", code=302)
-    u = uuid.UUID(id)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
+    try:
+        u = uuid.UUID(id)
+        pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
+    except:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
+    if pokemon is None or pokemon.trainer.created_by_id != current_user.uid:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     devolution = [p.poke1.poke_id for p in pokemon.pokemon.devolutions]
     if to_id in devolution:
         old_name = pokemon.nickname
@@ -226,16 +249,22 @@ def devolve(id, to_id):
         session.add(pokemon)
         session.commit()
         return redirect("/pokemon/"+ id, code=302)
+    return redirect("/404"), 404, {"Refresh": "1; url=/404"}
 
 @bp.route('/pokemon/<id>')
 def pokemon(id):
     if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
         return redirect("/login", code=302)
-    u = uuid.UUID(id)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
+    try:
+        u = uuid.UUID(id)
+        pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
+    except:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
+    if pokemon is None:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     evolution = [p.poke2 for p in pokemon.pokemon.evolutions]
     devolution = [p.poke1 for p in pokemon.pokemon.devolutions]
     stats = {"hp": pokemon.custom_hp, "attack": pokemon.custom_attack_stat, "defense": pokemon.custom_defense_stat, "sp_attack" : pokemon.custom_special_attack_stat,
@@ -283,11 +312,16 @@ class EditForm(FlaskForm):
 def pokemonedit(id):
     if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon
         return redirect("/login", code=302)
-    u = uuid.UUID(id)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=False) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
+    try:
+        u = uuid.UUID(id)
+        pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
+    except:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
+    if pokemon is None or pokemon.trainer.added_by_id != current_user.uid:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     available_moves = session.query(CanLearn).filter(CanLearn.poke_id == pokemon.poke_id).all()
     move_choices = [(-1, "")] + [(move.move.move_id, move.move.move_name) for move in available_moves]
     moves = []
