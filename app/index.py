@@ -3,12 +3,11 @@ from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
 from wtforms.fields.core import IntegerField
-from wtforms.validators import Optional, ValidationError, DataRequired
+from wtforms.validators import Optional, ValidationError, DataRequired, NumberRange, Length
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from flask_babel import _, lazy_gettext as _l
 
-from app.models.purchase import Purchase
 from app.models.trainer import Trainer
 from app.models.trainer_pokemon import TrainerPokemon, GenderClass
 from app.models.can_learn import CanLearn
@@ -18,65 +17,29 @@ from app.models.pokemon import Pokemon
 from app.scoring_algo import score_teams
 from app.config import Config
 import uuid
+import math
 
 from flask import Blueprint
+
+def hp_calc(base_stat, level):
+    hp_IV = 0
+    hp_EV = 0
+    return math.floor(0.01 * (2 * base_stat + hp_IV + math.floor(0.25 * hp_EV)) * level) + level + 10
+
+def stat_calc(base_stat, level):
+    nature = 1
+    IV = 0
+    EV = 0
+    return math.floor(((0.01 * (2 * base_stat + IV + math.floor(0.25 * EV)) * level) + 5) * nature)
 
 bp = Blueprint('index', __name__)
 @bp.route('/')
 def index():
-
-    print("About to print purchases:")
-    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
-
-    # a sessionmaker(), also in the same scope as the engine
-    Session = sessionmaker(engine)
-
-    # we can now construct a Session() without needing to pass the
-    # engine each time
-    with Session() as session:
-        Session.configure(bind=engine)
-        print(session.get_bind().table_names())
-
-        res = session.query(Purchase).all()
-        print("Purchase query results:")
-        print(res)
-
-        # get all available products for sale:
-        # products = Product.get_all(True)
-        # products = session.query(Product).all()
-        products = []
-
-        # find the products current user has bought:
-        if current_user.is_authenticated:
-            # purchases = Purchase.get_all_by_uid_since(
-                # current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-            # purchases = session.query(Purchase).all()
-            print(current_user, current_user.trainers, current_user.trainers[0].trainer_pokemon if len(current_user.trainers) > 0 else "NO POKEMON")
-            purchases = []
-            print("There would have been purchases!")
-        else:
-            purchases = None
-            # trainer1 = session.query(Trainer).filter(Trainer.trainer_id==2).one_or_none()
-            # trainer2 = session.query(Trainer).filter(Trainer.trainer_id==4).one_or_none()
-            # trainer1_pkmn = trainer1.trainer_pokemon
-            # trainer2_pkmn = trainer2.trainer_pokemon
-            # print(score_teams(trainer2_pkmn, trainer1_pkmn))
-
-        # render the page by adding information to the index.html file
-
-
-        return render_template('index.html',
-                            avail_products=products,
-                            purchase_history=purchases)
-    # session = Session()
-    # print(session.get_bind().table_names())
-    # print(session)
-    # return render_template('dummy.html')
+    return render_template('index.html')
     
 @bp.route('/faq')
 def faq():
     return render_template('faq.html')
-
 
 @bp.route('/fight/', defaults={'trainer': 'dummy'})
 @bp.route('/fight/<trainer>')
@@ -103,12 +66,9 @@ def fight(trainer):
     trainer = session.query(Trainer).filter(Trainer.name == trainer_name, Trainer.game_id==user.trainers[0].game_id, Trainer.is_user == False).one_or_none()
     if trainer is None:
         return redirect("/404"), 404, {"Refresh": "1; url=/404"}
-    user_trainer = user.trainers[0] # TODO: ONCE USER CAN ADD POKEMON, INPUT HERE
-    #dummy_trainer = session.query(Trainer).filter(Trainer.trainer_id == 4).one_or_none()
-    #user_trainer = dummy_trainer
+    user_trainer = user.trainers[0]
 
     score_results = score_teams(user_trainer.trainer_pokemon, trainer.trainer_pokemon)[::-1]
-    # print(score_results)
 
     return render_template('fight.html', trainer=trainer, scores=score_results)
 
@@ -133,7 +93,7 @@ def leaders():
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    trainers = session.query(Trainer).filter(Trainer.game_id == current_user.trainers[0].game_id, Trainer.is_user == False).all() # TODO: VERIFY DOESN'T INCLUDE USERS
+    trainers = session.query(Trainer).filter(Trainer.game_id == current_user.trainers[0].game_id, Trainer.is_user == False).all()
     trainer_types = []
     for t in trainers:
         pokemon = [p.pokemon for p in t.trainer_pokemon]
@@ -195,14 +155,13 @@ def delete(id):
         return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     if pokemon is None or pokemon.trainer.added_by_id != current_user.uid:
         return redirect("/404"), 404, {"Refresh": "1; url=/404"}
-    # TODO: VERIFY CURRENT USER CAN DELETE THIS POKEMON
     session.delete(pokemon)
     session.commit()
     return redirect(url_for('index.inventory'))
 
 @bp.route('/evolve/<id>/<int:to_id>')
 def evolve(id, to_id):
-    if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
+    if not current_user.is_authenticated:
         return redirect("/login", code=302)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
@@ -229,7 +188,7 @@ def evolve(id, to_id):
 
 @bp.route('/devolve/<id>/<int:to_id>')
 def devolve(id, to_id):
-    if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
+    if not current_user.is_authenticated:
         return redirect("/login", code=302)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
@@ -256,7 +215,7 @@ def devolve(id, to_id):
 
 @bp.route('/pokemon/<id>')
 def pokemon(id):
-    if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon or is trainer
+    if not current_user.is_authenticated:
         return redirect("/login", code=302)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
@@ -271,7 +230,19 @@ def pokemon(id):
     evolution = [p.poke2 for p in pokemon.pokemon.evolutions]
     devolution = [p.poke1 for p in pokemon.pokemon.devolutions]
     stats = {"hp": pokemon.custom_hp, "attack": pokemon.custom_attack_stat, "defense": pokemon.custom_defense_stat, "sp_attack" : pokemon.custom_special_attack_stat,
-    "sp_defense" : pokemon.custom_special_defense_stat, "speed": pokemon.custom_speed} #TODO:Autocalculate for missing stats
+    "sp_defense" : pokemon.custom_special_defense_stat, "speed": pokemon.custom_speed}
+    if stats["hp"] is None:
+        stats["hp"] = hp_calc(pokemon.pokemon.pokemon_base_stats[0].hp, pokemon.level)
+    if stats["attack"] is None:
+        stats["attack"] = stat_calc(pokemon.pokemon.pokemon_base_stats[0].attack_stat, pokemon.level)
+    if stats["defense"] is None:
+        stats["defense"] = stat_calc(pokemon.pokemon.pokemon_base_stats[0].defense_stat, pokemon.level)
+    if stats["sp_attack"] is None:
+        stats["sp_attack"] = stat_calc(pokemon.pokemon.pokemon_base_stats[0].special_attack_stat, pokemon.level)
+    if stats["sp_defense"] is None:
+        stats["sp_defense"] = stat_calc(pokemon.pokemon.pokemon_base_stats[0].special_defense_stat, pokemon.level)
+    if stats["speed"] is None:
+        stats["speed"] = stat_calc(pokemon.pokemon.pokemon_base_stats[0].speed, pokemon.level)
     moves = []
     for m in [pokemon.move1, pokemon.move2, pokemon.move3, pokemon.move4]:
         if m is not None:
@@ -281,15 +252,15 @@ def pokemon(id):
     return render_template('pokemon.html', pokemon=pokemon, moves=moves, evolution=evolution, devolution=devolution, stats=stats, read_only=read_only)
 
 class EditForm(FlaskForm):
-    nickname = StringField(_l('Nickname:'))
+    nickname = StringField(_l('Nickname:'), validators=[Length(max=25, message="Maximum length of 25 characters")])
     gender = SelectField(_l('Gender:'), validate_choice=True, coerce=int)
-    level = IntegerField(_l('Level:'), validators=[DataRequired()])
-    hp = IntegerField(_l('HP:'), validators=[Optional()]) # TODO: RIGHT NOW CREATING A TRAINER_POKEMON GIVES A DEFAULT LEVEL OF 50
-    attack = IntegerField(_l('Attack:'), validators=[Optional()])
-    defense = IntegerField(_l('Defense:'), validators=[Optional()])
-    special_attack = IntegerField(_l('Special Attack:'), validators=[Optional()])
-    special_defense = IntegerField(_l('Special Defense:'), validators=[Optional()])
-    speed = IntegerField(_l('Speed:'), validators=[Optional()])
+    level = IntegerField(_l('Level:'), validators=[DataRequired(), NumberRange(min=1, message='Must enter a number greater than 0')])
+    hp = IntegerField(_l('HP:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
+    attack = IntegerField(_l('Attack:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
+    defense = IntegerField(_l('Defense:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
+    special_attack = IntegerField(_l('Special Attack:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
+    special_defense = IntegerField(_l('Special Defense:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
+    speed = IntegerField(_l('Speed:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
     move1 = SelectField(_l('Move 1'), coerce=int)
     move2 = SelectField(_l('Move 2'), coerce=int)
     move3 = SelectField(_l('Move 3'), coerce=int)
@@ -313,7 +284,7 @@ class EditForm(FlaskForm):
 
 @bp.route('/pokemonedit/<id>', methods=['GET', 'POST'])
 def pokemonedit(id):
-    if not current_user.is_authenticated: #TODO: verify that current user owns the pokemon
+    if not current_user.is_authenticated:
         return redirect("/login", code=302)
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=False) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
@@ -347,8 +318,6 @@ def pokemonedit(id):
         curr_pokemon.nickname = form.nickname.data if form.nickname.data != "" else curr_pokemon.pokemon.name
         curr_pokemon.gender = {1: "male", 2: "female"}[form.gender.data]
         curr_pokemon.level = form.level.data
-
-        # TODO: ADD OTHER ATTRIBUTES/STATS
 
         curr_pokemon.custom_hp = form.hp.data
         curr_pokemon.custom_attack_stat = form.attack.data

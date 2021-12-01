@@ -29,8 +29,6 @@ class User(Base, UserMixin):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     last_trainer = Column(String(40), nullable=True)
 
-    purchases = relationship("Purchase", back_populates="user")
-
     trainers = relationship("Trainer", back_populates="added_by")
 
 
