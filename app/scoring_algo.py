@@ -140,12 +140,27 @@ def max_damage_perc(out_pkmn, in_pkmn, is_attacker, hp):
       
       move_text = ""
       if is_attacker:
-        if damage_scaled > 0.3:
-          move_text = move.move_name + " does big ol damage to {:}. Good job!".format(in_pkmn.nickname)
+        if damage_scaled >= 0.2 and damage_scaled < 0.4:
+          move_text = move.move_name + " does high damage to {:}. Good job!".format(in_pkmn.nickname)
+        elif damage_scaled >= 0.4 and damage_scaled < 0.6:
+          move_text = move.move_name + " does very high damage to {:}. Great job!".format(in_pkmn.nickname)
+        elif damage_scaled >= 0.6:
+          move_text = move.move_name + " does massive damage to {:}. Excellent job!".format(in_pkmn.nickname)
         # TODO: MAYBE ADD MORE DESCRIPTIONS
       else:
-        if damage_scaled > 0.3:
-          move_text = move.move_name + " does big ol damage to us. Ouch!"
+        if damage_scaled > 0.2 and damage_scaled < 0.5:
+          if in_pkmn.level - out_pkmn.level > 10:
+            move_text = "{:}'s " + move.move_name + " does high damage to us. Consider leveling up your pokemon before retrying!".format(in_pkmn.nickname)
+          else:
+            move_text = "{:}'s " + move.move_name + " does high damage to us. Ouch!".format(in_pkmn.nickname)
+        if damage_scaled >= 0.5:
+          if in_pkmn.level - out_pkmn.level > 10:
+            move_text = "{:}'s " + move.move_name + " does massive damage to us. Consider leveling up your pokemon before retrying!".format(in_pkmn.nickname)
+          elif out_pkmn.level - in_pkmn.level > 5:
+            move_text = "{:}'s " + move.move_name + " does massive damage to us. Consider switching out this pokemon for a better match!".format(in_pkmn.nickname)
+          else:
+            move_text = "{:}'s " + move.move_name + " does massive damage to us. Ouch!".format(in_pkmn.nickname)
+        
         # TODO: MAYBE ADD MORE DESCRIPTIONS
 
       damage_list.append((damage_scaled, move_text))
