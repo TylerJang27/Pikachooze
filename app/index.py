@@ -254,7 +254,7 @@ def pokemon(id):
 class EditForm(FlaskForm):
     nickname = StringField(_l('Nickname:'), validators=[Length(max=25, message="Maximum length of 25 characters")])
     gender = SelectField(_l('Gender:'), validate_choice=True, coerce=int)
-    level = IntegerField(_l('Level:'), validators=[DataRequired(), NumberRange(min=1, message='Must enter a number greater than 0')])
+    level = IntegerField(_l('Level:'), validators=[DataRequired(), NumberRange(min=1, max=100, message='Must enter a number between 1 and 100')])
     hp = IntegerField(_l('HP:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
     attack = IntegerField(_l('Attack:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
     defense = IntegerField(_l('Defense:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})

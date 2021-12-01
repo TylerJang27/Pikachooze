@@ -83,7 +83,7 @@
                             <p>{{score[1]}}</p>
                         </div>
                         <div class="col-4">
-                            <p>{{score[2]}}</p>
+                            <p>{{score[2].replace('(', '<b>').replace(')', '</b>')|safe}}</p>
                         </div>
                     </div>
                     {% endfor %}
