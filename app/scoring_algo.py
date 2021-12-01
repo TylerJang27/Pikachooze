@@ -109,11 +109,12 @@ def score(one_pkmn, team_pkmn):
 
 #calculate the max damage as percent of pokemon health out_pkmn and in_pkmn
 def max_damage_perc(out_pkmn, in_pkmn):
-  level = out_pkmn.level
+  level = in_pkmn.level
   hp_IV = 0
   hp_EV = 0
-  hp_base = out_pkmn.pokemon.pokemon_base_stats[0].hp
-  HP = math.floor(0.01 * (2 * hp_base + hp_IV + math.floor(0.25 * hp_EV)) * level) + level + 10
+  hp_base = in_pkmn.pokemon.pokemon_base_stats[0].hp
+  HP = in_pkmn.custom_hp
+  HP = HP if HP is not None else math.floor(0.01 * (2 * hp_base + hp_IV + math.floor(0.25 * hp_EV)) * level) + level + 10
   return min(max_damage(out_pkmn, in_pkmn) / HP, 1.0)
 
 
@@ -127,7 +128,7 @@ def max_damage(out_pkmn, in_pkmn):
   return max(damage_list, default=0)
 
 def damage_calc(out_pkmn, move, in_pkmn):
-  if move.damage_class == 3:
+  if move.damage_class.value == 3:
     return 0
   
   level = out_pkmn.level
@@ -146,15 +147,19 @@ def damage_calc(out_pkmn, move, in_pkmn):
   D_EV = 0
   #change these into data entered
 
-  if move.damage_class == 1: #physical 
-    A_base = out_pkmn.pokemon.pokemon_base_stats.attack_stat
-    D_base = in_pkmn.pokemon.pokemon_base_stats.defense_stat
-  if move.damage_class == 2: #special
-    A_base = out_pkmn.pokemon.pokemon_base_stats.special_attack_stat
-    D_base = in_pkmn.pokemon.pokemon_base_stats.special_defense_stat
+  if move.damage_class.value == 1: #physical 
+    A_base = out_pkmn.pokemon.pokemon_base_stats[0].attack_stat
+    D_base = in_pkmn.pokemon.pokemon_base_stats[0].defense_stat
+    A = out_pkmn.custom_attack_stat
+    D = in_pkmn.custom_defense_stat
+  if move.damage_class.value == 2: #special
+    A_base = out_pkmn.pokemon.pokemon_base_stats[0].special_attack_stat
+    D_base = in_pkmn.pokemon.pokemon_base_stats[0].special_defense_stat
+    A = out_pkmn.custom_special_attack_stat
+    D = in_pkmn.custom_special_defense_stat
 
-  A = math.floor(((0.01 * (2 * A_base + A_IV + math.floor(0.25 * A_EV)) * level) + 5) * A_Nature)
-  D = math.floor(((0.01 * (2 * D_base + D_IV + math.floor(0.25 * D_EV)) * level) + 5) * D_Nature)
+  A = A if A is not None else math.floor(((0.01 * (2 * A_base + A_IV + math.floor(0.25 * A_EV)) * level) + 5) * A_Nature)
+  D = D if D is not None else math.floor(((0.01 * (2 * D_base + D_IV + math.floor(0.25 * D_EV)) * level) + 5) * D_Nature)
 
   #targets = 1
   #weather = 1

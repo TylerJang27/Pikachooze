@@ -42,8 +42,8 @@ class TrainerPokemon(Base):
     move4 = relationship("Move", foreign_keys=[move4_id])
 
     def __repr__(self):
-        return "<TrainerPokemon(trainer='%s', pokemon='%s', nickname='%s', inParty='%r', level='%d', move1='%s', move2='%s', move3='%s', move4='%s')>" % (
-                             self.trainer.name, self.pokemon.name, self.nickname, self.inParty, self.level,
+        return "<TrainerPokemon(trainer='%s', pokemon='%s', nickname='%s', inParty='%r', level='%d', hp='%r', attack='%r', defense='%r', sp_attack='%r', sp_defense='%r', speed='%r', move1='%s', move2='%s', move3='%s', move4='%s')>" % (
+                             self.trainer.name, self.pokemon.name, self.nickname, self.inParty, self.level, self.custom_hp, self.custom_attack_stat, self.custom_defense_stat, self.custom_special_attack_stat, self.custom_special_defense_stat, self.custom_speed,
                              (self.move1.move_name if self.move1 is not None else "None"),
                              (self.move2.move_name if self.move2 is not None else "None"),
                              (self.move3.move_name if self.move3 is not None else "None"),
