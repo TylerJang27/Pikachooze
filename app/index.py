@@ -212,7 +212,7 @@ def evolve(id, to_id):
         pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
     except:
         return redirect("/404"), 404, {"Refresh": "1; url=/404"}
-    if pokemon is None or pokemon.trainer.created_by_id != current_user.uid:
+    if pokemon is None or pokemon.trainer.added_by_id != current_user.uid:
         return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     evolution = [p.poke2.poke_id for p in pokemon.pokemon.evolutions]
     if to_id in evolution:
@@ -239,7 +239,7 @@ def devolve(id, to_id):
         pokemon = session.query(TrainerPokemon).filter(TrainerPokemon.uuid == u).one_or_none()
     except:
         return redirect("/404"), 404, {"Refresh": "1; url=/404"}
-    if pokemon is None or pokemon.trainer.created_by_id != current_user.uid:
+    if pokemon is None or pokemon.trainer.added_by_id != current_user.uid:
         return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     devolution = [p.poke1.poke_id for p in pokemon.pokemon.devolutions]
     if to_id in devolution:
