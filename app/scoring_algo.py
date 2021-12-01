@@ -29,7 +29,7 @@ damage_array =  [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1/2, 0, 1, 1, 1/2, 1],
 #my_pkmn = [trainer_pokemon objects]
 #opp_pkmn = [trainer_pokemon objects]
 
-#returns a list of (trainer_pokemon object, score) tuples sorted by score (highest score comes first)
+#returns a list of (trainer_pokemon object, (score, text)) tuples sorted by score (highest score comes first)
 #currently includes all pokemon, can filter for first six pokemon by [0:5]
 def score_teams(my_pkmn, opp_pkmn):
   score_list=[]
@@ -37,6 +37,11 @@ def score_teams(my_pkmn, opp_pkmn):
     score_list.append((pk_1, score(pk_1, opp_pkmn))) # (pikachu, (37, "Thunderbolt is great!"))
   print(sorted(score_list, key=lambda tup: tup[1][0]))
   return sorted(score_list, key=lambda tup: tup[1][0]) #could break ties through speed
+
+#returns a list of (trainer_pokemon object, (score, text)) tuples sorted by score (highest comes first)
+#fulfils a team with LP status
+def score_team_6(my_pkmn, opp_pkmn):
+  return
 
 #returns a score for a single pokemon against a team of pokemon
 def score(one_pkmn, team_pkmn):
