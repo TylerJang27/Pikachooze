@@ -68,7 +68,7 @@ def fight(trainer):
         return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     user_trainer = user.trainers[0]
 
-    score_results = score_teams(user_trainer.trainer_pokemon, trainer.trainer_pokemon)[::-1]
+    score_results = [(k[0], k[1][0], k[1][1]) for k in score_teams(user_trainer.trainer_pokemon, trainer.trainer_pokemon)[::-1]]
 
     return render_template('fight.html', trainer=trainer, scores=score_results)
 

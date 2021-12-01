@@ -34,8 +34,9 @@ damage_array =  [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1/2, 0, 1, 1, 1/2, 1],
 def score_teams(my_pkmn, opp_pkmn):
   score_list=[]
   for pk_1 in my_pkmn:
-    score_list.append((pk_1, score(pk_1, opp_pkmn)))
-  return sorted(score_list, key=lambda tup: tup[1]) #could break ties through speed
+    score_list.append((pk_1, score(pk_1, opp_pkmn))) # (pikachu, (37, "Thunderbolt is great!"))
+  print(sorted(score_list, key=lambda tup: tup[1][0]))
+  return sorted(score_list, key=lambda tup: tup[1][0]) #could break ties through speed
 
 #returns a score for a single pokemon against a team of pokemon
 def score(one_pkmn, team_pkmn):
@@ -44,10 +45,10 @@ def score(one_pkmn, team_pkmn):
   outgoing = [] #outgoing as a value (20, 25, 34, 50, 100)
   incoming = [] #incoming as a value (20, 25, 34, 50, 100)
   for pk_2 in team_pkmn:
-    outgoing_dmg.append(max_damage_perc(one_pkmn, pk_2))
-    incoming_dmg.append(max_damage_perc(pk_2, one_pkmn))
-  for dmg in outgoing_dmg:
-    dmg = dmg*100
+    outgoing_dmg.append(max_damage_adjusted(one_pkmn, pk_2, True))
+    incoming_dmg.append(max_damage_adjusted(pk_2, one_pkmn, False))
+  for dmg_info in outgoing_dmg:
+    dmg = dmg_info[0]*100
     val = 0
     if dmg >= 100:
       val = 100
@@ -71,10 +72,10 @@ def score(one_pkmn, team_pkmn):
       val = 10
     else:
       val = 0
-    outgoing.append(val)
+    outgoing.append((val, dmg_info[1]))
 
-  for dmg in incoming_dmg:
-    dmg = dmg*100
+  for dmg_info in incoming_dmg:
+    dmg = dmg_info[0]*100
     val = 0
     if dmg >= 100:
       val = 100
@@ -98,36 +99,60 @@ def score(one_pkmn, team_pkmn):
       val = 10
     else:
       val = 0
-    incoming.append(val)
+    incoming.append((val, dmg_info[1]))
   
   #print(incoming_dmg, outgoing_dmg)
   #print(incoming, outgoing)
-  difference = [a_i - b_i for a_i, b_i in zip(outgoing, incoming)]
+  difference = [(a_i[0] - b_i[0], 
+                [a_i[1], b_i[1]][0 if a_i > b_i else 1]) 
+                for a_i, b_i in zip(outgoing, incoming)]
+
+  max_diff = max(difference, key = lambda i : abs(i[0]))
+  move_text = max_diff[1]
   #calculation based on damages here
   #print(sum(difference)/len(difference))
-  return math.floor(sum(difference)/len(difference))
+  difference_nums = [k[0] for k in difference]
+
+  return math.floor(sum(difference_nums)/len(difference_nums)), move_text
 
 #calculate the max damage as percent of pokemon health out_pkmn and in_pkmn
-def max_damage_perc(out_pkmn, in_pkmn):
+def max_damage_adjusted(out_pkmn, in_pkmn, is_attacker):
   level = in_pkmn.level
   hp_IV = 0
   hp_EV = 0
   hp_base = in_pkmn.pokemon.pokemon_base_stats[0].hp
   HP = in_pkmn.custom_hp
   HP = HP if HP is not None else math.floor(0.01 * (2 * hp_base + hp_IV + math.floor(0.25 * hp_EV)) * level) + level + 10
-  return min(max_damage(out_pkmn, in_pkmn) / HP, 1.0)
+  damage_perc = max_damage_perc(out_pkmn, in_pkmn, is_attacker, HP)
+  if damage_perc[0] > 1.0:
+    return (1.0, damage_perc[1])
+  return damage_perc
 
 
 #calculate the max damage that can be done by out_pkmn to in_pkmn
-def max_damage(out_pkmn, in_pkmn):
+def max_damage_perc(out_pkmn, in_pkmn, is_attacker, hp):
   damage_list = []
   moves = [out_pkmn.move1, out_pkmn.move2, out_pkmn.move3, out_pkmn.move4]
   for move in moves:
-    if(move is not None):
-      damage_list.append(damage_calc(out_pkmn, move, in_pkmn))
-  return max(damage_list, default=0)
+    if move is not None:
+      damage_val = damage_calc(out_pkmn, move, in_pkmn, is_attacker)
+      damage_scaled = damage_val / hp
+      
+      move_text = ""
+      if is_attacker:
+        if damage_scaled > 0.3:
+          move_text = move.move_name + " does big ol damage to {:}. Good job!".format(in_pkmn.nickname)
+        # TODO: MAYBE ADD MORE DESCRIPTIONS
+      else:
+        if damage_scaled > 0.3:
+          move_text = move.move_name + " does big ol damage to us. Ouch!"
+        # TODO: MAYBE ADD MORE DESCRIPTIONS
 
-def damage_calc(out_pkmn, move, in_pkmn):
+      damage_list.append((damage_scaled, move_text))
+  return max(damage_list, key = lambda i : i[0], default=0)
+
+# calculate the raw damage that out_pkmn can do to in_pkmn using move
+def damage_calc(out_pkmn, move, in_pkmn, is_attacker):
   if move.damage_class.value == 3:
     return 0
   

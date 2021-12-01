@@ -63,7 +63,7 @@
                     {% endif %}
                     {% for score in scores %}
                     <div class="row align-items-center">
-                        <div class="col-3" style="text-align: center;">
+                        <div class="col-1" style="text-align: center;">
                             <p>{{loop.index}}</p>
                         </div>
                         <div class="col-3">
@@ -79,8 +79,11 @@
                             <img src="{{score[0].pokemon.pic}}" alt="{{score[0].pokemon.name}}" class="rounded-top w-75">
                             </a>
                         </div>
-                        <div class="col-3">
+                        <div class="col-1">
                             <p>{{score[1]}}</p>
+                        </div>
+                        <div class="col-4">
+                            <p>{{score[2]}}</p>
                         </div>
                     </div>
                     {% endfor %}
