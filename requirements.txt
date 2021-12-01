@@ -32,3 +32,5 @@ pytest-shutil==1.7.0
 ndg-httpsclient
 pyopenssl
 pyasn1
+scipy==1.4.*
+pulp==2.1
