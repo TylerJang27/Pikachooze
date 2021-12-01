@@ -80,14 +80,11 @@
         <!-- Section -->
     <section class="section section-md">
         <div class="container mb-5">
-            <div class="row align-items-start justify-content-around">
-                <div class="col-md-6 col-xl-4 text-center text-md-left text-black" id="leftBox">
+            <div class="row align-items-center justify-content-around">
+                <div class="col-md-6 col-xl-4 text-center text-md-left text-black">
                     <img class="img-fluid" src="{{ pokemon.pokemon.pic }}" alt="Pikachu Image">
-
-                    <canvas id="myCanvas"></canvas>
-
                 </div>
-                <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
+                <div class="col-md-6 col-xl-4 mb-5" id="leftBox" style="text-align: left">
                     <span class="h4 card-title mb-0">Name: </span> <span class="h5 card-title mb-0">{{ pokemon.pokemon.name }}</span> <br><br>
                     <span class="h4 card-title mb-0">Nickname: </span> <span class="h5 card-title mb-0" id="mynamespan">{{ pokemon.nickname }}</span> <br><br>
                     <span class="h4 card-title mb-0">Gender: </span> <span class="h5 card-title mb-0">{{ pokemon.gender.name.title() }}</span> <br><br>
@@ -98,7 +95,8 @@
                     <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
                     {% endif %} <br><br>
                     <span class="h4 card-title mb-0">Stats: </span><br><br>
-                    <ul>
+                    <canvas id="myCanvas"></canvas>
+                    <ul style="visibility: hidden;">
                         <span class="h5 card-title mb-0">HP: </span> <span class="h6 card-title mb-0" id="hp_stat">{{ stats["hp"] }}</span> <br>
                         <span class="h5 card-title mb-0">Attack: </span> <span class="h6 card-title mb-0" id="attack_stat">{{ stats["attack"] }}</span> <br>
                         <span class="h5 card-title mb-0">Defense: </span> <span class="h6 card-title mb-0" id="defense_stat">{{ stats["defense"] }}</span> <br>
