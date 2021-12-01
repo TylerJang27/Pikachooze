@@ -80,9 +80,12 @@
         <!-- Section -->
     <section class="section section-md">
         <div class="container mb-5">
-            <div class="row align-items-center justify-content-around">
-                <div class="col-md-6 col-xl-4 text-center text-md-left text-black">
+            <div class="row align-items-start justify-content-around">
+                <div class="col-md-6 col-xl-4 text-center text-md-left text-black" id="leftBox">
                     <img class="img-fluid" src="{{ pokemon.pokemon.pic }}" alt="Pikachu Image">
+
+                    <canvas id="myCanvas"></canvas>
+
                 </div>
                 <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
                     <span class="h4 card-title mb-0">Name: </span> <span class="h5 card-title mb-0">{{ pokemon.pokemon.name }}</span> <br><br>
@@ -96,12 +99,12 @@
                     {% endif %} <br><br>
                     <span class="h4 card-title mb-0">Stats: </span><br><br>
                     <ul>
-                        <span class="h5 card-title mb-0">HP: </span> <span class="h6 card-title mb-0">{{ stats["hp"] }}</span> <br>
-                        <span class="h5 card-title mb-0">Attack: </span> <span class="h6 card-title mb-0">{{ stats["attack"] }}</span> <br>
-                        <span class="h5 card-title mb-0">Defense: </span> <span class="h6 card-title mb-0">{{ stats["defense"] }}</span> <br>
-                        <span class="h5 card-title mb-0">Sp. Att: </span> <span class="h6 card-title mb-0">{{ stats["sp_attack"] }}</span> <br>
-                        <span class="h5 card-title mb-0">Sp. Def: </span> <span class="h6 card-title mb-0">{{ stats["sp_defense"] }}</span> <br>
-                        <span class="h5 card-title mb-0">Speed: </span> <span class="h6 card-title mb-0">{{ stats["speed"] }}</span> <br>
+                        <span class="h5 card-title mb-0">HP: </span> <span class="h6 card-title mb-0" id="hp_stat">{{ stats["hp"] }}</span> <br>
+                        <span class="h5 card-title mb-0">Attack: </span> <span class="h6 card-title mb-0" id="attack_stat">{{ stats["attack"] }}</span> <br>
+                        <span class="h5 card-title mb-0">Defense: </span> <span class="h6 card-title mb-0" id="defense_stat">{{ stats["defense"] }}</span> <br>
+                        <span class="h5 card-title mb-0">Sp. Att: </span> <span class="h6 card-title mb-0" id="sp_attack_stat">{{ stats["sp_attack"] }}</span> <br>
+                        <span class="h5 card-title mb-0">Sp. Def: </span> <span class="h6 card-title mb-0" id="sp_defense_stat">{{ stats["sp_defense"] }}</span> <br>
+                        <span class="h5 card-title mb-0">Speed: </span> <span class="h6 card-title mb-0" id="speed_stat">{{ stats["speed"] }}</span> <br>
                     </ul>
                 </div>
                 <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
@@ -125,6 +128,121 @@
                 </div>
             </div>
         </div>
+        <script>
+            var growth = 0;
+
+            function getAlong(startX, startY, endX, endY, perc) {
+                let newX = startX + (endX - startX) * perc;
+                let newY = startY + (endY - startY) * perc;
+                return [newX, newY];
+            }
+
+            function draw() {
+                var canvas = document.getElementById("myCanvas");
+                let w = canvas.width;
+                let h = canvas.height;
+                if (growth < 1.0) {
+                    growth += (0.12) * (1.0-growth);
+                }
+
+                var ctx = canvas.getContext("2d");
+                ctx.clearRect(0, 0, w, h);
+                // ctx.fillStyle = "#FF0000";
+                // ctx.fillRect(0, 0, 150, 75);
+
+                ctx.font = "15px Arial";
+
+                let l = w/3;
+                let m = w/2;
+                let r = 2*w/3;
+
+                let t = h/6;
+                let mt = h/3;
+                let my = h/2;
+                let mb = 2*h/3;
+                let b = 5*h/6;
+
+                ctx.beginPath();
+                ctx.moveTo(m, t);
+                ctx.lineTo(r, mt);
+                ctx.lineTo(r, mb);
+                ctx.lineTo(m, b);
+                ctx.lineTo(l, mb);
+                ctx.lineTo(l, mt);
+                ctx.lineTo(m, t);
+                ctx.strokeStyle = "#FFFFFF";
+                ctx.fillStyle = "#EEEEEE";
+                ctx.stroke();
+                ctx.fill();
+
+                ctx.moveTo(m, t);
+                ctx.lineTo(m, b);
+                ctx.moveTo(l, mt);
+                ctx.lineTo(r, mb);
+                ctx.moveTo(r, mt);
+                ctx.lineTo(l, mb);
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                ctx.textAlign = "center";
+                ctx.fillStyle = "#000000";
+                let hpVal = document.getElementById("hp_stat").textContent
+                ctx.fillText("HP " + hpVal, m, t - 10);
+
+                ctx.textAlign = "left";
+                let spAttackVal = document.getElementById("sp_attack_stat").textContent
+                ctx.fillText("Sp. Atk " + spAttackVal, r + 5, mt - 5);
+
+                ctx.textAlign = "left";
+                let spDefenseVal = document.getElementById("sp_defense_stat").textContent
+                ctx.fillText("Sp. Def " + spDefenseVal, r + 5, mb + 10);
+
+                ctx.textAlign = "center";
+                let speedVal = document.getElementById("speed_stat").textContent
+                ctx.fillText("Speed " + speedVal, m, b + 15);
+
+                ctx.textAlign = "right";
+                let attackVal = document.getElementById("attack_stat").textContent
+                ctx.fillText("Attack " + attackVal, l - 5, mt - 5);
+
+                ctx.textAlign = "right";
+                let defenseVal = document.getElementById("defense_stat").textContent
+                ctx.fillText("Defense " + defenseVal, l - 5, mb + 10);
+                
+                let capStat = Math.max(hpVal, spAttackVal, spDefenseVal, speedVal, attackVal, defenseVal) * 1.25 / growth;
+                ctx.strokeStyle = "rgba(100, 50, 225, 1.0)";
+                ctx.fillStyle = "rgba(75, 25, 200, 0.5)";
+                let hpPoint = getAlong(m, my, m, t, hpVal/capStat);
+                ctx.beginPath();
+                ctx.moveTo(hpPoint[0], hpPoint[1]);
+                let spAttackPoint = getAlong(m, my, r, mt, spAttackVal/capStat);
+                ctx.lineTo(spAttackPoint[0], spAttackPoint[1]);
+                let spDefensePoint = getAlong(m, my, r, mb, spDefenseVal/capStat);
+                ctx.lineTo(spDefensePoint[0], spDefensePoint[1]);
+                let speedPoint = getAlong(m, my, m, b, speedVal/capStat);
+                ctx.lineTo(speedPoint[0], speedPoint[1]);
+                let defensePoint = getAlong(m, my, l, mb, defenseVal/capStat);
+                ctx.lineTo(defensePoint[0], defensePoint[1]);
+                let attackPoint = getAlong(m, my, l, mt, attackVal/capStat);
+                ctx.lineTo(attackPoint[0], attackPoint[1]);
+                ctx.lineTo(hpPoint[0], hpPoint[1]);
+                ctx.stroke();
+                ctx.fill();
+
+                ctx.closePath();
+            }
+
+            function updateCanvas() {
+                var box = document.getElementById("leftBox");
+                var canvas = document.getElementById("myCanvas");
+                canvas.width = box.offsetWidth;
+                canvas.height = box.offsetWidth * 1/2;
+
+                // set refresh rate
+                return setInterval(draw, 30);
+            }
+            window.onload = updateCanvas();
+        </script>
     </section>
     <!-- End of section -->
 
