@@ -16,6 +16,30 @@
     </div>
     <!-- End of Hero -->
 
+    <script>
+        function openTab(evt, tabName) {
+        // Declare all variables
+        var i, tabcontent, tablinks;
+
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+        }
+
+    </script>
+
     <!--End of Title section-->
     <div class="section section-md">
         <div class="container">
@@ -49,8 +73,8 @@
                 </div>
 
                 <div class="col">
-                    <h4 class="h4 mb-3">Top Picks</h4>
                     {% if scores|length == 0 %}
+                    <h4 class="h4 mb-3">Top Picks</h4>
                     <div class="card shadow mb-3">
                         <div class = "row">
                             <div class="col -0">
@@ -60,34 +84,63 @@
                             </div>
                         </div>
                     </div>
-                    {% endif %}
-                    {% for score in scores %}
-                    <div class="row align-items-center">
-                        <div class="col-1" style="text-align: center;">
-                            <p>{{loop.index}}</p>
-                        </div>
-                        <div class="col-3">
-                            <p class="mb-1">{% if score[0].pokemon.name != score[0].nickname%} {{score[0].pokemon.name}} - {{score[0].nickname}} {% else %} {{score[0].pokemon.name}} {% endif %}</p>
-                            <a class="btn disabled btn-sm {{score[0].pokemon.type1.type_name}}" style="opacity: 1">{{score[0].pokemon.type1.type_name.title()}}</a>
-                            {% if score[0].pokemon.type2 %}
-                            <a class="btn disabled btn-sm {{score[0].pokemon.type2.type_name}}" style="opacity: 1">{{score[0].pokemon.type2.type_name.title()}}</a>
-                            {% endif %}
-                            <!-- Should this be name or nickname -->
-                        </div>
-                        <div class="col-3"> 
-                            <a href="{{ url_for('index.pokemon', id=score[0].uuid) }}">
-                            <img src="{{score[0].pokemon.pic}}" alt="{{score[0].pokemon.name}}" class="rounded-top w-75">
-                            </a>
-                        </div>
-                        <div class="col-1">
-                            <p>{{score[1]}}</p>
-                        </div>
-                        <div class="col-4">
-                            <p>{{score[2].replace('(', '<b>').replace(')', '</b>')|safe}}</p>
-                        </div>
+                    {% else %}
+
+                    <!-- Tab links -->
+                    <div class="tab">
+                        <button class="tablinks" onclick="openTab(event, 'ranking')" id="defaultOpen">Top Picks</button>
+                        <button class="tablinks" onclick="openTab(event, 'team')">Recommended Team</button>
+                        <button class="tablinks" onclick="openTab(event, 'matchups')">Matchups</button>
                     </div>
-                    {% endfor %}
+
+                    <!-- Tab content -->
+                    <div id="ranking" class="tabcontent">
+                        {% for score in scores %}
+                        <div class="row align-items-center">
+                            <div class="col-1" style="text-align: center;">
+                                <p>{{loop.index}}</p>
+                            </div>
+                            <div class="col-3">
+                                <p class="mb-1">{% if score[0].pokemon.name != score[0].nickname%} {{score[0].pokemon.name}} - {{score[0].nickname}} {% else %} {{score[0].pokemon.name}} {% endif %}</p>
+                                <a class="btn disabled btn-sm {{score[0].pokemon.type1.type_name}}" style="opacity: 1">{{score[0].pokemon.type1.type_name.title()}}</a>
+                                {% if score[0].pokemon.type2 %}
+                                <a class="btn disabled btn-sm {{score[0].pokemon.type2.type_name}}" style="opacity: 1">{{score[0].pokemon.type2.type_name.title()}}</a>
+                                {% endif %}
+                                <!-- Should this be name or nickname -->
+                            </div>
+                            <div class="col-3"> 
+                                <a href="{{ url_for('index.pokemon', id=score[0].uuid) }}">
+                                <img src="{{score[0].pokemon.pic}}" alt="{{score[0].pokemon.name}}" class="rounded-top w-75">
+                                </a>
+                            </div>
+                            <div class="col-1">
+                                <p>{{score[1]}}</p>
+                            </div>
+                            <div class="col-4">
+                                <p>{{score[2].replace('(', '<b>').replace(')', '</b>')|safe}}</p>
+                            </div>
+                        </div>
+
+                        
+                        {% endfor %}
+                    </div>
+
+                    <div id="team" class="tabcontent">
+                        Best Team
+                    </div>
+                    <div id="matchups" class="tabcontent">
+                        Matchups
+                    </div>
+
+                    {% endif %}
                 </div>
+
+                
+                <script>
+                    // Get the element with id="defaultOpen" and click on it
+                    document.getElementById("defaultOpen").click();
+                </script>
+
             </div>
         </div>
     </div>
