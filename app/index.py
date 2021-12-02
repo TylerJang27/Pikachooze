@@ -93,7 +93,8 @@ def leaders():
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
-    trainers = session.query(Trainer).filter(Trainer.game_id == current_user.trainers[0].game_id, Trainer.is_user == False).all()
+    user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
+    trainers = session.query(Trainer).filter(Trainer.game_id == user.trainers[0].game_id, Trainer.is_user == False).all()
     trainer_types = []
     for t in trainers:
         pokemon = [p.pokemon for p in t.trainer_pokemon]
