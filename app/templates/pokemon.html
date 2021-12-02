@@ -43,27 +43,9 @@
                                 <a class="btn btn-warning" style="opacity: 1" href="{{ url_for('index.pokemonedit', id=pokemon.uuid) }}">Edit</a>
                             </div>
                             <div class="ml-4">
-                                <input type="submit" value="Delete" onclick="clicked(event)" />
+                                <input class="btn btn-danger" type="submit" value="Delete" onclick="clicked(event)" />
                             </div>
-                            {% if evolution|length > 0 %}
-                            <div class="ml-4">
-                                {% if evolution|length > 1 %}
-                                <select id = "evolve_dropdown">
-                                    <option value="" disabled selected>Evolve!</option>
-                                    {% for e in evolution %}
-                                        <option value = "{{ e.poke_id }}">{{ e.name }}</option>
-                                    {% endfor %}
-                                </select>
-                                {% else %}
-                                <a class="btn btn-warning" style="opacity: 1" href="{{ url_for('index.evolve', id=pokemon.uuid, to_id=evolution[0].poke_id) }}">Evolve!</a>
-                                {% endif %}
-                            </div>
-                            {% endif %}
-                            {% if devolution|length > 0 %}
-                            <div class="ml-4">
-                                <a class="btn btn-warning" style="opacity: 1" href="{{ url_for('index.devolve', id=pokemon.uuid, to_id=devolution[0].poke_id) }}">Devolve!</a>
-                            </div>
-                            {% endif %}
+                            
                             {% endif %}
                             <script>
                                 $('#evolve_dropdown').on('change', function(){
@@ -80,11 +62,11 @@
         <!-- Section -->
     <section class="section section-md">
         <div class="container mb-5">
-            <div class="row align-items-center justify-content-around">
-                <div class="col-md-6 col-xl-4 text-center text-md-left text-black">
+            <div class="row justify-content-around">
+                <div class="col-md-6 col-xl-4 text-center text-md-left text-black pr-5" style="margin-top: auto; margin-bottom: auto;">
                     <img class="img-fluid" src="{{ pokemon.pokemon.pic }}" alt="Pikachu Image">
                 </div>
-                <div class="col-md-6 col-xl-4 mb-5" id="leftBox" style="text-align: left">
+                <div class="col-md-6 col-xl-4 mb-5 mt-4" id="leftBox" style="text-align: left">
                     <span class="h4 card-title mb-0">Name: </span> <span class="h5 card-title mb-0">{{ pokemon.pokemon.name }}</span> <br><br>
                     <span class="h4 card-title mb-0">Nickname: </span> <span class="h5 card-title mb-0" id="mynamespan">{{ pokemon.nickname }}</span> <br><br>
                     <span class="h4 card-title mb-0">Gender: </span> <span class="h5 card-title mb-0">{{ pokemon.gender.name.title() }}</span> <br><br>
@@ -96,7 +78,7 @@
                     {% endif %} <br><br>
                     <span class="h4 card-title mb-0">Stats: </span><br><br>
                     <canvas id="myCanvas"></canvas>
-                    <ul style="visibility: hidden;">
+                    <ul style="display: none">
                         <span class="h5 card-title mb-0">HP: </span> <span class="h6 card-title mb-0" id="hp_stat">{{ stats["hp"] }}</span> <br>
                         <span class="h5 card-title mb-0">Attack: </span> <span class="h6 card-title mb-0" id="attack_stat">{{ stats["attack"] }}</span> <br>
                         <span class="h5 card-title mb-0">Defense: </span> <span class="h6 card-title mb-0" id="defense_stat">{{ stats["defense"] }}</span> <br>
@@ -104,8 +86,29 @@
                         <span class="h5 card-title mb-0">Sp. Def: </span> <span class="h6 card-title mb-0" id="sp_defense_stat">{{ stats["sp_defense"] }}</span> <br>
                         <span class="h5 card-title mb-0">Speed: </span> <span class="h6 card-title mb-0" id="speed_stat">{{ stats["speed"] }}</span> <br>
                     </ul>
+                    <div class="row align-items-center justify-content-around mt-5">
+                        {% if evolution|length > 0 %}
+                        <div>
+                            {% if evolution|length > 1 %}
+                            <select id = "evolve_dropdown">
+                                <option value="" disabled selected>Evolve!</option>
+                                {% for e in evolution %}
+                                    <option value = "{{ e.poke_id }}">{{ e.name }}</option>
+                                {% endfor %}
+                            </select>
+                            {% else %}
+                            <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.evolve', id=pokemon.uuid, to_id=evolution[0].poke_id) }}">Evolve Pokemon</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% if devolution|length > 0 %}
+                        <div class="ml-4">
+                            <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.devolve', id=pokemon.uuid, to_id=devolution[0].poke_id) }}">Devolve Pokemon</a>
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
+                <div class="col-md-6 col-xl-4 mb-5 mt-4" style="text-align: left">
                     <span class="h4 card-title mb-0">Moves: </span> <br><br>
                     {% for move in moves%}
                     <div class="card shadow mb-3">
@@ -122,7 +125,6 @@
                         </div>
                     </div>
                     {% endfor %}
-
                 </div>
             </div>
         </div>

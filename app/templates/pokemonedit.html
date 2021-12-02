@@ -26,13 +26,13 @@
     <section class="section section-md">
         <form action="" method="post">
         <div class="container mb-5">
-            <div class="row align-items-center justify-content-around">
+            <div class="row justify-content-around">
                     {{ form.hidden_tag() }}
-                    <div class="col-md-6 col-xl-4 text-center text-md-left text-black">
+                    <div class="col-md-6 col-xl-4 text-center text-md-left text-black pr-5" style="margin-top: auto; margin-bottom: auto;">
                         <img class="img-fluid" src="{{ pokemon.pokemon.pic }}" alt="Pikachu Image">
                     </div>
                 
-                    <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
+                    <div class="col-md-6 col-xl-4 mb-5 mt-4" style="text-align: left">
                         <span class="h4 card-title mb-0">Name: </span> <span class="h5 card-title mb-0">{{ pokemon.pokemon.name }}</span> <br><br>
                         
                         <span class="h4 card-title mb-0">{{ form.nickname.label }} </span> 
@@ -147,7 +147,7 @@
                         </div>
                         </ul>
                     </div>
-                    <div class="col-md-6 col-xl-4 mb-5" style="text-align: left">
+                    <div class="col-md-6 col-xl-4 mb-5 mt-4" style="text-align: left">
 
                         <script>
                             /* When the user clicks on the button,
