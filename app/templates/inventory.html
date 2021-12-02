@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% include 'navbar.html' %}
-
 {% block content %}
 
     <main>
@@ -36,6 +34,7 @@
                     <div class="col-12 text-left mb-3 mt-4">
                         <div class="row"><h2>Pikachooze</h2></div>
                         <div class="row" style="align-items: center;">
+                            {% if pokemon_choices|length > 0 %}
                             <h1>Inventory</h1>
                             <div class="dropdown ml-4">
                                 <button onclick="toggleDropdown()" class="btn dropbtn">Add</button>
@@ -46,6 +45,9 @@
                                 {% endfor %}
                                 </div>
                             </div>
+                            {% else %}
+                            <h1>{{ trainer.name }}'s Inventory</h1>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

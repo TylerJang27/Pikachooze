@@ -3,7 +3,7 @@ from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 from app.config import Config
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -44,8 +44,8 @@ def login():
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField(_l('Username'), validators=[DataRequired()])
-    email = StringField(_l('Email'), validators=[DataRequired(), Email()])
+    username = StringField(_l('Username'), validators=[DataRequired(), Length(max=20, message="Maximum length of 20 characters")])
+    email = StringField(_l('Email'), validators=[DataRequired(), Email(), Length(max=50, message="Maximum length of 50 characters")])
     password = PasswordField(_l('Password'), validators=[DataRequired()])
     password2 = PasswordField(
         _l('Repeat Password'), validators=[DataRequired(),
