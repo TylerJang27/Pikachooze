@@ -128,6 +128,7 @@
         </div>
         <script>
             var growth = 0;
+            var delays = [1.0, 0.8, 0.6, 0.4, 0.2, 0.0];
 
             function getAlong(startX, startY, endX, endY, perc) {
                 let newX = startX + (endX - startX) * perc;
@@ -139,6 +140,13 @@
                 var canvas = document.getElementById("myCanvas");
                 let w = canvas.width;
                 let h = canvas.height;
+                if (growth < 1.0) {
+                    growth += (0.12) * (1.0-growth);
+                }
+                for (let i = 0; i < delays.length; i ++) {
+                    if (delays[i] < 1.0)
+                    delays[i] += (0.10) * (1.0-delays[i]);
+                }
                 if (growth < 1.0) {
                     growth += (0.12) * (1.0-growth);
                 }
@@ -210,18 +218,18 @@
                 let capStat = Math.max(hpVal, spAttackVal, spDefenseVal, speedVal, attackVal, defenseVal) * 1.25 / growth;
                 ctx.strokeStyle = "rgba(100, 50, 225, 1.0)";
                 ctx.fillStyle = "rgba(75, 25, 200, 0.5)";
-                let hpPoint = getAlong(m, my, m, t, hpVal/capStat);
+                let hpPoint = getAlong(m, my, m, t, hpVal/capStat*delays[0]);
                 ctx.beginPath();
                 ctx.moveTo(hpPoint[0], hpPoint[1]);
-                let spAttackPoint = getAlong(m, my, r, mt, spAttackVal/capStat);
+                let spAttackPoint = getAlong(m, my, r, mt, spAttackVal/capStat*delays[1]);
                 ctx.lineTo(spAttackPoint[0], spAttackPoint[1]);
-                let spDefensePoint = getAlong(m, my, r, mb, spDefenseVal/capStat);
+                let spDefensePoint = getAlong(m, my, r, mb, spDefenseVal/capStat*delays[2]);
                 ctx.lineTo(spDefensePoint[0], spDefensePoint[1]);
-                let speedPoint = getAlong(m, my, m, b, speedVal/capStat);
+                let speedPoint = getAlong(m, my, m, b, speedVal/capStat*delays[3]);
                 ctx.lineTo(speedPoint[0], speedPoint[1]);
-                let defensePoint = getAlong(m, my, l, mb, defenseVal/capStat);
+                let defensePoint = getAlong(m, my, l, mb, defenseVal/capStat*delays[4]);
                 ctx.lineTo(defensePoint[0], defensePoint[1]);
-                let attackPoint = getAlong(m, my, l, mt, attackVal/capStat);
+                let attackPoint = getAlong(m, my, l, mt, attackVal/capStat*delays[5]);
                 ctx.lineTo(attackPoint[0], attackPoint[1]);
                 ctx.lineTo(hpPoint[0], hpPoint[1]);
                 ctx.stroke();
