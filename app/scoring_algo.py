@@ -1,6 +1,8 @@
 import json
 import pandas
 import math
+from time import time
+from pulp import LpMaximize, LpProblem, LpStatus, lpSum, LpVariable
 
 pokemon_types = {"normal":0, "fire":1, "water":2, "electric":3, "grass":4, "ice":5,
                  "fighting":6, "poison":7, "ground":8, "flying":9, "psychic":10,
@@ -34,14 +36,81 @@ damage_array =  [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1/2, 0, 1, 1, 1/2, 1],
 def score_teams(my_pkmn, opp_pkmn):
   score_list=[]
   for pk_1 in my_pkmn:
-    score_list.append((pk_1, score(pk_1, opp_pkmn))) # (pikachu, (37, "Thunderbolt is great!"))
+    score_res = score(pk_1, opp_pkmn) # (37, "Thunderbolt is great!", [outgoing], [incoming])
+    score_list.append((pk_1, score_res[0:2])) # (pikachu, (37, "Thunderbolt is great!"))
   print(sorted(score_list, key=lambda tup: tup[1][0]))
   return sorted(score_list, key=lambda tup: tup[1][0]) #could break ties through speed
 
 #returns a list of (trainer_pokemon object, (score, text)) tuples sorted by score (highest comes first)
 #fulfils a team with LP status
 def score_team_6(my_pkmn, opp_pkmn):
-  return
+  score_list=[]
+  outgoings = []
+  incomings = []
+  move_texts = []
+  for pk_1 in my_pkmn:
+    score_res = score(pk_1, opp_pkmn) # (37, "Thunderbolt is great!", [outgoing], [incoming])
+    score_list.append((pk_1, score_res[0], score_res[1])) # (pikachu, (37, "Thunderbolt is great!"))
+    move_texts.append(score_res[1])
+    outgoings.append(score_res[2])
+    incomings.append(score_res[3])
+
+  ranking_ret = sorted(score_list, key=lambda tup: -1 * tup[1]) # first tab info
+  lp_ret = lp_solver(my_pkmn, opp_pkmn, outgoings, incomings, move_texts)
+  matchups = [(a_i[0] - b_i[0]) 
+                for a_i, b_i in zip(outgoings, incomings)]
+  
+  return ranking_ret, lp_ret, matchups
+
+#returns an optimal team based on LP solution
+def lp_solver(my_pkmn, opp_pkmn, outgoings, incomings, move_texts):
+  # borrows pattern from https://realpython.com/linear-programming-python/#installing-scipy-and-pulp
+  # Create the model
+  model = LpProblem(name="optimize-team", sense=LpMaximize)
+
+  # Initialize the decision variables
+  # x_s = [LpVariable(name="x"+k, lowBound=0, upBound=1, cat="Integer") for k in range(len(my_pkmn))]
+  x_vars = LpVariable.dicts('x', range(0,len(my_pkmn)), lowBound=0, upBound=1, cat="Integer")
+  print(x_vars)
+  x_s = [x_vars[x] for x in x_vars]
+  print(x_s)
+  # get individual x using x_vars[k].varValue
+  
+  model += (lpSum(x_s) <= 6, "max_team_constraint")
+  model += (lpSum(x_s) >= 1, "min_team_constraint")
+  
+  # Your value against an opposing pokemon is only determined by your top n (3) pokemon
+  # Weight more heavily towards the top 3, but still account for the remaining 
+
+  # Alternatively, take the best of best
+
+  # Add the objective function to the model
+  obj_function = (
+    [
+      [x_s[j] * (outgoings[j][k][0] - incomings[j][k][0]) for k in range(len(opp_pkmn))]
+      for j in range(len(my_pkmn))
+    ])
+  obj_function = lpSum(sum(obj_function, []))
+  # lpSum
+
+  model += obj_function
+
+
+  # Solve the problem
+  status = model.solve()
+  while status != 1:
+    status = model.solve()
+    time.sleep(0.1)
+  
+  obj_value = model.objective.value()
+  chosen_x_s = [var.value() for var in model.variables()] # var.name for name
+  print("chosen_x_s", chosen_x_s)
+
+  active_indexes = sum([[k] if chosen_x_s[k] == 1.0 else [] for k in range(len(chosen_x_s))], [])
+  my_chosen_pkmn = [(my_pkmn[k], move_texts[k]) for k in active_indexes]
+  print("my choices: ", my_chosen_pkmn)
+  return my_chosen_pkmn
+
 
 #returns a score for a single pokemon against a team of pokemon
 def score(one_pkmn, team_pkmn):
@@ -118,7 +187,7 @@ def score(one_pkmn, team_pkmn):
   #print(sum(difference)/len(difference))
   difference_nums = [k[0] for k in difference]
 
-  return math.floor(sum(difference_nums)/len(difference_nums)), move_text
+  return math.floor(sum(difference_nums)/len(difference_nums)), move_text, outgoing, incoming
 
 #calculate the max damage as percent of pokemon health out_pkmn and in_pkmn
 def max_damage_adjusted(out_pkmn, in_pkmn, is_attacker):

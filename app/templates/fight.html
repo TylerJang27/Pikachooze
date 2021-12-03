@@ -126,7 +126,34 @@
                     </div>
 
                     <div id="team" class="tabcontent">
-                        Best Team
+                        {% for pkmn_score in top_team %}
+                        <div class="row align-items-center">
+                            <div class="col-1" style="text-align: center;">
+                                <p>{{loop.index}}</p>
+                            </div>
+                            <div class="col-3">
+                                <p class="mb-1">{% if pkmn_score[0].pokemon.name != pkmn_score[0].nickname%} {{pkmn_score[0].pokemon.name}} - {{pkmn_score[0].nickname}} {% else %} {{pkmn_score[0].pokemon.name}} {% endif %}</p>
+                                <a class="btn disabled btn-sm {{pkmn_score[0].pokemon.type1.type_name}}" style="opacity: 1">{{pkmn_score[0].pokemon.type1.type_name.title()}}</a>
+                                {% if pkmn_score[0].pokemon.type2 %}
+                                <a class="btn disabled btn-sm {{pkmn_score[0].pokemon.type2.type_name}}" style="opacity: 1">{{pkmn_score[0].pokemon.type2.type_name.title()}}</a>
+                                {% endif %}
+                                <!-- Should this be name or nickname -->
+                            </div>
+                            <div class="col-3"> 
+                                <a href="{{ url_for('index.pokemon', id=pkmn_score[0].uuid) }}">
+                                <img src="{{pkmn_score[0].pokemon.pic}}" alt="{{pkmn_score[0].pokemon.name}}" class="rounded-top w-75">
+                                </a>
+                            </div>
+                            <div class="col-1">
+                                <p></p>
+                            </div>
+                            <div class="col-4">
+                                <p>{{pkmn_score[1].replace('(', '<b>').replace(')', '</b>')|safe}}</p>
+                            </div>
+                        </div>
+
+                        
+                        {% endfor %}
                     </div>
                     <div id="matchups" class="tabcontent">
                         Matchups

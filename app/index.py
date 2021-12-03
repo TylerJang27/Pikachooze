@@ -14,7 +14,7 @@ from app.models.can_learn import CanLearn
 from app.models.user import User
 from app.models.pokemon import Pokemon
 
-from app.scoring_algo import score_teams
+from app.scoring_algo import score_teams, score_team_6
 from app.config import Config
 import uuid
 import math
@@ -68,9 +68,10 @@ def fight(trainer):
         return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     user_trainer = user.trainers[0]
 
-    score_results = [(k[0], k[1][0], k[1][1]) for k in score_teams(user_trainer.trainer_pokemon, trainer.trainer_pokemon)[::-1]]
-
-    return render_template('fight.html', trainer=trainer, scores=score_results)
+    # score_results = [(k[0], k[1][0], k[1][1]) for k in score_teams(user_trainer.trainer_pokemon, trainer.trainer_pokemon)[::-1]]
+    score_results, top_team, matchups = score_team_6(user_trainer.trainer_pokemon, trainer.trainer_pokemon)
+    
+    return render_template('fight.html', trainer=trainer, scores=score_results, top_team=top_team, matchups=matchups)
 
 @bp.route('/inventory')
 def inventory():
