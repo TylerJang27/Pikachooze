@@ -33,7 +33,7 @@
                             <h1>{{ pokemon.pokemon.name }}</h1>
                             <div class="ml-4">
                                 {% if not pokemon.trainer.is_user %}
-                                <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.leader_inventory', trainer=pokemon.trainer.name.replace(' ', '%20')) }}">Back to Inventory</a>
+                                <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.leader_inventory', trainer=pokemon.trainer.name.replace(' ', '%20')) }}">Back to {{ pokemon.trainer.name }}'s Inventory</a>
                                 {% else %}
                                 <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.inventory', id=pokemon.uuid) }}">Back to Inventory</a>
                                 {% endif %}
@@ -86,6 +86,7 @@
                         <span class="h5 card-title mb-0">Sp. Def: </span> <span class="h6 card-title mb-0" id="sp_defense_stat">{{ stats["sp_defense"] }}</span> <br>
                         <span class="h5 card-title mb-0">Speed: </span> <span class="h6 card-title mb-0" id="speed_stat">{{ stats["speed"] }}</span> <br>
                     </ul>
+                    {% if pokemon.trainer.is_user %}
                     <div class="row align-items-center justify-content-around mt-5">
                         {% if evolution|length > 0 %}
                         <div>
@@ -107,6 +108,7 @@
                         </div>
                         {% endif %}
                     </div>
+                    {% endif %}
                 </div>
                 <div class="col-md-6 col-xl-4 mb-5 mt-4" style="text-align: left">
                     <span class="h4 card-title mb-0">Moves: </span> <br><br>

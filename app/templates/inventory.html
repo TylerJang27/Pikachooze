@@ -48,6 +48,9 @@
                             {% else %}
                             <h1>{{ trainer.name }}'s Inventory</h1>
                             {% endif %}
+                            {% if not trainer.is_user %}
+                            <a class="btn btn-light ml-4" style="opacity: 1" href="{{ url_for('index.leaders') }}">Back to Gym Leaders</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -71,7 +74,7 @@
                         {% for pokemon in trainer.trainer_pokemon %}
                         <div class="card shadow col-3">
                             <a href="{{ url_for('index.pokemon', id=pokemon.uuid) }}">
-                                <img src="{{pokemon.pokemon.pic}}" alt="Togepi" class="card-img-top rounded-top">
+                                <img src="{{pokemon.pokemon.pic}}" alt="Togepi" class="card-img-top rounded-top p-4">
                             </a>
                             <div class="card-body">
                                 <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
