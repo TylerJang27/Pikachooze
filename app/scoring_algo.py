@@ -3,8 +3,6 @@ import pandas
 import math
 import numpy as np
 from time import time
-from pulp import LpMaximize, LpProblem, LpStatus, lpSum, LpVariable, lpDot
-from pulp.constants import LpMinimize
 
 pokemon_types = {"normal":0, "fire":1, "water":2, "electric":3, "grass":4, "ice":5,
                  "fighting":6, "poison":7, "ground":8, "flying":9, "psychic":10,
@@ -43,11 +41,8 @@ def score_teams(my_pkmn, opp_pkmn):
   print(sorted(score_list, key=lambda tup: tup[1][0]))
   return sorted(score_list, key=lambda tup: tup[1][0]) #could break ties through speed
 
-def mylog(x):
-  x - 1 - 1/2*lpDot((x-1),(x-1)) # +1/3*(x-1)*(x-1)*(x-1)
-
 #returns a list of (trainer_pokemon object, (score, text)) tuples sorted by score (highest comes first)
-#fulfils a team with LP status
+#fulfils a team with all tabs
 def score_team_6(my_pkmn, opp_pkmn):
   score_list=[]
   outgoings = []
@@ -60,15 +55,15 @@ def score_team_6(my_pkmn, opp_pkmn):
     move_texts.append(score_res[1])
     outgoings.append(score_res[2])
     incomings.append(score_res[3])
-    matchups.append(score_res[4][0])
+    matchup_nums = [k[0] for k in score_res[4]]
+    matchups.append((pk_1, matchup_nums))
 
   ranking_ret = sorted(score_list, key=lambda tup: -1 * tup[1]) # first tab info
-  # lp_ret = lp_solver(my_pkmn, opp_pkmn, outgoings, incomings, move_texts) # [(pikachu, "Thunderbolt is great!"),]
+  print("Matchups: ", matchups)
+  matchups_ret = sorted(matchups, key=lambda tup: -1 * sum(tup[1])/len(tup[1]))
   team_ret = greedy_solver(my_pkmn, opp_pkmn, outgoings, incomings, move_texts)
-  # matchups = [(a_i[0] - b_i[0]) 
-  #               for a_i, b_i in zip(outgoings, incomings)]
   
-  return ranking_ret, team_ret, matchups
+  return ranking_ret, team_ret, (opp_pkmn, matchups_ret)
 
 # returns positive if pkmn_ind_1 is a better choice to include than pkmn_ind_2 at this iteration
 def comp_pkmn(rem_pkmn, pkmn_ind_1, pkmn_ind_2, opp_pkmn, op_coverage, turns_to_win):
@@ -77,12 +72,12 @@ def comp_pkmn(rem_pkmn, pkmn_ind_1, pkmn_ind_2, opp_pkmn, op_coverage, turns_to_
     pkmn_1_advs = sum([1 for k in remaining_matchups if turns_to_win[pkmn_ind_1][k] > 0])
     pkmn_2_advs = sum([1 for k in remaining_matchups if turns_to_win[pkmn_ind_2][k] > 0])
     advs_diff = pkmn_1_advs - pkmn_2_advs
-    print("\t\tadv diff of ", advs_diff)
+    # print("\t\tadv diff of ", advs_diff)
     if advs_diff != 0:
       return advs_diff
   total_vals_diff = sum([turns_to_win[pkmn_ind_1][k] for k in range(len(opp_pkmn))]) - sum([turns_to_win[pkmn_ind_2][k] for k in range(len(opp_pkmn))])
   if total_vals_diff != 0:
-    print("\t\ttotal vals diff of ", total_vals_diff)
+    # print("\t\ttotal vals diff of ", total_vals_diff)
     return total_vals_diff
   levels_diff = rem_pkmn[pkmn_ind_1].level - rem_pkmn[pkmn_ind_2].level
   if levels_diff != 0:
@@ -96,13 +91,13 @@ def get_greedy_to_remove(rem_pkmn, opp_pkmn, op_coverage, turns_to_win):
   for k in rem_pkmn:
     if k == curr_ind_best:
       continue
-    print("\tcomparing ", rem_pkmn[k].nickname, " to the current leader ", rem_pkmn[curr_ind_best].nickname)
+    # print("\tcomparing ", rem_pkmn[k].nickname, " to the current leader ", rem_pkmn[curr_ind_best].nickname)
     if comp_pkmn(rem_pkmn, k, curr_ind_best, opp_pkmn, op_coverage, turns_to_win) > 0:
-      print("choosing ", rem_pkmn[k].nickname, " is better than choosing ", rem_pkmn[curr_ind_best].nickname)
+      # print("choosing ", rem_pkmn[k].nickname, " is better than choosing ", rem_pkmn[curr_ind_best].nickname)
       curr_ind_best = k
   return curr_ind_best
 
-#returns an optimal team based on LP solution
+#returns an optimal team based on greedy solution
 def greedy_solver(my_pkmn, opp_pkmn, outgoings, incomings, move_texts):
   num_mine = len(my_pkmn)
   num_opp = len(opp_pkmn)
@@ -112,7 +107,7 @@ def greedy_solver(my_pkmn, opp_pkmn, outgoings, incomings, move_texts):
       [(100 / incomings[j][k][0]) - (100 / outgoings[j][k][0]) if outgoings[j][k][0] != 0 and incomings[j][k][0] != 0 else (100-100/outgoings[j][k][0] if outgoings[j][k][0] > 0 else -100+100/incomings[j][k][0] if incomings[j][k][0] > 0 else -100) for k in range(len(opp_pkmn))]
       for j in range(len(my_pkmn))
     ] # positive means I win first
-  print(turns_to_win)
+  # print(turns_to_win)
 
   rem_pkmn = {k: my_pkmn[k] for k in range(num_mine)} # 0: pikachu
   chosen_pkmn = []
@@ -120,7 +115,7 @@ def greedy_solver(my_pkmn, opp_pkmn, outgoings, incomings, move_texts):
   while len(rem_pkmn) > 0 and len(chosen_pkmn) < 6: # choose up to 6 times
     curr_key_best_choice = get_greedy_to_remove(rem_pkmn, opp_pkmn, op_coverage, turns_to_win)
     curr_opt = rem_pkmn.pop(curr_key_best_choice)
-    print("for round ", len(chosen_pkmn), curr_opt.nickname, " was chosen.")
+    # print("for round ", len(chosen_pkmn), curr_opt.nickname, " was chosen.")
 
     chosen_pkmn.append((curr_opt, move_texts[curr_key_best_choice]))
     for k in range(num_opp):
@@ -128,99 +123,6 @@ def greedy_solver(my_pkmn, opp_pkmn, outgoings, incomings, move_texts):
         op_coverage[k] += 1 # change to a number than 1 to signify amount of lead or add another dictionary
   
   return chosen_pkmn
-
-
-#returns an optimal team based on LP solution
-def lp_solver(my_pkmn, opp_pkmn, outgoings, incomings, move_texts):
-  # borrows pattern from https://realpython.com/linear-programming-python/#installing-scipy-and-pulp
-  # Create the model
-  model = LpProblem(name="optimize-team", sense=LpMaximize)
-
-  # Initialize the decision variables
-  # x_s = [LpVariable(name="x"+k, lowBound=0, upBound=1, cat="Integer") for k in range(len(my_pkmn))]
-  x_vars = LpVariable.dicts('x', range(0,len(my_pkmn)), lowBound=0, upBound=1, cat="Integer")
-  print(x_vars)
-  x_s = [x_vars[x] for x in x_vars]
-  print(x_s)
-  # get individual x using x_vars[k].varValue
-  
-  model += (lpSum([x_s]) <= 6, "max_team_constraint")
-  model += (lpSum([x_s]) >= 1, "min_team_constraint")
-  
-  # Your value against an opposing pokemon is only determined by your top n (3) pokemon
-  # Weight more heavily towards the top 3, but still account for the remaining 
-
-  # Alternatively, take the best of best
-
-  # Add the objective function to the model
-  turns_to_die = [
-      [100 / incomings[j][k][0] - 100 / outgoings[j][k][0] if outgoings[j][k][0] != 0 and incomings[j][k][0] != 0 else 1000 for k in range(len(opp_pkmn))]
-      for j in range(len(my_pkmn))
-    ] # negative means I win first
-  
-  # my_advantage = [
-  #     [-1 * np.exp(turns_to_die[j][k]) + 1 for k in range(len(opp_pkmn))]
-  #     for j in range(len(my_pkmn))
-  #   ]
-  my_advantage = [
-      [1 if turns_to_die[j][k] < 0 else 0.01 for k in range(len(opp_pkmn))]
-      for j in range(len(my_pkmn))
-    ]
-  # my_advantage = [
-  #     [-1/turns_to_die[j][k] if turns_to_die[j][k] < 0 else turns_to_die[j][k]**2 for k in range(len(opp_pkmn))]
-  #     for j in range(len(my_pkmn))
-  #   ]
-
-  print("my advantage: ", my_advantage)
-  # obj_function = [(np.log(0.1 + 65*sum([x_s[j] * my_advantage[j][k] for j in range(len(my_pkmn))]))) for k in range(len(opp_pkmn))]
-  # obj_function = [min([x_s[j] * my_advantage[j][k] for j in range(len(my_pkmn))]) for k in range(len(opp_pkmn))]
-
-  # we could kinda use an indicator, with a shape kinda like e^-x (log?) where having two of a level up (k) is better than having 5 of a level below (j)
-  # obj_function = [mylog(lpSum([x_s[j] * my_advantage[j][k] for j in range(len(my_pkmn))])) for k in range(len(opp_pkmn))]
-
-  obj_function = [sum([x_s[j] * my_advantage[j][k] for j in range(len(my_pkmn))]) for k in range(len(opp_pkmn))]
-  # iterate over each available pokemon, evaluate by some fitness function given existing team and enemy team, repeat, win
-
-  # obj_function = [(sum([x_s[j] * turns_to_die[j][k] for j in range(len(my_pkmn))])) for k in range(len(opp_pkmn))]
-
-  # obj_function = [
-  #     [np.exp(turns_to_die) for k in range(len(opp_pkmn))]
-  #     for j in range(len(my_pkmn))
-  #   ]
-  # obj_function = [
-  #     [x_s[j] * (outgoings[j][k][0] - incomings[j][k][0]) for k in range(len(opp_pkmn))]
-  #     for j in range(len(my_pkmn))
-  #   ]
-  obj_function = lpSum(sum(obj_function, []))
-  # lpSum
-  # model += obj_function
-  model += x_s[0] * x_s[1]
-  # for k in obj_function:
-  #   model += k
-
-  # for each of enemy's pokemon, do count of how mnay of ours have advantage (negative number) over them
-  # count is then plugged into exponential
-  # sum all the values in the exponential
-
-  # Solve the problem
-  try:
-    status = model.solve()
-    while status != 1:
-      status = model.solve()
-      time.sleep(0.1)
-  except e:
-    print(e)
-  
-  obj_value = model.objective.value()
-  chosen_x_s = [var.value() if var.value() is not None else 0.0 for var in model.variables()] # var.name for name
-  print("chosen_x_s", [k if k is not None else 0.0 for k in chosen_x_s])
-
-  active_indexes = sum([[k] if chosen_x_s[k] == 1.0 else [] for k in range(len(chosen_x_s))], [])
-  print("active indexes:", active_indexes)
-  my_chosen_pkmn = [(my_pkmn[k], move_texts[k]) for k in active_indexes]
-  print("my choices: ", my_chosen_pkmn)
-  return my_chosen_pkmn
-
 
 #returns a score for a single pokemon against a team of pokemon
 def score(one_pkmn, team_pkmn):

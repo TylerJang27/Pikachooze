@@ -156,7 +156,39 @@
                         {% endfor %}
                     </div>
                     <div id="matchups" class="tabcontent">
-                        Matchups
+                        <table width="100%" class='align-items-center text-center'>
+                            <tr>
+                                <th width="{{100/(matchups[0]|length + 1)}}%"></th>
+                                {% for opp_pkmn in matchups[0] %}
+                                <th width="{{100/(matchups[0]|length + 1)}}%">
+                                    <a href="{{ url_for('index.pokemon', id=opp_pkmn.uuid) }}">
+                                    <img src="{{opp_pkmn.pokemon.pic}}" alt="{{opp_pkmn.pokemon.name}}" class="card-img-top rounded-top">
+                                    </a>{{opp_pkmn.nickname}}
+                                </th>
+                                {% endfor %}
+                            </tr>
+                            {% for matchup in matchups[1] %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('index.pokemon', id=matchup[0].uuid) }}">
+                                            <img src="{{matchup[0].pokemon.pic}}" alt="{{matchup[0].pokemon.name}}" class="card-img-top rounded-top">
+                                        </a>{{matchup[0].nickname}}
+                                    </td>
+                                    {% for rating in matchup[1] %}
+                                    {% set ratingr = rating|round|int %}
+                                    <td bgcolor="{% if (ratingr > 0) %}
+                                        {{ '#%x' % ((255-0.72*ratingr)|round|int)}}{{'%x' % ((255-0.3*ratingr)|round|int)}}{{'%x' % ((255-0.5*ratingr)|round|int)}}
+                                        {% elif (ratingr < 0) %}
+                                        {{ '#%x' % ((255+0.125*ratingr)|round|int)}}{{ '%x' % ((255+0.655*ratingr)|round|int)}}{{ '%x' % ((255+0.7*ratingr)|round|int) }}
+                                        {% else %}
+                                        white
+                                        {% endif %}">
+                                        {{ratingr}}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </table>
                     </div>
 
                     {% endif %}

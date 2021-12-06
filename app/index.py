@@ -46,7 +46,6 @@ def faq():
 def fight(trainer):
     if not current_user.is_authenticated:
         return redirect("/login", code=302)
-    print("THIS IS MY TRAINER", trainer)
     
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
     Session = sessionmaker(engine, expire_on_commit=False)
@@ -85,7 +84,6 @@ def inventory():
     trainer.trainer_pokemon = sorted(trainer.trainer_pokemon, key=lambda p: -1 * p.level)
     pokemon = session.query(Pokemon).filter(Pokemon.generation_id == user.trainers[0].game.generation_id).all()
     pokemon_choices = [(p.poke_id, p.name) for p in pokemon]
-    print("my tp_ids:", [p.tp_id for p in trainer.trainer_pokemon])
     return render_template('inventory.html', trainer=trainer, pokemon_choices=pokemon_choices)
 
 @bp.route('/leaders')
@@ -117,7 +115,6 @@ def leader_inventory(trainer):
     trainer_name = trainer.replace("%20", " ")
     user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
     trainer = session.query(Trainer).filter(Trainer.name == trainer_name, Trainer.game_id==user.trainers[0].game_id, Trainer.is_user == False).one_or_none()
-    #TODO:ERROR HANDLING IF BAD TRAINER
     if trainer is None:
         return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     return render_template('inventory.html', trainer=trainer, pokemon_choices = [])
