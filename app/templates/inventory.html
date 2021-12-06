@@ -81,9 +81,9 @@
                             {% if not trainer.is_user %}
                             <a class="btn btn-light ml-4" style="opacity: 1" href="{{ url_for('index.leaders') }}">Back to Gym Leaders</a>
                             {% endif %}
-                        </div>
-                        <div class="row">
-                            <input type="text" id="filterBar" onkeyup="filterPokemon()" placeholder="Search inventory...">
+                            <div style="position: absolute; right:0;">
+                                <input type="text" id="filterBar" style="height: 40px" onkeyup="filterPokemon()" placeholder="Search inventory...">
+                            </div>
                         </div>
                     </div>
                 </div>
