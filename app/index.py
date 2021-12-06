@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
 from wtforms.fields.core import IntegerField
 from wtforms.validators import Optional, ValidationError, DataRequired, NumberRange, Length
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, or_, null, and_
 from sqlalchemy.orm import sessionmaker
 from flask_babel import _, lazy_gettext as _l
 
@@ -52,22 +52,26 @@ def fight(trainer):
     if not current_user.is_authenticated:
         return redirect("/login", code=302)
     session = make_session()
-    trainer_name = trainer.replace("%20", " ")
+    # trainer_name = trainer.replace("%20", " ")
     user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
-    
+
     if trainer == 'dummy':
         if user.last_trainer is not None:
             return redirect("/fight/" + user.last_trainer, code=302)
         return redirect("/leaders", code=302)
-    else:
-        user.last_trainer = trainer
-        session.add(user)
-        session.commit()
-    
-    trainer = session.query(Trainer).filter(Trainer.name == trainer_name, Trainer.game_id==user.trainers[0].game_id, Trainer.is_user == False).one_or_none()
+    try:
+        u = uuid.UUID(trainer)
+        trainer = session.query(Trainer).filter(and_(Trainer.uuid == u, Trainer.game_id==user.trainers[0].game_id, Trainer.is_user == False, or_(Trainer.added_by_id == null(), Trainer.added_by_id == user.uid))).one_or_none()
+    except:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     if trainer is None:
         return redirect("/404"), 404, {"Refresh": "1; url=/404"}
-    user_trainer = user.trainers[0]
+    
+    user.last_trainer = u
+    session.add(user)
+    session.commit()
+    
+    user_trainer = [t for t in user.trainers if t.is_user][0]
 
     # score_results = [(k[0], k[1][0], k[1][1]) for k in score_teams(user_trainer.trainer_pokemon, trainer.trainer_pokemon)[::-1]]
     score_results, top_team, matchups = score_team_6(user_trainer.trainer_pokemon, trainer.trainer_pokemon)
@@ -80,10 +84,12 @@ def inventory():
         return redirect("/login", code=302)
     session = make_session()
     user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
-    trainer = session.query(Trainer).filter(Trainer.trainer_id == user.trainers[0].trainer_id).one_or_none()
+    trainer = session.query(Trainer).filter(Trainer.added_by_id == user.uid, Trainer.is_user == True).one_or_none()
     trainer.trainer_pokemon = sorted(trainer.trainer_pokemon, key=lambda p: -1 * p.level)
     pokemon = session.query(Pokemon).filter(Pokemon.generation_id == user.trainers[0].game.generation_id).all()
     pokemon_choices = [(p.poke_id, p.name) for p in pokemon]
+    print(trainer)
+    print(trainer.uuid)
     return render_template('inventory.html', trainer=trainer, pokemon_choices=pokemon_choices)
 
 @bp.route('/leaders')
@@ -92,7 +98,7 @@ def leaders():
         return redirect("/login", code=302)
     session = make_session()
     user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
-    trainers = session.query(Trainer).filter(Trainer.game_id == user.trainers[0].game_id, Trainer.is_user == False).all()
+    trainers = session.query(Trainer).filter(and_(Trainer.game_id==user.trainers[0].game_id, Trainer.is_user == False, or_(Trainer.added_by_id == null(), Trainer.added_by_id == user.uid))).all()
     trainer_types = []
     for t in trainers:
         pokemon = [p.pokemon for p in t.trainer_pokemon]
@@ -101,30 +107,50 @@ def leaders():
         all_types_sorted = sorted(all_type_counts, key=lambda x: -1*x[1])
         trainer_types.append([k[0] for k in all_types_sorted[:2]])
 
-    return render_template('leaders.html', trainers=trainers, trainer_types=trainer_types)
+    return render_template('leaders.html', trainers=trainers, trainer_types=trainer_types, num_user_trainers = len(user.trainers))
 
 @bp.route('/leader_inventory/<trainer>')
 def leader_inventory(trainer):
     if not current_user.is_authenticated:
         return redirect("/login", code=302)
     session = make_session()
-    trainer_name = trainer.replace("%20", " ")
+    # trainer_name = trainer.replace("%20", " ")
     user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
-    trainer = session.query(Trainer).filter(Trainer.name == trainer_name, Trainer.game_id==user.trainers[0].game_id, Trainer.is_user == False).one_or_none()
+    try:
+        u = uuid.UUID(trainer)
+        trainer = session.query(Trainer).filter(and_(Trainer.uuid == u, Trainer.game_id==user.trainers[0].game_id, Trainer.is_user == False, or_(Trainer.added_by_id == null(), Trainer.added_by_id == user.uid))).one_or_none()
+    except:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
     if trainer is None:
         return redirect("/404"), 404, {"Refresh": "1; url=/404"}
-    return render_template('inventory.html', trainer=trainer, pokemon_choices = [])
+    pokemon_choices = []
+    if trainer.added_by_id == user.uid:
+        pokemon = session.query(Pokemon).filter(Pokemon.generation_id == user.trainers[0].game.generation_id).all()
+        pokemon_choices = [(p.poke_id, p.name) for p in pokemon]
+    return render_template('inventory.html', trainer=trainer, pokemon_choices = pokemon_choices)
 
-@bp.route('/add/<int:id>')
-def add(id):
+@bp.route('/add/<int:id>/<trainer>')
+def add(id, trainer):
     if not current_user.is_authenticated:
         return redirect("/login", code=302)
     session = make_session()
     user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
-    if len(user.trainers[0].trainer_pokemon) >= 20:
-        return redirect("/inventory", code=302)
+    try:
+        u = uuid.UUID(trainer)
+        trainer = session.query(Trainer).filter(and_(Trainer.uuid == u, Trainer.game_id==user.trainers[0].game_id, or_(Trainer.added_by_id == null(), Trainer.added_by_id == user.uid))).one_or_none()
+    except:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
+    if trainer is None:
+        return redirect("/404"), 404, {"Refresh": "1; url=/404"}
+    if trainer.is_user:
+        if len(trainer.trainer_pokemon) >= 20:
+            return redirect("/inventory", code=302)
+    else:
+        if len(trainer.trainer_pokemon) >= 6:
+            return redirect("/leader_inventory/" + u, code=302)
+        
     added = TrainerPokemon()
-    added.trainer_id = user.trainers[0].trainer_id
+    added.trainer_id = trainer.trainer_id
     added.poke_id = id
     pokemon = session.query(Pokemon).filter(Pokemon.poke_id == id).one_or_none()
     if pokemon is None:
@@ -337,3 +363,33 @@ def pokemonedit(id):
     form.move4.data = pokemon.move4_id
     
     return render_template('pokemonedit.html', pokemon=pokemon, moves=moves, form=form, move_choices=move_choices)
+
+class AddTrainerForm(FlaskForm):
+    name = StringField(_l('Name:'), validators=[Length(min=1, max=40, message="Maximum length of 40 characters")])
+    submit = SubmitField(_l('Save'))
+
+@bp.route('/add_trainer', methods=['GET', 'POST'])
+def add_trainer():
+    if not current_user.is_authenticated:
+        return redirect("/login", code=302)
+    session = make_session()
+    user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
+    if len(user.trainers) >= 6:
+        return redirect("/leaders", code=302)
+    game = user.trainers[0].game
+
+    form = AddTrainerForm()
+
+    if form.validate_on_submit():
+        new_trainer = Trainer()
+        new_trainer.is_user = False
+        new_trainer.name = form.name.data
+        new_trainer.game_id = game.game_id
+        new_trainer.added_by_id = user.uid
+        new_trainer.pic = ""
+        session.add(new_trainer)
+        session.commit()
+        res_trainer = session.query(Trainer).filter(Trainer.is_user == False, Trainer.added_by_id == user.uid).order_by(Trainer.added_at.desc()).first()
+        return redirect(url_for('index.leader_inventory', trainer=res_trainer.uuid))
+    
+    return render_template('addtrainer.html', form=form, game=game, user=user)

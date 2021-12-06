@@ -10,6 +10,9 @@
                 <div class="col-12 text-left mb-3 mt-4">
                     <h2>Pikachooze</h2>
                     <h1>Gym Leaders</h1>
+                    {% if num_user_trainers <= 5 %}
+                    <a class="btn dropbtn" style="opacity: 1" href="{{ url_for('index.add_trainer') }}">Add</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -35,14 +38,20 @@
                             <div class="col -0">
                                 <div class="card-body p-2">
                                     <h3 class="h3 card-title mb-0">{{trainer.name}}</h3>
-                                    <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">{{trainer.location.location_name}}</span> <br>
+                                    <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">
+                                        {% if trainer.location == None %}
+                                        Unknown
+                                        {% else %}
+                                        {{trainer.location.location_name}}
+                                        {% endif %}
+                                    </span> <br>
                                     <span class="h5 card-title mb-0">Pokemon Type:
                                         {% for t in trainer_types[(loop.index-1)*2]%}
                                             <a class="btn disabled btn-sm {{t}}"" style="opacity: 1">{{t.title()}}</a>
                                         {% endfor %}
                                     </span><br>
-                                    <a href="{{ url_for('index.fight', trainer=trainer.name.replace(' ', '%20')) }}" class="btn btn-light">Fight</a>
-                                    <a href="{{ url_for('index.leader_inventory', trainer=trainer.name.replace(' ', '%20')) }}" class="btn btn-light">View Inventory</a>
+                                    <a href="{{ url_for('index.fight', trainer=trainer.uuid) }}" class="btn btn-light">Fight</a>
+                                    <a href="{{ url_for('index.leader_inventory', trainer=trainer.uuid) }}" class="btn btn-light">View Inventory</a>
                                 </div>
                             </div>
                         </div>
@@ -63,14 +72,19 @@
                             <div class="col -0">
                                 <div class="card-body p-2">
                                     <h3 class="h3 card-title mb-0">{{trainer.name}}</h3>
-                                    <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">{{trainer.location.location_name}}</span> <br>
-                                    <span class="h5 card-title mb-0">Pokemon Type:
+                                    <span class="h5 card-title mb-0">Location:</span> <span class="h6 card-title mb-0">
+                                        {% if trainer.location == None %}
+                                        Unknown
+                                        {% else %}
+                                        {{trainer.location.location_name}}
+                                        {% endif %}
+                                    </span> <br>                                    <span class="h5 card-title mb-0">Pokemon Type:
                                         {% for t in trainer_types[loop.index*2-1]%}
                                             <a class="btn disabled btn-sm {{t}}"" style="opacity: 1">{{t.title()}}</a>
                                         {% endfor %}
                                     </span><br>
-                                    <a href="{{ url_for('index.fight', trainer=trainer.name.replace(' ', '%20')) }}" class="btn btn-light">Fight</a>
-                                    <a href="{{ url_for('index.leader_inventory', trainer=trainer.name.replace(' ', '%20')) }}" class="btn btn-light">View Inventory</a>
+                                    <a href="{{ url_for('index.fight', trainer=trainer.uuid) }}" class="btn btn-light">Fight</a>
+                                    <a href="{{ url_for('index.leader_inventory', trainer=trainer.uuid) }}" class="btn btn-light">View Inventory</a>
                                 </div>
                             </div>
                         </div>
