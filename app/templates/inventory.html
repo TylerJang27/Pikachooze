@@ -25,6 +25,34 @@
                     }
                 }
             }
+
+            function filterPokemon() {
+                // Declare variables
+                var input, filter, ul, li, a, i, txtValue;
+                input = document.getElementById('filterBar');
+                filter = input.value.toUpperCase();
+
+                cards = document.getElementsByClassName('card');
+
+                // Loop through all list items, and hide those who don't match the search query
+                for (i = 0; i < cards.length; i++) {
+                    poke_name = cards[i].getElementsByTagName("img")[0].alt.toUpperCase();
+                    nickname = cards[i].getElementsByTagName("h3")[0].textContent.toUpperCase();
+                    
+                    types = cards[i].getElementsByTagName("a");
+                    txtValue = poke_name + " " + nickname;
+                    for (let j = 0; j < types.length; j ++) {
+                        if (types[j].id == "typebutton") {
+                            txtValue += " " + types[j].textContent.toUpperCase();
+                        }
+                    }
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        cards[i].style.display = "";
+                    } else {
+                        cards[i].style.display = "none";
+                    }
+                }
+            }
         </script>
         
         <!-- Hero -->
@@ -54,18 +82,13 @@
                             <a class="btn btn-light ml-4" style="opacity: 1" href="{{ url_for('index.leaders') }}">Back to Gym Leaders</a>
                             {% endif %}
                         </div>
+                        <div class="row">
+                            <input type="text" id="filterBar" onkeyup="filterPokemon()" placeholder="Search your inventory...">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <script type="text/javascript">
-            document.getElementById("add").onclick = function () {
-                let selection = document.getElementById("add_pokemon").value;
-                // console.log("/add/" + selection);
-                location.href = "/add/" + selection;
-            };
-        </script>
         <!-- End of Hero -->
 
         <!--End of Title section-->
@@ -76,15 +99,15 @@
                         {% for pokemon in trainer.trainer_pokemon %}
                         <div class="card shadow col-3">
                             <a href="{{ url_for('index.pokemon', id=pokemon.uuid) }}">
-                                <img src="{{pokemon.pokemon.pic}}" alt="Togepi" class="card-img-top rounded-top p-4">
+                                <img id="poke_pic" src="{{pokemon.pokemon.pic}}" alt="{{pokemon.pokemon.name}}" class="card-img-top rounded-top p-4">
                             </a>
                             <div class="card-body">
-                                <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
+                                <a class="btn disabled btn-sm {{pokemon.pokemon.type1.type_name}}" id='typebutton' style="opacity: 1">{{pokemon.pokemon.type1.type_name.title()}}</a>
                                 {% if pokemon.pokemon.type2 %}
-                                <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
+                                <a class="btn disabled btn-sm {{pokemon.pokemon.type2.type_name}}" id='typebutton' style="opacity: 1">{{pokemon.pokemon.type2.type_name.title()}}</a>
                                 {% endif %}
                                 <span class="h6 icon-tertiary small"><span class="fas fa-medal me-2"></span>Lv. </span></span>{{pokemon.level}}</span>
-                                <h3 class="h5 card-title mt-3">{{pokemon.nickname}}</h3>
+                                <h3 id="nicknamefield" class="h5 card-title mt-3">{{pokemon.nickname}}</h3>
                             </div>
                         </div>
                         {% endfor %}
