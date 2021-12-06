@@ -13,9 +13,9 @@ class TrainerPokemon(Base):
     __tablename__ = 'trainer_pokemon'
 
     uuid = Column(UUID(as_uuid=True), unique=True, index=True, default=uuid.uuid4)
-    trainer_pokemon_seq = Sequence('trainer_pokemon_seq', start=200) # TODO: CHANGE NUMBER IF MORE TRAINER POKEMON ADDED
+    trainer_pokemon_seq = Sequence('trainer_pokemon_seq', start=1000)
     tp_id = Column(Integer, trainer_pokemon_seq, server_default=trainer_pokemon_seq.next_value(), primary_key = True)
-    trainer_id = Column(Integer, ForeignKey('trainer.trainer_id')) # TODO: ADD INDEXES
+    trainer_id = Column(Integer, ForeignKey('trainer.trainer_id'))
     poke_id = Column(Integer, ForeignKey('pokemon.poke_id'))
     nickname = Column(String(25))
     gender = Column(Enum(GenderClass), default=GenderClass.male, nullable=True)

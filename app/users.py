@@ -70,7 +70,6 @@ def register():
     form.game.choices = [(g.game_id, g.game_name.title()) for g in games]
 
     if form.validate_on_submit():
-        print('validated1')
         if User.register(form.email.data,
                          form.password.data,
                          form.username.data,

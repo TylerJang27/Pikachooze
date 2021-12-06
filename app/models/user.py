@@ -84,10 +84,9 @@ RETURNING uid
                                   password=generate_password_hash(password),
                                   username=username)
             uid = rows[0][0]
-            # TODO: ADD SEQUENCE TO AVOID CONCURRENT ISSUES OF TRAINER ID
             rows2 = app.db.execute("""
-INSERT INTO trainer(trainer_id, is_user, name, game_id, added_by_id)
-VALUES((SELECT COUNT(*) FROM trainer) + 1, true, :username, :game_id, :uid) RETURNING trainer_id
+INSERT INTO trainer(is_user, name, game_id, added_by_id)
+VALUES(true, :username, :game_id, :uid) RETURNING trainer_id
 """,
                                   username=username, uid=uid, game_id=game)
             return User.get(uid)

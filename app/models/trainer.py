@@ -6,9 +6,9 @@ from app.models.base import Base
 class Trainer(Base): 
     __tablename__ = 'trainer'
 
-    # trainer_id_seq = Sequence('trainer_id_seq')
+    trainer_seq = Sequence('trainer_seq', start=100)
 
-    trainer_id = Column(Integer, primary_key = True) # trainer_id_seq, server_default=trainer_id_seq.next_value(), 
+    trainer_id = Column(Integer, trainer_seq, server_default=trainer_seq.next_value(), primary_key = True) 
     is_user = Column(Boolean)
     name = Column(String(40))
     pic = Column(String)
