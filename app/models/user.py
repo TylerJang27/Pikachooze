@@ -99,28 +99,6 @@ VALUES((SELECT COUNT(*) FROM trainer) + 1, true, :username, :game_id, :uid) RETU
             return None
 
     @staticmethod
-    def forgot(email):
-        new_random = get_random_string()
-        
-        # TODO: UPDATE TABLE NAME TO USERS LOWERCASE
-        rows = app.db.execute("""
-SELECT id, email, firstname, lastname
-FROM Users
-WHERE email = :email
-""",
-                              email=email)
-        if rows: # TODO: UPDATE TABLE NAME TO USERS LOWERCASE
-            id = rows[0][0]
-            app.db.execute_no_return("""
-UPDATE Users
-SET password=:password
-WHERE email = :email
-""",
-                              email=email, password=generate_password_hash(new_random))
-            send_new_pass(email, new_random)
-            return rows.get(id)
-
-    @staticmethod
     @login.user_loader
     def get(uid):
         engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE

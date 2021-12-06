@@ -127,6 +127,8 @@ def add(id):
     Session = sessionmaker(engine, expire_on_commit=False)
     session = Session()
     user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
+    if len(user.trainers[0].trainer_pokemon) >= 20:
+        return redirect("/inventory", code=302)
     added = TrainerPokemon()
     added.trainer_id = user.trainers[0].trainer_id
     added.poke_id = id
@@ -255,12 +257,12 @@ class EditForm(FlaskForm):
     nickname = StringField(_l('Nickname:'), validators=[Length(max=25, message="Maximum length of 25 characters")])
     gender = SelectField(_l('Gender:'), validate_choice=True, coerce=int)
     level = IntegerField(_l('Level:'), validators=[DataRequired(), NumberRange(min=1, max=100, message='Must enter a number between 1 and 100')])
-    hp = IntegerField(_l('HP:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
-    attack = IntegerField(_l('Attack:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
-    defense = IntegerField(_l('Defense:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
-    special_attack = IntegerField(_l('Special Attack:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
-    special_defense = IntegerField(_l('Special Defense:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
-    speed = IntegerField(_l('Speed:'), validators=[Optional(), NumberRange(min=1, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
+    hp = IntegerField(_l('HP:'), validators=[Optional(), NumberRange(min=1, max=4000, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
+    attack = IntegerField(_l('Attack:'), validators=[Optional(), NumberRange(min=1, max=4000, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
+    defense = IntegerField(_l('Defense:'), validators=[Optional(), NumberRange(min=1, max=4000, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
+    special_attack = IntegerField(_l('Special Attack:'), validators=[Optional(), NumberRange(min=1, max=4000, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
+    special_defense = IntegerField(_l('Special Defense:'), validators=[Optional(), NumberRange(min=1, max=4000, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
+    speed = IntegerField(_l('Speed:'), validators=[Optional(), NumberRange(min=1, max=4000, message='Must enter a number greater than 0')], render_kw={"placeholder": "Optional"})
     move1 = SelectField(_l('Move 1'), coerce=int)
     move2 = SelectField(_l('Move 2'), coerce=int)
     move3 = SelectField(_l('Move 3'), coerce=int)

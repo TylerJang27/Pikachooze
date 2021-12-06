@@ -57,17 +57,6 @@ class RegistrationForm(FlaskForm):
         if User.email_exists(email.data):
             raise ValidationError(_('Already a user with this email.'))
 
-class ForgotForm(FlaskForm):
-    # TODO: ADD SECURITY QUESTION OR SIMILAR
-    email = StringField(_l('Email'), validators=[DataRequired(), Email()])
-    submit = SubmitField(_l('Retrieve Password'))
-
-    def validate_email(self, email):
-        print("yay")
-        if User.email_exists(email.data):
-            print("found user email")
-            # raise ValidationError(_('Already a user with this email.'))
-
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -90,19 +79,6 @@ def register():
             print("registered!")
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
-
-@bp.route('/forgot', methods=['GET', 'POST'])
-def forgot():
-    if current_user.is_authenticated:
-        return redirect(url_for('index.index'))
-    form = ForgotForm()
-    if form.validate_on_submit():
-        print("validating")
-        if User.forgot(form.email.data):
-            flash('If user exists, email sent with new password!')
-            print("sent new password")
-            return redirect(url_for('users.login'))
-    return render_template('forgot.html', title='Forgot', form=form)
 
 @bp.route('/logout')
 def logout():

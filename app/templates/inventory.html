@@ -36,6 +36,7 @@
                         <div class="row" style="align-items: center;">
                             {% if pokemon_choices|length > 0 %}
                             <h1>Inventory</h1>
+                            {% if trainer.trainer_pokemon|length < 20 %}
                             <div class="dropdown ml-4">
                                 <button onclick="toggleDropdown()" class="btn dropbtn">Add</button>
                                 <div id="myDropdown" class="dropdown-content">
@@ -45,6 +46,7 @@
                                 {% endfor %}
                                 </div>
                             </div>
+                            {% endif %}
                             {% else %}
                             <h1>{{ trainer.name }}'s Inventory</h1>
                             {% endif %}
