@@ -47,11 +47,6 @@
                             </div>
                             
                             {% endif %}
-                            <script>
-                                $('#evolve_dropdown').on('change', function(){
-                                    evolve_clicked();
-                                });
-                            </script>
                         </div>
                     </div>
                 </div>
@@ -110,6 +105,11 @@
                     </div>
                     {% endif %}
                 </div>
+                <script>
+                    $('#evolve_dropdown').on('change', function(){
+                        evolve_clicked();
+                    });
+                </script>
                 <div class="col-md-6 col-xl-4 mb-5 mt-4" style="text-align: left">
                     <span class="h4 card-title mb-0">Moves: </span> <br><br>
                     {% for move in moves%}

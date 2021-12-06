@@ -82,6 +82,7 @@ def inventory():
     session = Session()
     user = session.query(User).filter(User.uid == current_user.uid).one_or_none()
     trainer = session.query(Trainer).filter(Trainer.trainer_id == user.trainers[0].trainer_id).one_or_none()
+    trainer.trainer_pokemon = sorted(trainer.trainer_pokemon, key=lambda p: -1 * p.level)
     pokemon = session.query(Pokemon).filter(Pokemon.generation_id == user.trainers[0].game.generation_id).all()
     pokemon_choices = [(p.poke_id, p.name) for p in pokemon]
     print("my tp_ids:", [p.tp_id for p in trainer.trainer_pokemon])
