@@ -18,7 +18,6 @@ class Target(enum.Enum):
     user_or_ally = 12
     all_pokemon = 13
     selected_pokemon_me_first = 14
-    # TODO: ADD MORE AS NEEDED
 
 class DamageClass(enum.Enum):
     physical = 1

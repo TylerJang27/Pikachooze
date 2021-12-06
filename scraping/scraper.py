@@ -498,7 +498,7 @@ def get_gym_leaders():
                 # LATER: EXTRACT NICKNAME IF APPLICABLE
                 if poke_name not in df_pokemon:
                     print("MISSING POKEMON FOR ", poke_name)
-                    # TODO: ACCOUNT FOR MISSING POKEMON
+                    # LATER: ACCOUNT FOR MISSING POKEMON
                     continue
 
                 # extract pokemon id

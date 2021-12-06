@@ -101,7 +101,7 @@ VALUES((SELECT COUNT(*) FROM trainer) + 1, true, :username, :game_id, :uid) RETU
     @staticmethod
     @login.user_loader
     def get(uid):
-        engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+        engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True)
         Session = sessionmaker(engine, expire_on_commit=False)
         session = Session()
         return session.query(User).filter(User.uid == uid).one_or_none()

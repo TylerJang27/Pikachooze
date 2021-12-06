@@ -23,7 +23,6 @@ class DB:
         #     conn.execute(escaped_sql)
 
 
-    # TODO: ATTEMPT TO DEPRECATE THESE METHODS IN FAVOR OF SESSION BEHAVIOR
     def connect(self):
         return self.engine.connect()
 
