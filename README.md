@@ -57,6 +57,7 @@ Created by [Rickard Stureborg](http://www.rickard.stureborg.com) and [Yihao Hu](
 - Pokemon images taken from https://github.com/HybridShttps://github.com/HybridShivam/Pokemonhivam/Pokemon
 - Trainer data taken from https://bulbapedia.bulbagarden.net/wiki/Main_Page
 - Trainer images taken from https://pokemon.fandom.com/wiki/Pok%C3%A9mon_Wiki
+- Video resources taken from https://youtu.be/Iy2f0o8QTyE, https://youtu.be/6xKWiCMKKJg, https://youtu.be/8URukvnUYTw, and https://www.engadget.com/pokemon-brilliant-diamond-shining-pearl-trailer-details-art-style-161620641.html
 
 # Useful Tips
 
