@@ -1,51 +1,59 @@
 {% extends "base.html" %}
 
-{% include 'navbar.html' %}
-
 {% block content %}
 
-<h2>Pikachooze</h2>
-<h1>Login</h1>
-<p>Don't have an account, <a href="{{ url_for('users.register') }}">Sign up</a></p>
+<div class="section-header pb-6 text-black">
+  <div class="container">
+      <div class="row px-3 justify-content-center">
+          <div class="col-12 text-left mb-3 mt-4">
+              <div class="row"><h2>Pikachooze</h2></div>
+              <div class="row" style="align-items: center;">
+                  <h1>Login</h1>
+              </div>
+              <div class="row"><p>Don't have an account, <a href="{{ url_for('users.register') }}">Sign up</a></p></div>
+          </div>
+      </div>
+  </div>
+</div>
 
-<div class="container left-force">
-  <div class="row align-items-start">
-    <div class="col">
-      <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-          {{ form.email.label }}<br/>
-          {{ form.email(size=32) }}<br/>
-          {% for error in form.email.errors %}
-          <span style="color: red;">[{{ error }}]</span>
-          {% endfor %}
-        </p>
-        <p>
-          {{ form.password.label }}<br/>
-          {{ form.password(size=32) }}<br/>
-          {% for error in form.password.errors %}
-          <span style="color: red;">[{{ error }}]</span>
-          {% endfor %}
-        </p>
-        <p>
-          {% with messages = get_flashed_messages() %}
-          {% if messages %}
-          <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-          {% endwith %}
-        </p>
-        {{ form.submit(class_="btn btn-black") }}
-        <p><a href="{{ url_for('users.register') }}">Forgot password?</a></p>
-        <!-- TODO: ADD IN FORGOT PASSWORD GENERATION PAGE -->
-        <!-- <a class="btn btn-secondary" href="{{ url_for('users.register') }}" role="button">Register</a> -->
-      </form>
-    </div>
-    <div class="col">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrEpro86Nz9q6kBJfA4wDU9F5W0yQdeOIoSg&usqp=CAU" alt="Togepi">
+<div class="section section-md">
+  <div class="container">
+      <div class="row mb-5">
+        <div class="col">
+          <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <p>
+              {{ form.email.label }}<br/>
+              {{ form.email(size=32) }}<br/>
+              {% for error in form.email.errors %}
+              <span style="color: red;">[{{ error }}]</span>
+              {% endfor %}
+            </p>
+            <p>
+              {{ form.password.label }}<br/>
+              {{ form.password(size=32) }}<br/>
+              {% for error in form.password.errors %}
+              <span style="color: red;">[{{ error }}]</span>
+              {% endfor %}
+            </p>
+            <p>
+              {% with messages = get_flashed_messages() %}
+              {% if messages %}
+              <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+              {% endwith %}
+            </p>
+            {{ form.submit(class_="btn btn-warning") }}
+          </form>
+        </div>
+        <div class="col">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrEpro86Nz9q6kBJfA4wDU9F5W0yQdeOIoSg&usqp=CAU" alt="Togepi">
+        </div>
+      </div>
     </div>
   </div>
 </div>

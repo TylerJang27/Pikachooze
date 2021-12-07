@@ -12,21 +12,25 @@ import re
 import time
 
 from bs4 import BeautifulSoup
+from sqlalchemy.sql.expression import null
 from sqlalchemy.sql.sqltypes import MatchType
+import shutil
 # Database reference, only missing the Move-Pokemon connecting table (assume just a (poke_id, move_id)) relation.
 # https://dbdiagram.io/d/6158de67825b5b01461dfd3f
 
 # %% Constants
 POKEAPI_HOSTNAME = "https://pokeapi.co/api/v2/{:}"
 POKEIMAGES_URL = "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/{:}"
-SPECIES_LIST_EXT = "pokemon-species"
+SPECIES_LIST_EXT = "pokemon-species/{:}"
 POKEMON_EXT = "pokemon/{:}"
 MOVES = "move/{:}"
 TYPES = "type"
 POKEDEX = "pokedex/{:}"
 GENERATION = "generation/{:}"
 TRAINER_HOSTNAME = "https://bulbapedia.bulbagarden.net/w/index.php?title={:}&action=edit"
-gym_leader_url = "https://cdn2.bulbagarden.net/upload/2/2f/{:}"
+GYM_LEADER_HOSTNAME = "https://pokemon.fandom.com/wiki/Gym_Leader#{:}"
+ELITE_FOUR_HOSTNAME = "https://pokemon.fandom.com/wiki/Elite_Four#{:}"
+ASSETS_FILEPATH = "app/static/assets/img/"
 
 # dictionaries for preserved lookups
 type_dict = {}
@@ -35,6 +39,7 @@ df_moves = {}
 df_pokemon = {}
 df_stats = {}
 df_can_learn = {}
+leader_urls = {}
 
 # collections for populating
 all_moves = set()
@@ -49,6 +54,7 @@ version_game = []
 locations = {}
 trainer_list = []
 trainer_pokemon_list = []
+evolutions = []
 
 # trainers to scrape
 diamond_pearl_gym_leaders = ["Roark", "Gardenia", "Maylene", "Crasher Wake", "Fantina", "Byron", "Candice", "Volkner"]
@@ -76,7 +82,8 @@ def sanitize_poke(poke_name):
 # extract a field from the trainer text
 def extract_field(field_name, source_text, replace_spaces=False, manual_regex="\|{:}.*[\|\n]"):
     regex_pattern = re.compile(manual_regex.format(field_name))
-    matching_fields = regex_pattern.findall(source_text)[0]
+    matching_fields = regex_pattern.findall(source_text)
+    matching_fields = matching_fields[0]
     matching_text = matching_fields.split("=")[1].strip()
     if replace_spaces:
         matching_text = matching_text.replace(" ", "_")
@@ -101,6 +108,32 @@ def html_request_to_api(trainer_name):
         return response
     else:
         print("ERROR: STATUS CODE: {:}".format(response.status_code))
+
+# request to pokemon fandom for gym leader images
+def html_request_to_fandom_api(region, leader=False):
+    if leader:
+        response = requests.get(ELITE_FOUR_HOSTNAME.format(region))
+    else:
+        response = requests.get(GYM_LEADER_HOSTNAME.format(region))
+    if response.status_code == 200:
+        return response
+    else:
+        print("ERROR: STATUS CODE: {:}".format(response.status_code))
+
+# download a gym leader image
+# based on code from https://towardsdatascience.com/how-to-download-an-image-using-python-38a75cfa21c
+def download_image(image_url, filepath):
+    # Open the url image, set stream to True, this will return the stream content.
+    r = requests.get(image_url, stream = True)
+
+    # Check if the image was retrieved successfully
+    if r.status_code == 200:
+        # Set decode_content value to True, otherwise the downloaded image file's size will be zero.
+        r.raw.decode_content = True
+        
+        # Open a local file with wb ( write binary ) permission.
+        with open(filepath,'wb') as f:
+            shutil.copyfileobj(r.raw, f)
 
 # %% Scraping Methods
 # populates Types.csv with [type_id, type_name]
@@ -232,6 +265,23 @@ def get_pokemon_csv():
         df_pokemon[name] = [id, generation, type_1, type_2, pic]
     #print(df_pokemon)
 
+# populates Evolution.csv with [poke1_id, poke2_id]
+def get_evolutions():
+    for pokemon in df_pokemon:
+        res = request_to_api(SPECIES_LIST_EXT.format(pokemon.lower().replace(" ", "-")))
+        prev = res["evolves_from_species"]
+        post = df_pokemon[pokemon][0]
+        if prev != None:
+            pand = res["evolves_from_species"]["url"]
+            ext = pand.split("https://pokeapi.co/api/v2/pokemon-species/")
+            prev = ext[1].replace("/","")
+           # print([prev,post])
+            evolutions.append([prev, post])
+    #print(evolutions)
+    df_evolution = pd.DataFrame(evolutions)
+    df_evolution = df_evolution.to_csv('db/data/Evolution.csv', index = False, header = False)
+   
+
 # reads in from Stats.csv to populate df_stats
 def get_stats_csv():
     df = pd.read_csv("db/data/Stats.csv", header=None)
@@ -311,11 +361,36 @@ def get_moves_csv():
         df_moves[move_name] = [move_id, target, mtype, power, acc, crit_rate, damage_class, min_hits, max_hits, priority, pp]
     #print(df_moves)
 
+# extracts a trainer image url from a soup
+def get_url_for_trainer(trainer_name, soup):
+    poke_trainer_name_for_img = trainer_name.split("_")[0].split(" ")[0]
+    name_img_regex = re.compile(poke_trainer_name_for_img)
+    print(trainer_name, name_img_regex)
+
+    images = soup.find_all("img")
+    for image in images:
+        try:
+            if name_img_regex.match(image['data-image-name']):
+                url = image['data-src'].replace("100", "266").replace("82", "266").replace("81", "266")
+                return url
+                # print(image)
+            if poke_trainer_name_for_img in image['data-image-name']:
+                url = image['data-src'].replace("100", "266").replace("82", "266").replace("81", "266")
+                return url
+        except:
+            # print("no alt tag")
+            continue
+
 # populates Leaders.csv with [trainer_id, is_user, name, pic, game_id, generation_id, location_id, added_by_id]
 # populates LeaderPokemon.csv with [tp_id, trainer_id, poke_id, nickname, gender, level, inParty, move1_id, move2_id, move3_id, move4_id]
 # populates Locations.csv with [location_id, location_name, is_route, is_gym, game_id]
 def get_gym_leaders():
     # iterate through all desired trainers
+    res = html_request_to_fandom_api("Sinnoh")
+    image_soup = BeautifulSoup(res.content, "html.parser")
+    res = html_request_to_fandom_api("Sinnoh", True)
+    leader_soup = BeautifulSoup(res.content, "html.parser")
+
     for leader in diamond_pearl_all_elite_trainers:
         # retrieve trainer data
         page = html_request_to_api(leader)
@@ -323,13 +398,15 @@ def get_gym_leaders():
         text = soup.find("textarea", {"id": "wpTextbox1"})
 
         # split trainer data by games
-        pokemon_game_data_list = text.string.split("===Pokémon===")[1].split("===={{game|")[1:]
+        pokemon_game_data_list = text.string.split("===Pokémon===")[1].split("===={{g")[1:]
+        # print(leader, len(pokemon_game_data_list))
         pokemon_scenarios = {}
 
         # parse games for relevant games and their respective scenarios if multiple encounters
         for game_data in pokemon_game_data_list:
-            game_name_temp = game_data[:20]
+            game_name_temp = game_data[:25]
             if not ("Diamond" in game_name_temp or "Pearl" in game_name_temp or "Platinum" in game_name_temp):
+                # print("SKIPPING BECAUSE IRRELEVANT GAME")
                 continue
 
             if "=====" in game_data:
@@ -344,23 +421,42 @@ def get_gym_leaders():
                     pokemon_scenarios[scenario] = game_scenario_data
                 
             else:
-                pokemon_scenarios[""] = game_data
+                new_str = ""
+                if "" in pokemon_scenarios:
+                    new_str = " "
+                pokemon_scenarios[new_str] = game_data
                 pokemon_data = game_data.split("{{Pokémon/4")
 
         # iterate through game scenarios
         for scenario in pokemon_scenarios:
             game_data = pokemon_scenarios[scenario]
+            scenario = scenario.strip()
             # split to separate trainer information from pokemon information
             pokemon_data = game_data.split("{{Pokémon/4")
             trainer_section = pokemon_data[0]
             
             # extract trainer name
-            poke_trainer_name = extract_field("name", trainer_section)
+            try:
+                poke_trainer_name = extract_field("name", trainer_section)
+            except:
+                continue
             poke_trainer_name = poke_trainer_name + (" " + scenario if len(scenario) > 0 and "{" not in scenario else "")
 
             # extract trainer image
-            pic_name = extract_field("sprite", trainer_section, True)
-            pic_url = gym_leader_url.format(pic_name)
+            pic_url = get_url_for_trainer(poke_trainer_name, image_soup)
+            if pic_url is None:
+                pic_url = get_url_for_trainer(poke_trainer_name, leader_soup)
+            if pic_url is not None:
+                if pic_url in leader_urls:
+                    pic_url = leader_urls[pic_url]
+                else:
+                    new_url = poke_trainer_name.replace(" ", "_") + ".png"
+                    leader_urls[pic_url] = new_url
+                    download_image(pic_url, ASSETS_FILEPATH + new_url)
+                    pic_url = new_url
+            print(pic_url)
+            # pic_name = extract_field("sprite", trainer_section, True)
+            # pic_url = gym_leader_url.format(pic_name)
 
             # extract trainer game(s)
             game_name = extract_field("game", trainer_section)
@@ -370,8 +466,9 @@ def get_gym_leaders():
             elif game_name == "Pt":
                 game_ids = [df_games["platinum"]]
             else:
-                print("NOT A GAME WE KNOW HOW TO PARSE")
+                print("NOT A GAME WE KNOW HOW TO PARSE", game_name)
                 game_ids = []
+            # print(poke_trainer_name, game_name, game_ids)
 
             # extract trainer location(s)
             try:
@@ -386,6 +483,7 @@ def get_gym_leaders():
             # make trainers for each game 
             trainer_ids = []
             for game_id in game_ids:
+                print("adding for game_id: ", game_id)
                 location_id = locations[(location_name, game_id)]
                 trainer_id = len(trainer_list)
                 trainer_ids.append(trainer_id)
@@ -400,7 +498,7 @@ def get_gym_leaders():
                 # LATER: EXTRACT NICKNAME IF APPLICABLE
                 if poke_name not in df_pokemon:
                     print("MISSING POKEMON FOR ", poke_name)
-                    # TODO: ACCOUNT FOR MISSING POKEMON
+                    # LATER: ACCOUNT FOR MISSING POKEMON
                     continue
 
                 # extract pokemon id
@@ -470,6 +568,7 @@ if __name__ == "__main__":
     #get_games()
     #get_types_csv()
     #get_pokemon()
+    #get_evolutions()
     #get_generation()
     #get_games()
     #get_moves()
@@ -483,3 +582,4 @@ if __name__ == "__main__":
     get_types_csv()
 
     get_gym_leaders()
+    

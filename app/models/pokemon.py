@@ -18,6 +18,8 @@ class Pokemon(Base):
     type2 = relationship("Type", foreign_keys=[type2_id])
     pokemon_base_stats = relationship("PokemonBaseStats", back_populates="pokemon")
     learnable_moves = relationship("CanLearn", back_populates="pokemon")
+    evolutions = relationship("Evolution", primaryjoin = "Pokemon.poke_id == Evolution.poke1_id")
+    devolutions = relationship("Evolution", primaryjoin = "Pokemon.poke_id == Evolution.poke2_id")
 
     def __repr__(self):
         return "<Pokemon(poke_id='%d', name='%s', type1='%s', type2='%s')>" % (
