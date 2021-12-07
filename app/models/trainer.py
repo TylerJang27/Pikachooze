@@ -10,7 +10,7 @@ import uuid
 class Trainer(Base): 
     __tablename__ = 'trainer'
 
-    uuid = Column(UUID(as_uuid=True), unique=True, index=True, default=uuid.uuid4, nullable=False)
+    uuid = Column(UUID(as_uuid=True), unique=True, index=True, default=uuid.uuid4)
     trainer_seq = Sequence('trainer_seq', start=100)
 
     trainer_id = Column(Integer, trainer_seq, server_default=trainer_seq.next_value(), primary_key = True) 
