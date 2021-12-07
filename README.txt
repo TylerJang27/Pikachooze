@@ -7,3 +7,4 @@ Since our last milestone, we added the ability to add, edit, and delete pokemon 
 For security, we made sure that only authenticated users can access and edit specific pages, and implemented UUIDs for pokemon instances and trainers in order to obscure our implementation.
 
 We also added numerous UI improvements.
+Demo video: https://youtu.be/vGAJVO_0vqs
