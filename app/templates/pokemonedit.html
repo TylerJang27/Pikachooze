@@ -188,14 +188,14 @@
                         </script>
                         <span class="h4 card-title mb-0">Moves: </span> <br><br>
 
-                        <div class="card shadow mb-3">
+                        <div class="card shadow mb-3" style="border-radius: 0.25rem;">
                             <!-- <div class = "row"> -->
                                 <div class="dropdown">
-                                    <button type="button" onclick="toggleDropdown(1)" id="movebutton1" class="btn dropbtn">{{ form.move1.data }}</button>
-                                    <div id="myDropdown1" class="dropdown-content">
-                                        <input type="text" placeholder="Search.." id="searchBar1" onkeyup="filterFunction(1)" style="width: 100%; height: 45px;">
+                                    <button type="button" onclick="toggleDropdown(1)" id="movebutton1" class="btn btn-light dropdown-toggle" style="width: 100%;">{{ form.move1.data }}</button>
+                                    <div id="myDropdown1" class="dropdown-menu" style="width: 100%">
+                                        <input class="dropdown-item" type="text" placeholder="Search.." id="searchBar1" onkeyup="filterFunction(1)" style="width: 100%; height: 45px;">
                                         {% for option in move_choices %}
-                                        <a name={{option[0]}} onclick="setMove(1, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
+                                        <a name={{option[0]}} class="dropdown-item" onclick="setMove(1, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
                                         {% endfor %}
                                     </div>
                                     <span class="h5 card-title mb-0" hidden=true>{{ form.move1 }}</span>
@@ -207,14 +207,14 @@
                             <!-- </div> -->
                         </div>
 
-                        <div class="card shadow mb-3">
+                        <div class="card shadow mb-3" style="border-radius: 0.25rem;">
                             <!-- <div class = "row"> -->
                                 <div class="dropdown">
-                                    <button type="button" onclick="toggleDropdown(2)" id="movebutton2" class="btn dropbtn">{{ form.move2.data }}</button>
-                                    <div id="myDropdown2" class="dropdown-content">
-                                        <input type="text" placeholder="Search.." id="searchBar2" onkeyup="filterFunction(2)" style="width: 100%; height: 45px;">
+                                    <button type="button" onclick="toggleDropdown(2)" id="movebutton2" class="btn btn-light dropdown-toggle" style="width: 100%">{{ form.move2.data }}</button>
+                                    <div id="myDropdown2" class="dropdown-menu" style="width: 100%">
+                                        <input class="dropdown-item" type="text" placeholder="Search.." id="searchBar2" onkeyup="filterFunction(2)" style="width: 100%; height: 45px;">
                                         {% for option in move_choices %}
-                                        <a name={{option[0]}} onclick="setMove(2, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
+                                        <a name={{option[0]}} class="dropdown-item" onclick="setMove(2, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
                                         {% endfor %}
                                     </div>
                                     <span class="h5 card-title mb-0" hidden=true>{{ form.move2 }}</span>
@@ -225,14 +225,14 @@
                                 </div>
                             <!-- </div> -->
                         </div>
-                        <div class="card shadow mb-3">
+                        <div class="card shadow mb-3" style="border-radius: 0.25rem;">
                             <!-- <div class = "row"> -->
                                 <div class="dropdown">
-                                    <button type="button" onclick="toggleDropdown(3)" id="movebutton3" class="btn dropbtn">{{ form.move3.data }}</button>
-                                    <div id="myDropdown3" class="dropdown-content">
-                                        <input type="text" placeholder="Search.." id="searchBar3" onkeyup="filterFunction(3)" style="width: 100%; height: 45px;">
+                                    <button type="button" onclick="toggleDropdown(3)" id="movebutton3" class="btn btn-light dropdown-toggle" style="width: 100%">{{ form.move3.data }}</button>
+                                    <div id="myDropdown3" class="dropdown-menu" style="width: 100%">
+                                        <input class="dropdown-item" type="text" placeholder="Search.." id="searchBar3" onkeyup="filterFunction(3)" style="width: 100%; height: 45px;">
                                         {% for option in move_choices %}
-                                        <a name={{option[0]}} onclick="setMove(3, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
+                                        <a name={{option[0]}} class="dropdown-item" onclick="setMove(3, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
                                         {% endfor %}
                                     </div>
                                     <span class="h5 card-title mb-0" hidden=true>{{ form.move3 }}</span>
@@ -243,14 +243,14 @@
                                 </div>
                             <!-- </div> -->
                         </div>
-                        <div class="card shadow mb-3">
+                        <div class="card shadow mb-3" style="border-radius: 0.25rem;">
                             <!-- <div class = "row"> -->
                                 <div class="dropdown">
-                                    <button type="button" onclick="toggleDropdown(4)" id="movebutton4" class="btn dropbtn">{{ form.move4.data }}</button>
-                                    <div id="myDropdown4" class="dropdown-content">
-                                        <input type="text" placeholder="Search.." id="searchBar4" onkeyup="filterFunction(4)" style="width: 100%; height: 45px;">
+                                    <button type="button" onclick="toggleDropdown(4)" id="movebutton4" class="btn btn-light dropdown-toggle" style="width: 100%">{{ form.move4.data }}</button>
+                                    <div id="myDropdown4" class="dropdown-menu" style="width: 100%">
+                                        <input class="dropdown-item" type="text" placeholder="Search.." id="searchBar4" onkeyup="filterFunction(4)" style="width: 100%; height: 45px;">
                                         {% for option in move_choices %}
-                                        <a name={{option[0]}} onclick="setMove(4, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
+                                        <a name={{option[0]}} class="dropdown-item" onclick="setMove(4, '{{option[0]}}', '{{option[1]}}')"> {{option[1]}}</a>
                                         {% endfor %}
                                     </div>
                                     <span class="h5 card-title mb-0" hidden=true>{{ form.move4 }}</span>
