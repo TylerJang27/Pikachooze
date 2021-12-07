@@ -31,12 +31,12 @@
                 <div class="col-6">
                     {% for trainer in trainers[::2]%}
                     <div class="card shadow mb-3">
-                        <div class = "row">
-                            <div class="col-2 m-2">
+                        <div class ="row align-items-center" style="height: 170px">
+                            <div class="col-3 m-2">
                                 {% if trainer.pic == "" %}
-                                <img src="/static/assets/img/ash.png" alt="Default Trainer" class="card-img-top rounded-top">
+                                <img src="/static/assets/img/ash.png" alt="Default Trainer" class="card-img-top rounded-top" style="width: 80px; display: block; margin-left: auto;">
                                 {% else %}
-                                <img src="/static/assets/img/{{trainer.pic}}" alt="{{trainer.name}}" class="card-img-top rounded-top">
+                                <img src="/static/assets/img/{{trainer.pic}}" alt="{{trainer.name}}" class="card-img-top rounded-top" style="width: 80px; display: block; margin-left: auto;">
                                 {% endif %}
                             </div>
                             <div class="col -0">
@@ -65,12 +65,12 @@
                 <div class="col-6">
                     {% for trainer in trainers[1::2]%}
                     <div class="card shadow mb-3">
-                        <div class = "row">
-                            <div class="col-2 m-2">
+                        <div class ="row align-items-center" style="height: 170px">
+                            <div class="col-3 m-2">
                                 {% if trainer.pic == "" %}
-                                <img src="/static/assets/img/ash.png" alt="Default Trainer" class="card-img-top rounded-top">
+                                <img src="/static/assets/img/ash.png" alt="Default Trainer" class="card-img-top rounded-top" style="width: 80px; display: block; margin-left: auto;">
                                 {% else %}
-                                <img src="/static/assets/img/{{trainer.pic}}" alt="{{trainer.name}}" class="card-img-top rounded-top">
+                                <img src="/static/assets/img/{{trainer.pic}}" alt="{{trainer.name}}" class="card-img-top rounded-top" style="width: 80px; display: block; margin-left: auto;">
                                 {% endif %}
                             </div>
                             <div class="col -0">
