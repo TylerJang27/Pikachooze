@@ -210,6 +210,7 @@ def max_damage_adjusted(out_pkmn, in_pkmn, is_attacker):
   HP = in_pkmn.custom_hp
   HP = HP if HP is not None else math.floor(0.01 * (2 * hp_base + hp_IV + math.floor(0.25 * hp_EV)) * level) + level + 10
   damage_perc = max_damage_perc(out_pkmn, in_pkmn, is_attacker, HP)
+  print(damage_perc)
   if damage_perc[0] > 1.0:
     return (1.0, damage_perc[1])
   return damage_perc
@@ -247,7 +248,7 @@ def max_damage_perc(out_pkmn, in_pkmn, is_attacker, hp):
             move_text = "({:})'s move ({:}) does massive damage to us. Ouch!".format(out_pkmn.nickname, move.move_name)
         
       damage_list.append((damage_scaled, move_text))
-  return max(damage_list, key = lambda i : i[0], default=0)
+  return max(damage_list, key = lambda i : i[0], default=(0, ""))
 
 # calculate the raw damage that out_pkmn can do to in_pkmn using move
 def damage_calc(out_pkmn, move, in_pkmn, is_attacker):

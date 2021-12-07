@@ -9,6 +9,7 @@ from os import getcwd, path
 import uuid
 
 from app.models.trainer_pokemon import TrainerPokemon
+from app.models.trainer import Trainer
 
 
 def create_app():
@@ -33,6 +34,11 @@ def create_app():
         if tp.uuid is None:
             tp.uuid = uuid.uuid4()
             session.add(tp)
+    ts = session.query(Trainer).all()
+    for t in ts:
+        if t.uuid is None:
+            t.uuid = uuid.uuid4()
+            session.add(t)
     session.commit()
 
     login.init_app(app)

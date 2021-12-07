@@ -3,12 +3,14 @@ from flask import current_app as app
 from app.utils import send_new_pass
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import Column, Integer, String, Sequence, DateTime
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship, sessionmaker
 from app.models.base import Base, login
 from app.config import Config
 import random
 import string
+import uuid
 
 import datetime
 
@@ -26,10 +28,10 @@ class User(Base, UserMixin):
     username = Column(String(20), nullable=False)
     email = Column(String(50), nullable=False)
     password = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(UUID(as_uuid=True), nullable=True)
     last_trainer = Column(String(40), nullable=True)
 
-    trainers = relationship("Trainer", back_populates="added_by")
+    trainers = relationship("Trainer", back_populates="added_by", order_by="asc(Trainer.added_at)")
 
 
     def __repr__(self):
@@ -84,11 +86,12 @@ RETURNING uid
                                   password=generate_password_hash(password),
                                   username=username)
             uid = rows[0][0]
+            u = uuid.uuid4()
             rows2 = app.db.execute("""
-INSERT INTO trainer(is_user, name, game_id, added_by_id)
-VALUES(true, :username, :game_id, :uid) RETURNING trainer_id
+INSERT INTO trainer(uuid, is_user, name, game_id, added_by_id)
+VALUES(:u, true, :username, :game_id, :uid) RETURNING trainer_id
 """,
-                                  username=username, uid=uid, game_id=game)
+                                  u=u, username=username, uid=uid, game_id=game)
             return User.get(uid)
         except Exception as e:
 

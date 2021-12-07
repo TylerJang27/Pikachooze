@@ -62,21 +62,23 @@
                     <div class="col-12 text-left mb-3 mt-4">
                         <div class="row"><h2>Pikachooze</h2></div>
                         <div class="row" style="align-items: center;">
-                            {% if pokemon_choices|length > 0 %}
+                            {% if trainer.is_user %}
                             <h1>Inventory</h1>
-                            {% if trainer.trainer_pokemon|length < 20 %}
+                            {% else %}
+                            <h1>{{ trainer.name }}'s Inventory</h1>
+                            {% endif %}
+                            {% if pokemon_choices|length > 0 %}
+                            {% if (trainer.trainer_pokemon|length < 20) or (trainer.trainer_pokemon|length < 6 and not trainer.is_user) %}
                             <div class="dropdown ml-4">
                                 <button onclick="toggleDropdown()" class="btn btn-warning dropdown-toggle">Add</button>
                                 <div id="myDropdown" class="dropdown-menu">
                                 <input class="dropdown-item" type="text" placeholder="Search.." id="searchBar" onkeyup="filterFunction()" style="width: 100%; height: 45px;">
                                 {% for option in pokemon_choices %}
-                                    <a class="dropdown-item" href="{{ url_for('index.add', id=option[0]) }}">{{option[1]}}</a>
+                                    <a class="dropdown-item" href="{{ url_for('index.add', id=option[0], trainer=trainer.uuid) }}">{{option[1]}}</a>
                                 {% endfor %}
                                 </div>
                             </div>
                             {% endif %}
-                            {% else %}
-                            <h1>{{ trainer.name }}'s Inventory</h1>
                             {% endif %}
                             {% if not trainer.is_user %}
                             <a class="btn btn-light ml-4" style="opacity: 1" href="{{ url_for('index.leaders') }}">Back to Gym Leaders</a>
