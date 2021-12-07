@@ -1,6 +1,8 @@
 # Pikachooze
 # Try It Out
 During the Fall 2021 semester, try out our site at: http://34.139.249.180:5000/
+
+Demo video is available at https://youtu.be/vGAJVO_0vqs
 # Overview
 Over the last two and a half decades since the launch of Pokemon, dozens of web apps have been created to accelerate progress, simplify content, and help dedicated players optimize their pokemon teams. Informative tools like Bulbapedia and strategy-based tools like Poke Assistant have become some of the most used resources of all time. Despite the far reaching capabilities of these websites, our team discovered a massive problem yet to be solved: how to find the optimal team for each gym leader/elite four based on a player’s own pokemon collection. With this in mind, our team spent the last two month creating a personalized tool that any player can use to upload pokemon, set levels & moves, choose gym leaders to battle, and discover the optimal team of 6 for every battle. We call this Pikachooze, and we believe that it can be used by millions of players worldwide. 
 
