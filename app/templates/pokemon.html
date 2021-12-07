@@ -87,7 +87,7 @@
                         <div>
                             {% if evolution|length > 1 %}
                             <select id = "evolve_dropdown">
-                                <option value="" disabled selected>Evolve!</option>
+                                <option value="" disabled selected>Evolve Pokemon</option>
                                 {% for e in evolution %}
                                     <option value = "{{ e.poke_id }}">{{ e.name }}</option>
                                 {% endfor %}
