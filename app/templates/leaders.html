@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% include 'navbar.html' %}
-
 {% block content %}
 
 <main>
@@ -28,7 +26,11 @@
                     <div class="card shadow mb-3">
                         <div class = "row">
                             <div class="col-2 m-2">
+                                {% if trainer.pic == "" %}
+                                <img src="/static/assets/img/ash.png" alt="Default Trainer" class="card-img-top rounded-top">
+                                {% else %}
                                 <img src="/static/assets/img/{{trainer.pic}}" alt="{{trainer.name}}" class="card-img-top rounded-top">
+                                {% endif %}
                             </div>
                             <div class="col -0">
                                 <div class="card-body p-2">
@@ -40,6 +42,7 @@
                                         {% endfor %}
                                     </span><br>
                                     <a href="{{ url_for('index.fight', trainer=trainer.name.replace(' ', '%20')) }}" class="btn btn-light">Fight</a>
+                                    <a href="{{ url_for('index.leader_inventory', trainer=trainer.name.replace(' ', '%20')) }}" class="btn btn-light">View Inventory</a>
                                 </div>
                             </div>
                         </div>
@@ -51,7 +54,11 @@
                     <div class="card shadow mb-3">
                         <div class = "row">
                             <div class="col-2 m-2">
+                                {% if trainer.pic == "" %}
+                                <img src="/static/assets/img/ash.png" alt="Default Trainer" class="card-img-top rounded-top">
+                                {% else %}
                                 <img src="/static/assets/img/{{trainer.pic}}" alt="{{trainer.name}}" class="card-img-top rounded-top">
+                                {% endif %}
                             </div>
                             <div class="col -0">
                                 <div class="card-body p-2">
@@ -63,6 +70,7 @@
                                         {% endfor %}
                                     </span><br>
                                     <a href="{{ url_for('index.fight', trainer=trainer.name.replace(' ', '%20')) }}" class="btn btn-light">Fight</a>
+                                    <a href="{{ url_for('index.leader_inventory', trainer=trainer.name.replace(' ', '%20')) }}" class="btn btn-light">View Inventory</a>
                                 </div>
                             </div>
                         </div>

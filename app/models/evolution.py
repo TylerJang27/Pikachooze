@@ -15,8 +15,8 @@ class Evolution(Base):
     poke2_id = Column(Integer, ForeignKey('pokemon.poke_id'), primary_key = True, nullable = False)
 >>>>>>> f622ded196590aad9261e2f655654b86e810822b
   
-    poke1 = relationship("Pokemon", foreign_keys=[poke1_id]) 
-    poke2 = relationship("Pokemon", foreign_keys=[poke2_id])
+    poke1 = relationship("Pokemon", foreign_keys=[poke1_id], back_populates="evolutions") 
+    poke2 = relationship("Pokemon", foreign_keys=[poke2_id], back_populates="devolutions")
 
     def __repr__(self):
         return "<Evolution(poke1_id='%d', poke2_id='%d')>" % (

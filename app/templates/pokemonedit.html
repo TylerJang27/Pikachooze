@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% include 'navbar.html' %}
-
 {% block content %}
 
     <main>
@@ -84,19 +82,6 @@
                         </div>
                         <div class="row">
                             <div style="text-align: left; width: 60%;">
-                                <span class="h5 card-title mb-0">{{ form.speed.label }}</span> <br>
-                            </div>
-                            <div style="text-align: left; width: 40%;">
-                                <span class="h6 card-title mb-0">{{ form.speed(size=10) }}</span> <br>
-                            </div>
-                        </div>
-                        <div class="pb-2">
-                            {% for error in form.speed.errors %}
-                            <span style="color: red; float: right">[{{ error }}]</span><br>
-                            {% endfor %} 
-                        </div>
-                        <div class="row">
-                            <div style="text-align: left; width: 60%;">
                                 <span class="h5 card-title mb-0">{{ form.attack.label }}</span> <br>
                             </div>
                             <div style="text-align: left; width: 40%;">
@@ -144,6 +129,19 @@
                         </div>
                         <div class="pb-2">
                             {% for error in form.special_defense.errors %}
+                            <span style="color: red; float: right">[{{ error }}]</span><br>
+                            {% endfor %} 
+                        </div>
+                        <div class="row">
+                            <div style="text-align: left; width: 60%;">
+                                <span class="h5 card-title mb-0">{{ form.speed.label }}</span> <br>
+                            </div>
+                            <div style="text-align: left; width: 40%;">
+                                <span class="h6 card-title mb-0">{{ form.speed(size=10) }}</span> <br>
+                            </div>
+                        </div>
+                        <div class="pb-2">
+                            {% for error in form.speed.errors %}
                             <span style="color: red; float: right">[{{ error }}]</span><br>
                             {% endfor %} 
                         </div>
@@ -272,7 +270,7 @@
                             move1Text = (move1Text == "" ? "Click to Search" : move1Text);
                             document.getElementById("movebutton1").textContent = move1Text;
                             var move2Select = document.getElementById("move2")
-                            var move2Text = move2Select.options[move1Select.selectedIndex].text;
+                            var move2Text = move2Select.options[move2Select.selectedIndex].text;
                             move2Text = (move2Text == "" ? "Click to Search" : move2Text);
                             document.getElementById("movebutton2").textContent = move2Text;
                             var move3Select = document.getElementById("move3")

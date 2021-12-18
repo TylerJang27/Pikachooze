@@ -39,6 +39,7 @@ deactivate
 
 Based on skeleton code for the CompSci 316 undergraduate course project.
 Created by [Rickard Stureborg](http://www.rickard.stureborg.com) and [Yihao Hu](https://www.linkedin.com/in/yihaoh/).
+Fav Icon for browser taken from https://icons-for-free.com/iconfiles/png/512/pokemon-131979013310232399.png
 
 # Useful Tips
 
