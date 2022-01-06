@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 from app.models.base import Base
 
 
-# TODO: CAN EXTRACT INTO THE ASSOCIATION TABLE, SEE DOCS
 class CanLearn(Base):
     __tablename__ = 'can_learn'
 

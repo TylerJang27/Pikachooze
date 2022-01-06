@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <main>
+        
+        <!-- Hero -->
+        <div class="section-header pb-6 text-black">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 text-left mb-3 mt-4">
+                        <div class="row"><h2>Gym Leaders</h2></div>
+                        <div class="row" style="align-items: center;">
+                            <h1>New Trainer</h1>
+                            <div class="ml-4">
+                                <a class="btn btn-light" style="opacity: 1" href="{{ url_for('index.leaders') }}">Back</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Hero -->
+
+        <!-- Section -->
+    <section class="section section-md">
+        <form action="" method="post">
+        <div class="container mb-5">
+            <div class="row justify-content-around mt-5">
+                    {{ form.hidden_tag() }}
+                    <div class="col-md-6 col-xl-4 text-center text-md-left text-black pr-5" style="margin-top: auto; margin-bottom: auto;">
+                        <img class="img-fluid" style="width: 250px" src="/static/assets/img/ash.png" alt="Default Trainer">
+                    </div>
+                
+                    <div class="col-md-6 col-xl-4 mb-5 mt-4" style="text-align: left">                        
+                        <span class="h4 card-title mb-0">{{ form.name.label }} </span> 
+                        <span class="h5 card-title mb-0">{{ form.name }} </span> 
+                        {% for error in form.name.errors %}
+                        <br>
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                        <br><br>
+                        <p>{{ form.submit() }}</p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+    <script>
+        console.log(document.getElementById("submit").classList);
+        document.getElementById("submit").classList.add("tablinks");
+        console.log(document.getElementById("submit").classList);
+    </script>
+    <!-- End of section -->
+
+    </main>
+
+{% endblock content %}

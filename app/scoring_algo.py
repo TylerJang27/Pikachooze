@@ -1,6 +1,8 @@
 import json
 import pandas
 import math
+import numpy as np
+from time import time
 
 pokemon_types = {"normal":0, "fire":1, "water":2, "electric":3, "grass":4, "ice":5,
                  "fighting":6, "poison":7, "ground":8, "flying":9, "psychic":10,
@@ -29,13 +31,98 @@ damage_array =  [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1/2, 0, 1, 1, 1/2, 1],
 #my_pkmn = [trainer_pokemon objects]
 #opp_pkmn = [trainer_pokemon objects]
 
-#returns a list of (trainer_pokemon object, score) tuples sorted by score (highest score comes first)
+#returns a list of (trainer_pokemon object, (score, text)) tuples sorted by score (highest score comes first)
 #currently includes all pokemon, can filter for first six pokemon by [0:5]
 def score_teams(my_pkmn, opp_pkmn):
   score_list=[]
   for pk_1 in my_pkmn:
-    score_list.append((pk_1, score(pk_1, opp_pkmn)))
-  return sorted(score_list, key=lambda tup: tup[1]) #could break ties through speed
+    score_res = score(pk_1, opp_pkmn) # (37, "Thunderbolt is great!", [outgoing], [incoming])
+    score_list.append((pk_1, score_res[0:2])) # (pikachu, (37, "Thunderbolt is great!"))
+  print(sorted(score_list, key=lambda tup: tup[1][0]))
+  return sorted(score_list, key=lambda tup: tup[1][0]) #could break ties through speed
+
+#returns a list of (trainer_pokemon object, (score, text)) tuples sorted by score (highest comes first)
+#fulfils a team with all tabs
+def score_team_6(my_pkmn, opp_pkmn):
+  score_list=[]
+  outgoings = []
+  incomings = []
+  matchups = []
+  move_texts = []
+  for pk_1 in my_pkmn:
+    score_res = score(pk_1, opp_pkmn) # (37, "Thunderbolt is great!", [outgoing,], [incoming,], [diffs,])
+    score_list.append((pk_1, score_res[0], score_res[1])) # (pikachu, 37, "Thunderbolt is great!")
+    move_texts.append(score_res[1])
+    outgoings.append(score_res[2])
+    incomings.append(score_res[3])
+    matchup_nums = [k[0] for k in score_res[4]]
+    matchups.append((pk_1, matchup_nums))
+
+  ranking_ret = sorted(score_list, key=lambda tup: -1 * tup[1]) # first tab info
+  print("Matchups: ", matchups)
+  matchups_ret = sorted(matchups, key=lambda tup: -1 * sum(tup[1])/len(tup[1]))
+  team_ret = greedy_solver(my_pkmn, opp_pkmn, outgoings, incomings, move_texts)
+  
+  return ranking_ret, team_ret, (opp_pkmn, matchups_ret)
+
+# returns positive if pkmn_ind_1 is a better choice to include than pkmn_ind_2 at this iteration
+def comp_pkmn(rem_pkmn, pkmn_ind_1, pkmn_ind_2, opp_pkmn, op_coverage, turns_to_win):
+  for k in range(max(op_coverage)+1): # NOTE: assumes integer values for op_coverage
+    remaining_matchups = [ind for ind in range(len(op_coverage)) if op_coverage[ind] == k]
+    pkmn_1_advs = sum([1 for k in remaining_matchups if turns_to_win[pkmn_ind_1][k] > 0])
+    pkmn_2_advs = sum([1 for k in remaining_matchups if turns_to_win[pkmn_ind_2][k] > 0])
+    advs_diff = pkmn_1_advs - pkmn_2_advs
+    # print("\t\tadv diff of ", advs_diff)
+    if advs_diff != 0:
+      return advs_diff
+  total_vals_diff = sum([turns_to_win[pkmn_ind_1][k] for k in range(len(opp_pkmn))]) - sum([turns_to_win[pkmn_ind_2][k] for k in range(len(opp_pkmn))])
+  if total_vals_diff != 0:
+    # print("\t\ttotal vals diff of ", total_vals_diff)
+    return total_vals_diff
+  levels_diff = rem_pkmn[pkmn_ind_1].level - rem_pkmn[pkmn_ind_2].level
+  if levels_diff != 0:
+    print("\t\tlevels diff of: ", levels_diff)
+    return levels_diff
+  return 0
+
+# returns the index/key of the best pkmn in rem_pkmn to choose in this iteration based on comp
+def get_greedy_to_remove(rem_pkmn, opp_pkmn, op_coverage, turns_to_win):
+  curr_ind_best = list(rem_pkmn.keys())[0]
+  for k in rem_pkmn:
+    if k == curr_ind_best:
+      continue
+    # print("\tcomparing ", rem_pkmn[k].nickname, " to the current leader ", rem_pkmn[curr_ind_best].nickname)
+    if comp_pkmn(rem_pkmn, k, curr_ind_best, opp_pkmn, op_coverage, turns_to_win) > 0:
+      # print("choosing ", rem_pkmn[k].nickname, " is better than choosing ", rem_pkmn[curr_ind_best].nickname)
+      curr_ind_best = k
+  return curr_ind_best
+
+#returns an optimal team based on greedy solution
+def greedy_solver(my_pkmn, opp_pkmn, outgoings, incomings, move_texts):
+  num_mine = len(my_pkmn)
+  num_opp = len(opp_pkmn)
+  op_coverage = [0 for k in range(num_opp)]
+
+  turns_to_win = [
+      [(100 / incomings[j][k][0]) - (100 / outgoings[j][k][0]) if outgoings[j][k][0] != 0 and incomings[j][k][0] != 0 else (100-100/outgoings[j][k][0] if outgoings[j][k][0] > 0 else -100+100/incomings[j][k][0] if incomings[j][k][0] > 0 else -100) for k in range(len(opp_pkmn))]
+      for j in range(len(my_pkmn))
+    ] # positive means I win first
+  # print(turns_to_win)
+
+  rem_pkmn = {k: my_pkmn[k] for k in range(num_mine)} # 0: pikachu
+  chosen_pkmn = []
+
+  while len(rem_pkmn) > 0 and len(chosen_pkmn) < 6: # choose up to 6 times
+    curr_key_best_choice = get_greedy_to_remove(rem_pkmn, opp_pkmn, op_coverage, turns_to_win)
+    curr_opt = rem_pkmn.pop(curr_key_best_choice)
+    # print("for round ", len(chosen_pkmn), curr_opt.nickname, " was chosen.")
+
+    chosen_pkmn.append((curr_opt, move_texts[curr_key_best_choice]))
+    for k in range(num_opp):
+      if turns_to_win[curr_key_best_choice][k] > 0:
+        op_coverage[k] += 1 # change to a number than 1 to signify amount of lead or add another dictionary
+  
+  return chosen_pkmn
 
 #returns a score for a single pokemon against a team of pokemon
 def score(one_pkmn, team_pkmn):
@@ -44,10 +131,10 @@ def score(one_pkmn, team_pkmn):
   outgoing = [] #outgoing as a value (20, 25, 34, 50, 100)
   incoming = [] #incoming as a value (20, 25, 34, 50, 100)
   for pk_2 in team_pkmn:
-    outgoing_dmg.append(max_damage_perc(one_pkmn, pk_2))
-    incoming_dmg.append(max_damage_perc(pk_2, one_pkmn))
-  for dmg in outgoing_dmg:
-    dmg = dmg*100
+    outgoing_dmg.append(max_damage_adjusted(one_pkmn, pk_2, True))
+    incoming_dmg.append(max_damage_adjusted(pk_2, one_pkmn, False))
+  for dmg_info in outgoing_dmg:
+    dmg = dmg_info[0]*100
     val = 0
     if dmg >= 100:
       val = 100
@@ -71,10 +158,10 @@ def score(one_pkmn, team_pkmn):
       val = 10
     else:
       val = 0
-    outgoing.append(val)
+    outgoing.append((val, dmg_info[1]))
 
-  for dmg in incoming_dmg:
-    dmg = dmg*100
+  for dmg_info in incoming_dmg:
+    dmg = dmg_info[0]*100
     val = 0
     if dmg >= 100:
       val = 100
@@ -98,36 +185,74 @@ def score(one_pkmn, team_pkmn):
       val = 10
     else:
       val = 0
-    incoming.append(val)
+    incoming.append((val, dmg_info[1]))
   
   #print(incoming_dmg, outgoing_dmg)
   #print(incoming, outgoing)
-  difference = [a_i - b_i for a_i, b_i in zip(outgoing, incoming)]
+  difference = [(a_i[0] - b_i[0], 
+                [a_i[1], b_i[1]][0 if a_i > b_i else 1]) 
+                for a_i, b_i in zip(outgoing, incoming)]
+
+  max_diff = max(difference, key = lambda i : abs(i[0]))
+  move_text = max_diff[1]
   #calculation based on damages here
   #print(sum(difference)/len(difference))
-  return math.floor(sum(difference)/len(difference))
+  difference_nums = [k[0] for k in difference]
+
+  return math.floor(sum(difference_nums)/len(difference_nums)), move_text, outgoing, incoming, difference
 
 #calculate the max damage as percent of pokemon health out_pkmn and in_pkmn
-def max_damage_perc(out_pkmn, in_pkmn):
-  level = out_pkmn.level
+def max_damage_adjusted(out_pkmn, in_pkmn, is_attacker):
+  level = in_pkmn.level
   hp_IV = 0
   hp_EV = 0
-  hp_base = out_pkmn.pokemon.pokemon_base_stats[0].hp
-  HP = math.floor(0.01 * (2 * hp_base + hp_IV + math.floor(0.25 * hp_EV)) * level) + level + 10
-  return min(max_damage(out_pkmn, in_pkmn) / HP, 1.0)
+  hp_base = in_pkmn.pokemon.pokemon_base_stats[0].hp
+  HP = in_pkmn.custom_hp
+  HP = HP if HP is not None else math.floor(0.01 * (2 * hp_base + hp_IV + math.floor(0.25 * hp_EV)) * level) + level + 10
+  damage_perc = max_damage_perc(out_pkmn, in_pkmn, is_attacker, HP)
+  print(damage_perc)
+  if damage_perc[0] > 1.0:
+    return (1.0, damage_perc[1])
+  return damage_perc
 
 
 #calculate the max damage that can be done by out_pkmn to in_pkmn
-def max_damage(out_pkmn, in_pkmn):
+def max_damage_perc(out_pkmn, in_pkmn, is_attacker, hp):
   damage_list = []
   moves = [out_pkmn.move1, out_pkmn.move2, out_pkmn.move3, out_pkmn.move4]
   for move in moves:
-    if(move is not None):
-      damage_list.append(damage_calc(out_pkmn, move, in_pkmn))
-  return max(damage_list, default=0)
+    if move is not None:
+      damage_val = damage_calc(out_pkmn, move, in_pkmn, is_attacker)
+      damage_scaled = damage_val / hp
+      
+      move_text = ""
+      if is_attacker:
+        if damage_scaled >= 0.2 and damage_scaled < 0.4:
+          move_text = "({:}) does high damage to ({:}). Good job!".format(move.move_name, in_pkmn.nickname)
+        elif damage_scaled >= 0.4 and damage_scaled < 0.6:
+          move_text = "({:}) does very high damage to ({:}). Great job!".format(move.move_name, in_pkmn.nickname)
+        elif damage_scaled >= 0.6:
+          move_text = "({:}) does massive damage to ({:}). Excellent job!".format(move.move_name, in_pkmn.nickname)
+      else:
+        if damage_scaled > 0.2 and damage_scaled < 0.5:
+          if in_pkmn.level - out_pkmn.level > 10:
+            move_text = "({:})'s move ({:}) does high damage to us. Consider leveling up your pokemon before retrying!".format(out_pkmn.nickname, move.move_name)
+          else:
+            move_text = "({:})'s move ({:}) does high damage to us. Ouch!".format(out_pkmn.nickname, move.move_name)
+        if damage_scaled >= 0.5:
+          if out_pkmn.level - in_pkmn.level > 10:
+            move_text = "({:})'s move ({:}) does massive damage to us. Consider leveling up your pokemon before retrying!".format(out_pkmn.nickname, move.move_name)
+          elif in_pkmn.level - out_pkmn.level > 5:
+            move_text = "({:})'s move ({:}) does massive damage to us. Consider switching out this pokemon for a better match!".format(out_pkmn.nickname, move.move_name)
+          else:
+            move_text = "({:})'s move ({:}) does massive damage to us. Ouch!".format(out_pkmn.nickname, move.move_name)
+        
+      damage_list.append((damage_scaled, move_text))
+  return max(damage_list, key = lambda i : i[0], default=(0, ""))
 
-def damage_calc(out_pkmn, move, in_pkmn):
-  if move.damage_class == 3:
+# calculate the raw damage that out_pkmn can do to in_pkmn using move
+def damage_calc(out_pkmn, move, in_pkmn, is_attacker):
+  if move.damage_class.value == 3:
     return 0
   
   level = out_pkmn.level
@@ -146,15 +271,19 @@ def damage_calc(out_pkmn, move, in_pkmn):
   D_EV = 0
   #change these into data entered
 
-  if move.damage_class == 1: #physical 
-    A_base = out_pkmn.pokemon.pokemon_base_stats.attack_stat
-    D_base = in_pkmn.pokemon.pokemon_base_stats.defense_stat
-  if move.damage_class == 2: #special
-    A_base = out_pkmn.pokemon.pokemon_base_stats.special_attack_stat
-    D_base = in_pkmn.pokemon.pokemon_base_stats.special_defense_stat
+  if move.damage_class.value == 1: #physical 
+    A_base = out_pkmn.pokemon.pokemon_base_stats[0].attack_stat
+    D_base = in_pkmn.pokemon.pokemon_base_stats[0].defense_stat
+    A = out_pkmn.custom_attack_stat
+    D = in_pkmn.custom_defense_stat
+  if move.damage_class.value == 2: #special
+    A_base = out_pkmn.pokemon.pokemon_base_stats[0].special_attack_stat
+    D_base = in_pkmn.pokemon.pokemon_base_stats[0].special_defense_stat
+    A = out_pkmn.custom_special_attack_stat
+    D = in_pkmn.custom_special_defense_stat
 
-  A = math.floor(((0.01 * (2 * A_base + A_IV + math.floor(0.25 * A_EV)) * level) + 5) * A_Nature)
-  D = math.floor(((0.01 * (2 * D_base + D_IV + math.floor(0.25 * D_EV)) * level) + 5) * D_Nature)
+  A = A if A is not None else math.floor(((0.01 * (2 * A_base + A_IV + math.floor(0.25 * A_EV)) * level) + 5) * A_Nature)
+  D = D if D is not None else math.floor(((0.01 * (2 * D_base + D_IV + math.floor(0.25 * D_EV)) * level) + 5) * D_Nature)
 
   #targets = 1
   #weather = 1

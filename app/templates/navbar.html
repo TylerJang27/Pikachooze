@@ -18,28 +18,24 @@
                     </div>
                 </div>
                 <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
-                    <li class="nav-item dropdown">
-                        <a href="{{ url_for('index.fight') }}" class="nav-link dropdown-toggle" id="frontPagesDropdown" aria-expanded="false" data-bs-toggle="dropdown">
+                    <li class="nav-item dropdown mr-4 ml-4">
+                        <a href="{{ url_for('index.fight') }}" class="nav-link" id="frontPagesDropdown" aria-expanded="false" data-bs-toggle="dropdown">
                             Fight
-                            <span class="fas fa-angle-down nav-link-arrow ms-1"></span>
                         </a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a href="{{ url_for('index.inventory') }}" class="nav-link dropdown-toggle" id="componentsDropdown" aria-expanded="false" data-bs-toggle="dropdown">
+                    <li class="nav-item dropdown mr-4">
+                        <a href="{{ url_for('index.inventory') }}" class="nav-link" id="componentsDropdown" aria-expanded="false" data-bs-toggle="dropdown">
                             Inventory
-                            <span class="fas fa-angle-down nav-link-arrow ms-1"></span>
                         </a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a href="{{ url_for('index.leaders') }}" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="supportDropdown" aria-expanded="false">
+                    <li class="nav-item dropdown mr-4">
+                        <a href="{{ url_for('index.leaders') }}" class="nav-link" data-bs-toggle="dropdown" id="supportDropdown" aria-expanded="false">
                             Gym Leaders
-                            <span class="fas fa-angle-down nav-link-arrow ms-1"></span>
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a href="{{ url_for('index.faq') }}" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="supportDropdown" aria-expanded="false">
+                        <a href="{{ url_for('index.faq') }}" class="nav-link" data-bs-toggle="dropdown" id="supportDropdown" aria-expanded="false">
                             FAQ
-                            <span class="fas fa-angle-down nav-link-arrow ms-1"></span>
                         </a>
                     </li>
                 </ul>
@@ -50,7 +46,7 @@
             <!-- <h1 style="color:aliceblue">Welcome to CompSci 316 Pikachooze!</h1> -->
             <div style="color: aliceblue; text-align: right; margin-right: 25px">
                 {% if current_user.is_authenticated %}
-                Hello {{current_user.username}}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
+                Hello {{current_user.username}}! &nbsp &nbsp <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
                 {% else %}
                 <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
                 {% endif %}

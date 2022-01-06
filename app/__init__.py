@@ -2,8 +2,14 @@ from flask import Flask
 from app.config import Config
 from app.db import DB
 from app.models.base import login, babel
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 import subprocess
 from os import getcwd, path
+import uuid
+
+from app.models.trainer_pokemon import TrainerPokemon
+from app.models.trainer import Trainer
 
 
 def create_app():
@@ -19,6 +25,21 @@ def create_app():
 
     load_path = path.join(getcwd(), app.config['SQL_LOAD_PATH'])
     subprocess.call([load_path])
+
+    engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, echo=True) #TODO: GET FROM OTHER ONE
+    Session = sessionmaker(engine, expire_on_commit=True)
+    session = Session()
+    tps = session.query(TrainerPokemon).all()
+    for tp in tps:
+        if tp.uuid is None:
+            tp.uuid = uuid.uuid4()
+            session.add(tp)
+    ts = session.query(Trainer).all()
+    for t in ts:
+        if t.uuid is None:
+            t.uuid = uuid.uuid4()
+            session.add(t)
+    session.commit()
 
     login.init_app(app)
     babel.init_app(app)

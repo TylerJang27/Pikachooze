@@ -1,58 +1,70 @@
 {% extends "base.html" %}
 
-{% include 'navbar.html' %}
-
 {% block content %}
 
-<h1>Register</h1>
-<div class="container left-force">
-  <div class="row align-items-start">
-    <div class="col">
-<form action="" method="post">
-  {{ form.hidden_tag() }}
-  <!-- I added some features here that should be on dev. Make sure to update to include username/email/password/confirmpassword -->
-  <p>
-    {{ form.username.label }}<br/>
-    {{ form.username(size=32) }}<br/>
-    {% for error in form.username.errors %}
-    <span style="color: red;">[{{ error }}]</span>
-    {% endfor %}
-  </p>
-  <p>
-    {{ form.game.label }}<br/>
-    {{ form.game }}<br/>
-    {% for error in form.game.errors %}
-    <span style="color: red;">[{{ error }}]</span>
-    {% endfor %}
-  </p>
-  <p>
-    {{ form.email.label }}<br/>
-    {{ form.email(size=64) }}<br/>
-    {% for error in form.email.errors %}
-    <span style="color: red;">[{{ error }}]</span>
-    {% endfor %}
-  </p>
-  <p>
-    {{ form.password.label }}<br/>
-    {{ form.password(size=32) }}<br/>
-    {% for error in form.password.errors %}
-    <span style="color: red;">[{{ error }}]</span>
-    {% endfor %}
-  </p>
-  <p>
-    {{ form.password2.label }}<br/>
-    {{ form.password2(size=32) }}<br/>
-    {% for error in form.password2.errors %}
-    <span style="color: red;">[{{ error }}]</span>
-    {% endfor %}
-  </p>
-  <p>{{ form.submit() }}</p>
-</form>
+<div class="section-header pb-6 text-black">
+  <div class="container">
+      <div class="row px-3 justify-content-center">
+          <div class="col-12 text-left mb-3 mt-4">
+              <div class="row"><h2>Pikachooze</h2></div>
+              <div class="row" style="align-items: center;">
+                  <h1>Register</h1>
+              </div>
+          </div>
+      </div>
+  </div>
 </div>
-<div class="col">
-  <img src="https://cdn2.bulbagarden.net/upload/thumb/b/b1/393Piplup.png/1200px-393Piplup.png" alt="Happy Togepi" style="width:300px;height:300px;">
-</div>
-</div>
+
+<div class="section section-md">
+  <div class="container">
+      <div class="row mb-5">
+        <div class="col">
+          <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+              {{ form.username.label }}<br/>
+              {{ form.username(size=32) }}<br/>
+              {% for error in form.username.errors %}
+              <span style="color: red;">[{{ error }}]</span>
+              {% endfor %}
+            </p>
+            <p>
+              {{ form.game.label }}<br/>
+              {{ form.game }}<br/>
+              {% for error in form.game.errors %}
+              <span style="color: red;">[{{ error }}]</span>
+              {% endfor %}
+            </p>
+            <p>
+              {{ form.email.label }}<br/>
+              {{ form.email(size=64) }}<br/>
+              {% for error in form.email.errors %}
+              <span style="color: red;">[{{ error }}]</span>
+              {% endfor %}
+            </p>
+            <p>
+              {{ form.password.label }}<br/>
+              {{ form.password(size=32) }}<br/>
+              {% for error in form.password.errors %}
+              <span style="color: red;">[{{ error }}]</span>
+              {% endfor %}
+            </p>
+            <p>
+              {{ form.password2.label }}<br/>
+              {{ form.password2(size=32) }}<br/>
+              {% for error in form.password2.errors %}
+              <span style="color: red;">[{{ error }}]</span>
+              {% endfor %}
+            </p>
+            <p>{{ form.submit() }}</p>
+          </form>
+        </div>
+        <div class="col">
+          <img src="https://ssb.wiki.gallery/images/thumb/c/ca/Piplup-Origin.png/1200px-Piplup-Origin.png" alt="Happy Togepi" style="width:300px;height:300px;">
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

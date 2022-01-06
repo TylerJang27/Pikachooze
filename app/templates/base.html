@@ -3,6 +3,7 @@
 
 <head>
   <title>Pikachooze</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/img/fav_icon.png') }}"/>
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -19,9 +20,9 @@
 
     .sidenav {
         /* height: 100%; */
-        background-color: #000;
+        background-color: #3c5aa6;
         overflow-x: hidden;
-        padding-top: 20px;
+        /* padding-top: 20px; */
     }
 
     .main {
@@ -44,7 +45,7 @@
     }
   </style>
 </head>
-
+{% include 'navbar.html' %}
 <body>
   <div class="sidenav">
     {% block msg %}

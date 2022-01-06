@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% include 'navbar.html' %}
-
 {% block content %}
 
 <br><br>
@@ -14,7 +12,7 @@
               <img class="img-fluid mb-3" src="/static/assets/img/logo.png" alt="Logo">
               <h2 class="h1 mb-5">CS 316</h2>
               {% if current_user.is_authenticated %}
-                <a href="{{ url_for('index.fight') }}" class="btn btn-light">Fight</a>
+                <a href="{{ url_for('index.fight') }}" class="btn btn-warning">Fight</a>
               {% else %}
                 <p><a href="{{ url_for('users.login') }}">Log in</a> to start a Pokemon fight!</p>
               {% endif %}
@@ -26,50 +24,5 @@
       </div>
   </section>
   <!-- End of section -->
-
-<!-- <h2>Products for sale:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Product ID</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for product in avail_products%}
-      <tr>
-        <th scope="row">{{product.id}}</th>
-        <td>{{product.name}}</td>
-        <td>{{product.price}}</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table> -->
-
-<!-- <br><br>
-{% if current_user.is_authenticated %}
-<h2>Your recent fights:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Purchase ID</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for purchase in purchase_history%}
-      <tr>
-        <th scope="row">{{purchase.id}}</th>
-        <td>{{purchase.pid}}</td>
-        <td>{{purchase.time_purchased}}</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to start a Pokemon fight!</p>
-{% endif %} -->
 
 {% endblock %}

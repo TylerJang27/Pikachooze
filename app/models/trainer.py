@@ -1,20 +1,26 @@
-from sqlalchemy import Column, Integer, String, Boolean, Sequence, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, Sequence, ForeignKey, DateTime
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from app.models.base import Base
+import datetime
+import uuid
+
 
 
 class Trainer(Base): 
     __tablename__ = 'trainer'
 
-    # trainer_id_seq = Sequence('trainer_id_seq')
+    uuid = Column(UUID(as_uuid=True), unique=True, index=True, default=uuid.uuid4)
+    trainer_seq = Sequence('trainer_seq', start=100)
 
-    trainer_id = Column(Integer, primary_key = True) # trainer_id_seq, server_default=trainer_id_seq.next_value(), 
+    trainer_id = Column(Integer, trainer_seq, server_default=trainer_seq.next_value(), primary_key = True) 
     is_user = Column(Boolean)
     name = Column(String(40))
     pic = Column(String)
     game_id = Column(Integer, ForeignKey('game.game_id'))
     location_id = Column(Integer, ForeignKey('location.location_id'), nullable=True)
     added_by_id = Column(Integer, ForeignKey('users.uid'), nullable=True)
+    added_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=True)
 
     game = relationship("Game") # no back populates unless strictly necessary
     location = relationship("Location")
